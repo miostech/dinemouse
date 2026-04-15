@@ -1,7 +1,7 @@
 // Número WhatsApp (E.164 sem +): +1 407-429-5155
 const WHATSAPP_BUSINESS_NUMBER = '14074295155';
 
-// Endpoint para gravar o lead no MongoDB (servidor em server.js). Mesma origem em dev/prod.
+// Endpoint para gravar o lead no MongoDB (servidor local em dev-server.js). Mesma origem em dev/prod.
 const CONTACT_LEADS_API = '/api/contact-leads';
 
 // ============================================

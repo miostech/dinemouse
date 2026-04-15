@@ -1,11 +1,10 @@
 /**
  * Servidor local: site estático + POST /api/contact-leads (MongoDB).
- * Em produção no Vercel usa api/contact-leads.js (serverless).
- * Variável de ambiente: MONGODB_URI
+ * Em produção no Vercel: api/contact-leads.js. MONGODB_URI no .env.
+ * Nome dev-server.js (evita server.js) para a Vercel não tratar o repo como app Express.
  */
-require('dotenv').config();
-
 const path = require('path');
+require('dotenv').config({ path: path.join(__dirname, '.env') });
 const express = require('express');
 const cors = require('cors');
 const { connectMongo } = require('./lib/mongo');

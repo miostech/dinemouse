@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "Dine Mouse - Landing Page Premium",
   "scripts": {
-    "dev": "node server.js",
-    "start": "node server.js",
+    "dev": "node dev-server.js",
+    "start": "node dev-server.js",
     "serve": "npx serve . -p 3000"
   },
   "keywords": [
