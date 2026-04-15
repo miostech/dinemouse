@@ -1,0 +1,1834 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Portal do Cliente Dine Mouse - Gerencie seus alertas e reservas">
+    <title>Portal do Cliente - Dine Mouse</title>
+    <link rel="icon" type="image/png" href="favicon.png" sizes="512x512">
+    <link rel="apple-touch-icon" href="favicon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .portal-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            min-height: 100vh;
+            background: linear-gradient(135deg, rgba(245, 247, 250, 0.95) 0%, rgba(255, 255, 255, 0.95) 100%);
+            backdrop-filter: blur(1px);
+        }
+        
+        .portal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 2px solid rgba(75, 63, 114, 0.1);
+        }
+        
+        .portal-header h1 {
+            font-family: var(--font-display);
+            font-size: 2rem;
+            color: var(--azul-profundo);
+        }
+        
+        .portal-nav {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+        
+        .btn-logout {
+            background: transparent;
+            color: var(--roxo-magico);
+            border: 2px solid var(--roxo-magico);
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .btn-logout:hover {
+            background: var(--roxo-magico);
+            color: var(--branco);
+        }
+        
+        .portal-content {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 2rem;
+        }
+        
+        .portal-sidebar {
+            background: #ffffff;
+            padding: 1.5rem;
+            border-radius: 16px;
+            height: fit-content;
+            box-shadow: 0 2px 12px rgba(11, 28, 45, 0.08);
+        }
+        
+        .portal-menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .portal-menu li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .portal-menu a {
+            display: block;
+            padding: 0.75rem 1rem;
+            color: var(--azul-profundo);
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            font-weight: 500;
+        }
+        
+        .portal-menu a:hover,
+        .portal-menu a.active {
+            background: var(--roxo-magico);
+            color: var(--branco);
+        }
+        
+        .portal-main {
+            background: #ffffff;
+            padding: 2rem;
+            border-radius: 16px;
+            box-shadow: 0 2px 12px rgba(11, 28, 45, 0.08);
+        }
+        
+        .portal-section {
+            display: none;
+        }
+        
+        .portal-section.active {
+            display: block;
+        }
+        
+        .portal-section h2 {
+            font-family: var(--font-display);
+            font-size: 1.75rem;
+            color: var(--azul-profundo);
+            margin-bottom: 1.5rem;
+        }
+        
+        /* Plan Info Card */
+        .plan-info-card {
+            background: linear-gradient(135deg, var(--roxo-magico) 0%, var(--azul-profundo) 100%);
+            color: var(--branco);
+            padding: 2rem;
+            border-radius: 16px;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 20px rgba(75, 63, 114, 0.3);
+        }
+        
+        .plan-info-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+        }
+        
+        .plan-info-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .plan-info-subtitle {
+            opacity: 0.9;
+            font-size: 0.95rem;
+        }
+        
+        .activation-date {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            backdrop-filter: blur(10px);
+        }
+        
+        .activation-date strong {
+            display: block;
+            font-size: 1.1rem;
+            margin-bottom: 0.25rem;
+        }
+        
+        .plan-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        
+        .plan-detail-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1rem;
+            border-radius: 8px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .plan-detail-label {
+            font-size: 0.85rem;
+            opacity: 0.8;
+            margin-bottom: 0.5rem;
+        }
+        
+        .plan-detail-value {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+        
+        /* Concierge Info */
+        .concierge-info {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-top: 1rem;
+            backdrop-filter: blur(10px);
+        }
+        
+        .concierge-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .concierge-restaurants {
+            margin-top: 1rem;
+        }
+        
+        .concierge-restaurants h4 {
+            font-size: 0.95rem;
+            opacity: 0.9;
+            margin-bottom: 0.75rem;
+        }
+        
+        .restaurants-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        
+        .restaurant-tag {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+        
+        /* Alerts List */
+        .alerts-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .alert-card {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 2px solid rgba(75, 63, 114, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .alert-card:hover {
+            border-color: var(--roxo-magico);
+            box-shadow: 0 4px 12px rgba(75, 63, 114, 0.15);
+        }
+        
+        .alert-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+        
+        .alert-card-title {
+            font-weight: 600;
+            color: var(--azul-profundo);
+            font-size: 1.1rem;
+        }
+        
+        .alert-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        
+        .alert-status.active {
+            background: rgba(16, 185, 129, 0.1);
+            color: #059669;
+        }
+        
+        .alert-status.paused {
+            background: rgba(245, 158, 11, 0.1);
+            color: #d97706;
+        }
+        
+        .alert-status.inactive {
+            background: rgba(107, 114, 128, 0.1);
+            color: #6b7280;
+        }
+        
+        .alert-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .alert-info-item {
+            font-size: 0.95rem;
+            color: #555;
+        }
+        
+        .alert-info-item strong {
+            color: var(--azul-profundo);
+        }
+        
+        .alert-actions {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+        
+        .btn-alert {
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.9rem;
+        }
+        
+        .btn-alert-primary {
+            background: var(--roxo-magico);
+            color: var(--branco);
+        }
+        
+        .btn-alert-primary:hover {
+            background: var(--azul-profundo);
+        }
+        
+        .btn-alert-secondary {
+            background: transparent;
+            color: var(--roxo-magico);
+            border: 2px solid var(--roxo-magico);
+        }
+        
+        .btn-alert-secondary:hover {
+            background: var(--roxo-magico);
+            color: var(--branco);
+        }
+        
+        .btn-alert-danger {
+            background: transparent;
+            color: #dc2626;
+            border: 2px solid #dc2626;
+        }
+        
+        .btn-alert-danger:hover {
+            background: #dc2626;
+            color: var(--branco);
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #666;
+        }
+        
+        .empty-state-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+        
+        /* Activation Modal */
+        .activation-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(11, 28, 45, 0.9);
+            backdrop-filter: blur(5px);
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            overflow: hidden;
+        }
+        
+        .activation-modal.active {
+            display: flex;
+        }
+        
+        .activation-modal-content {
+            background: var(--branco);
+            border-radius: 20px;
+            padding: 2.5rem;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(11, 28, 45, 0.3);
+            animation: slideUp 0.3s ease;
+            position: relative;
+            z-index: 2;
+        }
+        
+        /* Canvas de partículas para modais no portal */
+        .modal-particles-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .activation-modal-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .activation-modal-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+        
+        .activation-modal-title {
+            font-family: var(--font-display);
+            font-size: 2rem;
+            color: var(--azul-profundo);
+            margin-bottom: 0.5rem;
+        }
+        
+        .activation-modal-subtitle {
+            color: #666;
+            font-size: 1.1rem;
+        }
+        
+        .activation-plan-info {
+            background: linear-gradient(135deg, var(--roxo-magico) 0%, var(--azul-profundo) 100%);
+            color: var(--branco);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+        }
+        
+        .activation-plan-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .activation-plan-details {
+            opacity: 0.9;
+            font-size: 0.95rem;
+        }
+        
+        .activation-modal-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+        
+        .btn-activate {
+            background: var(--roxo-magico);
+            color: var(--branco);
+            border: none;
+            padding: 1rem 2.5rem;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(75, 63, 114, 0.3);
+        }
+        
+        .btn-activate:hover {
+            background: var(--azul-profundo);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(75, 63, 114, 0.4);
+        }
+        
+        /* Active Days Info */
+        .active-days-info {
+            background: rgba(230, 199, 122, 0.1);
+            border: 2px solid var(--dourado-suave);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+        }
+        
+        .active-days-info strong {
+            color: var(--azul-profundo);
+        }
+        
+        /* Profile Card */
+        .profile-card {
+            background: #ffffff;
+            border: 2px solid rgba(75, 63, 114, 0.1);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 2px 12px rgba(11, 28, 45, 0.08);
+        }
+        
+        .profile-header {
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 2px solid rgba(75, 63, 114, 0.1);
+        }
+        
+        .profile-header h3 {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            color: var(--azul-profundo);
+            margin: 0;
+        }
+        
+        .profile-info {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        
+        .profile-info-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .profile-info-label {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--roxo-magico);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .profile-info-value {
+            font-size: 1.1rem;
+            color: var(--azul-profundo);
+            font-weight: 500;
+        }
+        
+        .password-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .password-display {
+            font-family: 'Courier New', monospace;
+            font-size: 1.1rem;
+            letter-spacing: 2px;
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .btn-show-password {
+            background: transparent;
+            border: 2px solid var(--roxo-magico);
+            color: var(--roxo-magico);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+        
+        .btn-show-password:hover {
+            background: var(--roxo-magico);
+            color: var(--branco);
+        }
+        
+        @media (max-width: 768px) {
+            .portal-container {
+                padding: 1.5rem 1rem;
+            }
+            
+            .portal-content {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .portal-sidebar {
+                order: 2;
+                padding: 1.25rem 1rem;
+            }
+            
+            .portal-main {
+                order: 1;
+                padding: 1.5rem 1.25rem;
+            }
+            
+            .portal-header {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: flex-start;
+                padding-bottom: 1.5rem;
+            }
+            
+            .portal-header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .portal-nav {
+                flex-direction: column;
+                width: 100%;
+                gap: 0.75rem;
+            }
+            
+            .btn-logout {
+                width: 100%;
+                padding: 0.875rem 1.25rem;
+                font-size: 0.9rem;
+                text-align: center;
+            }
+            
+            .portal-menu a {
+                padding: 0.875rem 1rem;
+                font-size: 0.9rem;
+            }
+            
+            .portal-section h2 {
+                font-size: 1.5rem;
+                margin-bottom: 1.25rem;
+            }
+            
+            .plan-info-card {
+                padding: 1.5rem 1.25rem;
+                margin-bottom: 1.5rem;
+            }
+            
+            .plan-info-header {
+                flex-direction: column;
+                gap: 1rem;
+                margin-bottom: 1.25rem;
+            }
+            
+            .plan-info-title {
+                font-size: 1.25rem;
+            }
+            
+            .plan-info-subtitle {
+                font-size: 0.875rem;
+            }
+            
+            .activation-date {
+                padding: 0.875rem 1rem;
+                font-size: 0.875rem;
+            }
+            
+            .activation-date strong {
+                font-size: 1rem;
+            }
+            
+            .plan-details {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+                margin-top: 1.25rem;
+            }
+            
+            .plan-detail-item {
+                padding: 1rem;
+            }
+            
+            .plan-detail-label {
+                font-size: 0.8rem;
+            }
+            
+            .plan-detail-value {
+                font-size: 1.1rem;
+            }
+            
+            .concierge-info {
+                padding: 1.25rem 1rem;
+                margin-top: 1rem;
+            }
+            
+            .concierge-name {
+                font-size: 1.1rem;
+                margin-bottom: 0.875rem;
+            }
+            
+            .concierge-restaurants h4 {
+                font-size: 0.875rem;
+                margin-bottom: 0.75rem;
+            }
+            
+            .restaurant-tag {
+                padding: 0.5rem 0.875rem;
+                font-size: 0.85rem;
+            }
+            
+            .alert-card {
+                padding: 1.25rem 1rem;
+                margin-bottom: 1rem;
+            }
+            
+            .alert-card-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.75rem;
+                margin-bottom: 1rem;
+            }
+            
+            .alert-card-title {
+                font-size: 1rem;
+            }
+            
+            .alert-status {
+                padding: 0.375rem 0.875rem;
+                font-size: 0.8rem;
+            }
+            
+            .alert-info {
+                grid-template-columns: 1fr;
+                gap: 0.75rem;
+                margin-bottom: 1rem;
+            }
+            
+            .alert-info-item {
+                font-size: 0.875rem;
+                line-height: 1.6;
+            }
+            
+            .alert-actions {
+                flex-direction: column;
+                gap: 0.75rem;
+                margin-top: 1rem;
+            }
+            
+            .btn-alert {
+                width: 100%;
+                padding: 0.75rem 1rem;
+                font-size: 0.9rem;
+            }
+            
+            .profile-card {
+                padding: 1.5rem 1.25rem;
+            }
+            
+            .profile-header {
+                margin-bottom: 1.5rem;
+                padding-bottom: 1.25rem;
+            }
+            
+            .profile-header h3 {
+                font-size: 1.25rem;
+            }
+            
+            .profile-info {
+                gap: 1.25rem;
+            }
+            
+            .profile-info-item {
+                gap: 0.5rem;
+            }
+            
+            .profile-info-label {
+                font-size: 0.8rem;
+            }
+            
+            .profile-info-value {
+                font-size: 1rem;
+            }
+            
+            .password-container {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 0.75rem;
+            }
+            
+            .password-display {
+                font-size: 1rem;
+                min-width: auto;
+            }
+            
+            .btn-show-password {
+                width: 100%;
+                padding: 0.75rem 1rem;
+                font-size: 0.9rem;
+            }
+            
+            .activation-modal-content {
+                padding: 1.5rem 1.25rem;
+                margin: 1rem;
+            }
+            
+            .activation-modal-title {
+                font-size: 1.5rem;
+            }
+            
+            .activation-modal-subtitle {
+                font-size: 1rem;
+            }
+            
+            .activation-plan-info {
+                padding: 1.25rem 1rem;
+                margin-bottom: 1.5rem;
+            }
+            
+            .activation-plan-name {
+                font-size: 1.25rem;
+            }
+            
+            .activation-plan-details {
+                font-size: 0.875rem;
+            }
+            
+            .activation-modal-actions {
+                flex-direction: column;
+                gap: 0.75rem;
+            }
+            
+            .btn-activate {
+                width: 100%;
+                padding: 1rem 1.5rem;
+                font-size: 1rem;
+            }
+            
+            .active-days-info {
+                padding: 1rem;
+                margin-top: 1rem;
+                font-size: 0.875rem;
+                line-height: 1.7;
+            }
+        }
+    </style>
+    <style>
+        /* Canvas de partículas para o portal */
+        #portal-particles-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+        
+        body {
+            position: relative;
+            background: linear-gradient(135deg, var(--azul-profundo) 0%, var(--roxo-magico) 100%);
+            min-height: 100vh;
+        }
+        
+        .portal-container {
+            position: relative;
+            z-index: 1;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="portal-particles-canvas"></canvas>
+    <!-- Activation Modal -->
+    <div id="activationModal" class="activation-modal">
+        <canvas class="modal-particles-canvas" id="activationModalParticles"></canvas>
+        <div class="activation-modal-content">
+            <div class="activation-modal-header">
+                <div class="activation-modal-icon">🎉</div>
+                <h2 class="activation-modal-title">Bem-vindo ao Dine Mouse!</h2>
+                <p class="activation-modal-subtitle">Confirme seu plano contratado para ativar o serviço</p>
+            </div>
+            
+            <div class="activation-plan-info" id="activationPlanInfo">
+                <!-- Será preenchido dinamicamente -->
+            </div>
+            
+            <div class="activation-modal-actions">
+                <button class="btn-activate" onclick="activateService()">Ativar Serviço</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="portal-container">
+        <div class="portal-header">
+            <h1>Seu Portal Dine Mouse</h1>
+            <div class="portal-nav">
+                <a href="index.html" class="btn-logout">Voltar ao site</a>
+                <button class="btn-logout" onclick="logout()">Sair</button>
+            </div>
+        </div>
+
+        <div class="portal-content">
+            <aside class="portal-sidebar">
+                <ul class="portal-menu">
+                    <li><a href="#" class="active" onclick="showSection('overview'); return false;">Visão Geral</a></li>
+                    <li><a href="#" onclick="showSection('alerts'); return false;">Meus Alertas</a></li>
+                    <li><a href="#" onclick="showSection('subscription'); return false;">Minha Assinatura</a></li>
+                    <li><a href="#" onclick="showSection('receipts'); return false;">Meus Recibos</a></li>
+                    <li><a href="#" onclick="showSection('profile'); return false;">Meu Perfil</a></li>
+                </ul>
+            </aside>
+
+            <main class="portal-main">
+                <!-- Seção: Visão Geral -->
+                <div id="section-overview" class="portal-section active">
+                    <h2>Visão Geral</h2>
+                    
+                    <!-- Plan Info Card -->
+                    <div class="plan-info-card" id="planInfoCard">
+                        <!-- Será preenchido dinamicamente -->
+                    </div>
+                    
+                    <!-- Conteúdo baseado no tipo de plano -->
+                    <div id="planSpecificContent">
+                        <!-- Será preenchido dinamicamente -->
+                    </div>
+                </div>
+
+                <!-- Seção: Meus Alertas -->
+                <div id="section-alerts" class="portal-section">
+                    <h2>Meus Alertas</h2>
+                    <div class="alerts-list" id="alertsList">
+                        <!-- Os alertas serão carregados aqui -->
+                    </div>
+                </div>
+
+                <!-- Seção: Minha Assinatura -->
+                <div id="section-subscription" class="portal-section">
+                    <h2>Minha Assinatura</h2>
+                    <div id="subscriptionDetails">
+                        <!-- Será preenchido dinamicamente -->
+                    </div>
+                </div>
+
+                <!-- Seção: Meus Recibos -->
+                <div id="section-receipts" class="portal-section">
+                    <h2>Meus Recibos</h2>
+                    <div class="empty-state">
+                        <div class="empty-state-icon">🧾</div>
+                        <p>Nenhum recibo encontrado.</p>
+                    </div>
+                </div>
+
+                <!-- Seção: Meu Perfil -->
+                <div id="section-profile" class="portal-section">
+                    <h2>Meu Perfil</h2>
+                    <div id="profileContent">
+                        <!-- Será preenchido dinamicamente -->
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Modais Customizados para Alert, Confirm e Prompt -->
+    <div class="custom-modal-overlay" id="customModalOverlay">
+        <canvas class="modal-particles-canvas" id="customModalParticles"></canvas>
+        <div class="custom-modal" id="customModal">
+            <div class="custom-modal-header">
+                <h3 class="custom-modal-title" id="customModalTitle"></h3>
+            </div>
+            <div class="custom-modal-body">
+                <p class="custom-modal-message" id="customModalMessage"></p>
+                <div class="custom-modal-input-container" id="customModalInputContainer" style="display: none;">
+                    <input type="text" class="custom-modal-input" id="customModalInput" placeholder="">
+                </div>
+            </div>
+            <div class="custom-modal-footer" id="customModalFooter">
+                <!-- Botões serão adicionados dinamicamente -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // PARTICLE SYSTEM
+        // ============================================
+        class ParticleSystem {
+            constructor(canvas) {
+                this.canvas = canvas;
+                this.ctx = canvas.getContext('2d');
+                this.particles = [];
+                this.particleCount = 50;
+                
+                this.resize();
+                this.init();
+                this.animate();
+                
+                window.addEventListener('resize', () => this.resize());
+            }
+            
+            resize() {
+                this.canvas.width = window.innerWidth;
+                this.canvas.height = window.innerHeight;
+            }
+            
+            init() {
+                for (let i = 0; i < this.particleCount; i++) {
+                    this.particles.push({
+                        x: Math.random() * this.canvas.width,
+                        y: Math.random() * this.canvas.height,
+                        radius: Math.random() * 2 + 0.5,
+                        speedX: (Math.random() - 0.5) * 0.5,
+                        speedY: (Math.random() - 0.5) * 0.5,
+                        opacity: Math.random() * 0.5 + 0.2,
+                        twinkle: Math.random() * Math.PI * 2
+                    });
+                }
+            }
+            
+            animate() {
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                
+                this.particles.forEach(particle => {
+                    // Update position
+                    particle.x += particle.speedX;
+                    particle.y += particle.speedY;
+                    
+                    // Wrap around edges
+                    if (particle.x < 0) particle.x = this.canvas.width;
+                    if (particle.x > this.canvas.width) particle.x = 0;
+                    if (particle.y < 0) particle.y = this.canvas.height;
+                    if (particle.y > this.canvas.height) particle.y = 0;
+                    
+                    // Twinkle effect
+                    particle.twinkle += 0.02;
+                    const opacity = particle.opacity + Math.sin(particle.twinkle) * 0.2;
+                    
+                    // Draw particle
+                    this.ctx.beginPath();
+                    this.ctx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
+                    this.ctx.fillStyle = `rgba(230, 199, 122, ${opacity})`;
+                    this.ctx.fill();
+                    
+                    // Draw glow
+                    const gradient = this.ctx.createRadialGradient(
+                        particle.x, particle.y, 0,
+                        particle.x, particle.y, particle.radius * 3
+                    );
+                    gradient.addColorStop(0, `rgba(230, 199, 122, ${opacity * 0.5})`);
+                    gradient.addColorStop(1, 'rgba(230, 199, 122, 0)');
+                    this.ctx.fillStyle = gradient;
+                    this.ctx.fill();
+                });
+                
+                requestAnimationFrame(() => this.animate());
+            }
+        }
+        
+        // Initialize particle system for portal
+        document.addEventListener('DOMContentLoaded', () => {
+            const canvas = document.getElementById('portal-particles-canvas');
+            if (canvas) {
+                new ParticleSystem(canvas);
+            }
+        });
+        
+        // ============================================
+        // MODAL PARTICLE SYSTEMS MANAGEMENT
+        // ============================================
+        const modalParticleSystems = {};
+        
+        function initModalParticles(canvasId) {
+            const canvas = document.getElementById(canvasId);
+            if (canvas && !modalParticleSystems[canvasId]) {
+                modalParticleSystems[canvasId] = new ParticleSystem(canvas);
+            }
+        }
+        
+        function destroyModalParticles(canvasId) {
+            if (modalParticleSystems[canvasId]) {
+                // Limpar o canvas
+                const canvas = document.getElementById(canvasId);
+                if (canvas) {
+                    const ctx = canvas.getContext('2d');
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                }
+                // Remover referência
+                delete modalParticleSystems[canvasId];
+            }
+        }
+        
+        // ============================================
+        // CUSTOM MODALS (Alert, Confirm, Prompt)
+        // ============================================
+
+        /**
+         * Modal customizado para substituir alert()
+         */
+        function customAlert(message, title = 'Aviso') {
+            return new Promise((resolve) => {
+                const overlay = document.getElementById('customModalOverlay');
+                const modal = document.getElementById('customModal');
+                const modalTitle = document.getElementById('customModalTitle');
+                const modalMessage = document.getElementById('customModalMessage');
+                const modalFooter = document.getElementById('customModalFooter');
+                const inputContainer = document.getElementById('customModalInputContainer');
+                
+                // Esconder input
+                inputContainer.style.display = 'none';
+                
+                // Configurar conteúdo
+                modalTitle.textContent = title;
+                modalMessage.textContent = message;
+                
+                // Criar botão OK
+                modalFooter.innerHTML = `
+                    <button class="custom-modal-btn custom-modal-btn-primary" id="customModalOkBtn">
+                        OK
+                    </button>
+                `;
+                
+                // Mostrar modal
+                overlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
+                
+                // Inicializar partículas
+                initModalParticles('customModalParticles');
+                
+                // Fechar ao clicar em OK
+                const okBtn = document.getElementById('customModalOkBtn');
+                okBtn.addEventListener('click', () => {
+                    overlay.classList.remove('active');
+                    document.body.style.overflow = '';
+                    destroyModalParticles('customModalParticles');
+                    resolve();
+                });
+                
+                // Fechar ao clicar no overlay
+                overlay.addEventListener('click', function(e) {
+                    if (e.target === overlay) {
+                        overlay.classList.remove('active');
+                        document.body.style.overflow = '';
+                        destroyModalParticles('customModalParticles');
+                        resolve();
+                    }
+                });
+                
+                // Fechar com ESC
+                const escHandler = (e) => {
+                    if (e.key === 'Escape') {
+                        overlay.classList.remove('active');
+                        document.body.style.overflow = '';
+                        destroyModalParticles('customModalParticles');
+                        document.removeEventListener('keydown', escHandler);
+                        resolve();
+                    }
+                };
+                document.addEventListener('keydown', escHandler);
+            });
+        }
+
+        /**
+         * Modal customizado para substituir confirm()
+         */
+        function customConfirm(message, title = 'Confirmação') {
+            return new Promise((resolve) => {
+                const overlay = document.getElementById('customModalOverlay');
+                const modal = document.getElementById('customModal');
+                const modalTitle = document.getElementById('customModalTitle');
+                const modalMessage = document.getElementById('customModalMessage');
+                const modalFooter = document.getElementById('customModalFooter');
+                const inputContainer = document.getElementById('customModalInputContainer');
+                
+                // Esconder input
+                inputContainer.style.display = 'none';
+                
+                // Configurar conteúdo
+                modalTitle.textContent = title;
+                modalMessage.textContent = message;
+                
+                // Criar botões
+                modalFooter.innerHTML = `
+                    <button class="custom-modal-btn custom-modal-btn-secondary" id="customModalCancelBtn">
+                        Cancelar
+                    </button>
+                    <button class="custom-modal-btn custom-modal-btn-primary" id="customModalConfirmBtn">
+                        Confirmar
+                    </button>
+                `;
+                
+                // Mostrar modal
+                overlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
+                
+                // Inicializar partículas
+                initModalParticles('customModalParticles');
+                
+                // Botão Cancelar
+                const cancelBtn = document.getElementById('customModalCancelBtn');
+                cancelBtn.addEventListener('click', () => {
+                    overlay.classList.remove('active');
+                    document.body.style.overflow = '';
+                    destroyModalParticles('customModalParticles');
+                    resolve(false);
+                });
+                
+                // Botão Confirmar
+                const confirmBtn = document.getElementById('customModalConfirmBtn');
+                confirmBtn.addEventListener('click', () => {
+                    overlay.classList.remove('active');
+                    document.body.style.overflow = '';
+                    destroyModalParticles('customModalParticles');
+                    resolve(true);
+                });
+                
+                // Fechar ao clicar no overlay (retorna false)
+                overlay.addEventListener('click', function(e) {
+                    if (e.target === overlay) {
+                        overlay.classList.remove('active');
+                        document.body.style.overflow = '';
+                        destroyModalParticles('customModalParticles');
+                        resolve(false);
+                    }
+                });
+                
+                // Fechar com ESC (retorna false)
+                const escHandler = (e) => {
+                    if (e.key === 'Escape') {
+                        overlay.classList.remove('active');
+                        document.body.style.overflow = '';
+                        destroyModalParticles('customModalParticles');
+                        document.removeEventListener('keydown', escHandler);
+                        resolve(false);
+                    }
+                };
+                document.addEventListener('keydown', escHandler);
+            });
+        }
+        // ============================================
+        // USER DATA MANAGEMENT
+        // ============================================
+        
+        // Simulação de dados do usuário (em produção, viria de uma API)
+        function getUserData() {
+            // Verificar se existe dados salvos no localStorage
+            const savedData = localStorage.getItem('dineMouse_userData');
+            if (savedData) {
+                return JSON.parse(savedData);
+            }
+            
+            // Dados padrão para demonstração
+            // Em produção, isso viria do backend após login
+            return {
+                email: 'cliente@example.com',
+                plan: {
+                    type: 'alerts', // 'alerts' ou 'concierge'
+                    name: 'Plano Individual - 3 Alertas',
+                    price: 45.00,
+                    alerts: 3,
+                    conciergeName: null, // Preenchido se for concierge
+                    conciergeRestaurants: [] // Preenchido se for concierge
+                },
+                activationDate: null, // Será preenchido quando ativar
+                alerts: [
+                    {
+                        id: 1,
+                        restaurant: "Chef Mickey's",
+                        park: "Walt Disney World",
+                        date: "2024-03-15",
+                        meal: "Jantar",
+                        partySize: 4,
+                        status: 'active', // 'active', 'paused', 'cancelled'
+                        activeDays: 12,
+                        createdAt: '2024-03-01'
+                    },
+                    {
+                        id: 2,
+                        restaurant: "Be Our Guest Restaurant",
+                        park: "Walt Disney World",
+                        date: "2024-03-20",
+                        meal: "Almoço",
+                        partySize: 2,
+                        status: 'active',
+                        activeDays: 8,
+                        createdAt: '2024-03-05'
+                    }
+                ],
+                isFirstAccess: true // Será false após ativação
+            };
+        }
+        
+        function saveUserData(data) {
+            localStorage.setItem('dineMouse_userData', JSON.stringify(data));
+        }
+        
+        // ============================================
+        // INITIALIZATION
+        // ============================================
+        
+        let userData = getUserData();
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            // Verificar se é primeiro acesso e mostrar modal de ativação
+            if (userData.isFirstAccess && !userData.activationDate) {
+                showActivationModal();
+            } else {
+                loadPortalContent();
+            }
+        });
+        
+        // ============================================
+        // ACTIVATION MODAL
+        // ============================================
+        
+        function showActivationModal() {
+            const modal = document.getElementById('activationModal');
+            const planInfo = document.getElementById('activationPlanInfo');
+            
+            if (!modal || !planInfo) return;
+            
+            // Preencher informações do plano
+            const planName = userData.plan.name;
+            let planDetails = '';
+            
+            if (userData.plan.type === 'concierge') {
+                planDetails = `
+                    <div class="activation-plan-name">${planName}</div>
+                    <div class="activation-plan-details">
+                        Valor: R$ ${userData.plan.price.toFixed(2)} por viagem<br>
+                        Seu concierge dedicado entrará em contato em breve.
+                    </div>
+                `;
+            } else {
+                planDetails = `
+                    <div class="activation-plan-name">${planName}</div>
+                    <div class="activation-plan-details">
+                        Valor: R$ ${userData.plan.price.toFixed(2)}/mês<br>
+                        ${userData.plan.alerts} alertas disponíveis
+                    </div>
+                `;
+            }
+            
+            planInfo.innerHTML = planDetails;
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            
+            // Inicializar partículas no modal de ativação
+            initModalParticles('activationModalParticles');
+        }
+        
+        function activateService() {
+            // Registrar data de ativação
+            userData.activationDate = new Date().toISOString();
+            userData.isFirstAccess = false;
+            saveUserData(userData);
+            
+            // Fechar modal
+            const modal = document.getElementById('activationModal');
+            if (modal) {
+                modal.classList.remove('active');
+                document.body.style.overflow = '';
+                // Destruir partículas
+                destroyModalParticles('activationModalParticles');
+            }
+            
+            // Carregar conteúdo do portal
+            loadPortalContent();
+            
+            // Mostrar mensagem de sucesso
+            customAlert('Serviço ativado com sucesso! 🎉\n\nA data de ativação foi registrada.', 'Sucesso');
+        }
+        
+        // ============================================
+        // PORTAL CONTENT LOADING
+        // ============================================
+        
+        function loadPortalContent() {
+            loadPlanInfo();
+            loadPlanSpecificContent();
+            loadAlerts();
+            loadSubscriptionDetails();
+            loadProfile();
+        }
+        
+        function loadPlanInfo() {
+            const planInfoCard = document.getElementById('planInfoCard');
+            if (!planInfoCard) return;
+            
+            const activationDate = userData.activationDate 
+                ? new Date(userData.activationDate).toLocaleDateString('pt-BR', {
+                    day: '2-digit',
+                    month: 'long',
+                    year: 'numeric'
+                })
+                : 'Não ativado';
+            
+            let planInfoHTML = `
+                <div class="plan-info-header">
+                    <div>
+                        <div class="plan-info-title">${userData.plan.name}</div>
+                        <div class="plan-info-subtitle">Plano ${userData.plan.type === 'concierge' ? 'Concierge' : 'Alertas'}</div>
+                    </div>
+                    <div class="activation-date">
+                        <strong>Data de Ativação</strong>
+                        <span>${activationDate}</span>
+                    </div>
+                </div>
+                <div class="plan-details">
+                    <div class="plan-detail-item">
+                        <div class="plan-detail-label">${userData.plan.type === 'concierge' ? 'Valor por Viagem' : 'Valor Mensal'}</div>
+                        <div class="plan-detail-value">R$ ${userData.plan.price.toFixed(2)}</div>
+                    </div>
+            `;
+            
+            if (userData.plan.type === 'alerts') {
+                planInfoHTML += `
+                    <div class="plan-detail-item">
+                        <div class="plan-detail-label">Alertas Disponíveis</div>
+                        <div class="plan-detail-value">${userData.plan.alerts}</div>
+                    </div>
+                    <div class="plan-detail-item">
+                        <div class="plan-detail-label">Alertas Ativos</div>
+                        <div class="plan-detail-value">${userData.alerts.filter(a => a.status === 'active').length}</div>
+                    </div>
+                `;
+            }
+            
+            planInfoHTML += `</div>`;
+            
+            // Adicionar informações do concierge se aplicável
+            if (userData.plan.type === 'concierge' && userData.plan.conciergeName) {
+                // Formatar datas da viagem
+                let tripDatesInfo = '';
+                if (userData.conciergeInfo && userData.conciergeInfo.tripDateStart && userData.conciergeInfo.tripDateEnd) {
+                    const tripStart = new Date(userData.conciergeInfo.tripDateStart);
+                    const tripEnd = new Date(userData.conciergeInfo.tripDateEnd);
+                    const formattedStart = tripStart.toLocaleDateString('pt-BR', {
+                        day: '2-digit',
+                        month: 'long',
+                        year: 'numeric'
+                    });
+                    const formattedEnd = tripEnd.toLocaleDateString('pt-BR', {
+                        day: '2-digit',
+                        month: 'long',
+                        year: 'numeric'
+                    });
+                    tripDatesInfo = `
+                        <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgba(255, 255, 255, 0.2);">
+                            <strong style="display: block; margin-bottom: 0.5rem; opacity: 0.9;">📅 Datas da Viagem:</strong>
+                            <div style="opacity: 0.9;">
+                                ${formattedStart} até ${formattedEnd}
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                planInfoHTML += `
+                    <div class="concierge-info">
+                        <div class="concierge-name">
+                            Seu Concierge: <strong>${userData.plan.conciergeName}</strong>
+                        </div>
+                        ${tripDatesInfo}
+                        ${userData.plan.conciergeRestaurants.length > 0 ? `
+                            <div class="concierge-restaurants">
+                                <h4>Restaurantes Escolhidos:</h4>
+                                <div class="restaurants-list">
+                                    ${userData.plan.conciergeRestaurants.map(r => `
+                                        <span class="restaurant-tag">🍽️ ${r}</span>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        ` : '<p style="opacity: 0.8;">Os restaurantes serão definidos em breve durante a chamada com seu concierge.</p>'}
+                    </div>
+                `;
+            }
+            
+            planInfoCard.innerHTML = planInfoHTML;
+        }
+        
+        function loadPlanSpecificContent() {
+            const contentDiv = document.getElementById('planSpecificContent');
+            if (!contentDiv) return;
+            
+            if (userData.plan.type === 'alerts') {
+                // Mostrar informações sobre alertas ativos
+                const activeAlerts = userData.alerts.filter(a => a.status === 'active');
+                const pausedAlerts = userData.alerts.filter(a => a.status === 'paused');
+                
+                let html = '<div class="active-days-info">';
+                html += `<strong>Resumo dos Alertas</strong><br>`;
+                html += `Alertas ativos: ${activeAlerts.length} | `;
+                html += `Alertas pausados: ${pausedAlerts.length} | `;
+                html += `Total: ${userData.alerts.length}`;
+                html += '</div>';
+                
+                contentDiv.innerHTML = html;
+            } else {
+                // Mostrar informações do concierge
+                contentDiv.innerHTML = `
+                    <div class="active-days-info">
+                        <strong>Informações do Concierge</strong><br>
+                        Seu concierge dedicado está trabalhando para garantir suas reservas. 
+                        Você receberá atualizações conforme as reservas forem sendo confirmadas.
+                    </div>
+                `;
+            }
+        }
+        
+        function loadAlerts() {
+            const alertsList = document.getElementById('alertsList');
+            if (!alertsList) return;
+            
+            if (userData.plan.type !== 'alerts' || userData.alerts.length === 0) {
+                alertsList.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📋</div>
+                        <p>Você ainda não possui alertas ${userData.plan.type !== 'alerts' ? '(disponível apenas para planos de alertas)' : 'ativos'}.</p>
+                        ${userData.plan.type === 'alerts' ? '<p><a href="index.html#planos">Criar primeiro alerta</a></p>' : ''}
+                    </div>
+                `;
+                return;
+            }
+            
+            alertsList.innerHTML = userData.alerts.map(alert => {
+                const statusClass = alert.status;
+                const statusText = {
+                    'active': 'Ativo',
+                    'paused': 'Pausado',
+                    'cancelled': 'Cancelado'
+                }[alert.status] || 'Desconhecido';
+                
+                return `
+                    <div class="alert-card">
+                        <div class="alert-card-header">
+                            <div class="alert-card-title">${alert.restaurant}</div>
+                            <span class="alert-status ${statusClass}">${statusText}</span>
+                        </div>
+                        <div class="alert-info">
+                            <div class="alert-info-item">
+                                <strong>Parque:</strong> ${alert.park}
+                            </div>
+                            <div class="alert-info-item">
+                                <strong>Data:</strong> ${new Date(alert.date).toLocaleDateString('pt-BR')}
+                            </div>
+                            <div class="alert-info-item">
+                                <strong>Refeição:</strong> ${alert.meal}
+                            </div>
+                            <div class="alert-info-item">
+                                <strong>Pessoas:</strong> ${alert.partySize}
+                            </div>
+                            ${alert.status === 'active' ? `
+                                <div class="alert-info-item">
+                                    <strong>Dias Ativos:</strong> ${alert.activeDays} dias
+                                </div>
+                            ` : ''}
+                        </div>
+                        <div class="alert-actions">
+                            ${alert.status === 'active' ? `
+                                <button class="btn-alert btn-alert-secondary" onclick="pauseAlert(${alert.id})">
+                                    ⏸️ Pausar
+                                </button>
+                                <button class="btn-alert btn-alert-danger" onclick="cancelAlert(${alert.id})">
+                                    ❌ Cancelar
+                                </button>
+                            ` : ''}
+                            ${alert.status === 'paused' ? `
+                                <button class="btn-alert btn-alert-primary" onclick="resumeAlert(${alert.id})">
+                                    ▶️ Retomar
+                                </button>
+                                <button class="btn-alert btn-alert-danger" onclick="cancelAlert(${alert.id})">
+                                    ❌ Cancelar
+                                </button>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        function loadProfile() {
+            const profileDiv = document.getElementById('profileContent');
+            if (!profileDiv) return;
+            
+            // Obter dados do usuário
+            const name = userData.name || 'Não informado';
+            const email = userData.email || 'Não informado';
+            const password = userData.password || null;
+            const phones = userData.phones || [];
+            
+            // Formatar telefones
+            let phonesHTML = '';
+            if (phones.length > 0) {
+                phonesHTML = phones.map((phone, index) => {
+                    let phoneDisplay = '';
+                    if (typeof phone === 'object') {
+                        if (phone.full) {
+                            phoneDisplay = phone.full;
+                        } else if (phone.country && phone.number) {
+                            phoneDisplay = `${phone.country} ${phone.number}`;
+                        } else {
+                            phoneDisplay = phone.number || phone;
+                        }
+                    } else {
+                        phoneDisplay = phone;
+                    }
+                    return `
+                        <div class="profile-info-item">
+                            <div class="profile-info-label">Telefone ${index === 0 ? 'Principal' : `Adicional ${index}`}</div>
+                            <div class="profile-info-value">${phoneDisplay}</div>
+                        </div>
+                    `;
+                }).join('');
+            } else {
+                phonesHTML = `
+                    <div class="profile-info-item">
+                        <div class="profile-info-label">Telefone</div>
+                        <div class="profile-info-value" style="color: #999;">Não cadastrado</div>
+                    </div>
+                `;
+            }
+            
+            // Estado da senha (mostrar/ocultar)
+            let passwordHTML = '';
+            if (password) {
+                passwordHTML = `
+                    <div class="profile-info-item">
+                        <div class="profile-info-label">Senha</div>
+                        <div class="profile-info-value password-container">
+                            <span class="password-display" id="passwordDisplay">••••••••••••</span>
+                            <button class="btn-show-password" id="showPasswordBtn" onclick="togglePasswordVisibility()">
+                                👁️ Mostrar
+                            </button>
+                        </div>
+                    </div>
+                `;
+                // Armazenar senha para exibição
+                window.userPassword = password;
+            } else {
+                passwordHTML = `
+                    <div class="profile-info-item">
+                        <div class="profile-info-label">Senha</div>
+                        <div class="profile-info-value" style="color: #999;">Não disponível</div>
+                    </div>
+                `;
+            }
+            
+            profileDiv.innerHTML = `
+                <div class="profile-card">
+                    <div class="profile-header">
+                        <h3>Informações Pessoais</h3>
+                    </div>
+                    <div class="profile-info">
+                        <div class="profile-info-item">
+                            <div class="profile-info-label">Nome Completo</div>
+                            <div class="profile-info-value">${name}</div>
+                        </div>
+                        <div class="profile-info-item">
+                            <div class="profile-info-label">E-mail</div>
+                            <div class="profile-info-value">${email}</div>
+                        </div>
+                        ${phonesHTML}
+                        ${passwordHTML}
+                    </div>
+                </div>
+            `;
+        }
+        
+        function togglePasswordVisibility() {
+            const passwordDisplay = document.getElementById('passwordDisplay');
+            const showPasswordBtn = document.getElementById('showPasswordBtn');
+            
+            if (!passwordDisplay || !showPasswordBtn) return;
+            
+            if (passwordDisplay.textContent === '••••••••••••') {
+                // Mostrar senha
+                passwordDisplay.textContent = window.userPassword || 'Não disponível';
+                showPasswordBtn.textContent = '🙈 Ocultar';
+            } else {
+                // Ocultar senha
+                passwordDisplay.textContent = '••••••••••••';
+                showPasswordBtn.textContent = '👁️ Mostrar';
+            }
+        }
+        
+        function loadSubscriptionDetails() {
+            const subscriptionDiv = document.getElementById('subscriptionDetails');
+            if (!subscriptionDiv) return;
+            
+            const activationDate = userData.activationDate 
+                ? new Date(userData.activationDate).toLocaleDateString('pt-BR', {
+                    day: '2-digit',
+                    month: 'long',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                })
+                : 'Não ativado';
+            
+            // Formatar datas da viagem se for Concierge
+            let tripDatesHTML = '';
+            if (userData.plan.type === 'concierge' && userData.conciergeInfo) {
+                const tripStart = new Date(userData.conciergeInfo.tripDateStart);
+                const tripEnd = new Date(userData.conciergeInfo.tripDateEnd);
+                const formattedStart = tripStart.toLocaleDateString('pt-BR', {
+                    day: '2-digit',
+                    month: 'long',
+                    year: 'numeric'
+                });
+                const formattedEnd = tripEnd.toLocaleDateString('pt-BR', {
+                    day: '2-digit',
+                    month: 'long',
+                    year: 'numeric'
+                });
+                tripDatesHTML = `
+                    <div style="background: rgba(75, 63, 114, 0.1); padding: 1rem; border-radius: 8px; margin-top: 1rem; border-left: 4px solid var(--roxo-magico);">
+                        <strong style="color: var(--azul-profundo); display: block; margin-bottom: 0.5rem;">📅 Datas da Viagem:</strong>
+                        <div style="color: #555;">
+                            ${formattedStart} até ${formattedEnd}
+                        </div>
+                        <div style="color: #666; font-size: 0.9rem; margin-top: 0.5rem;">
+                            Esta assinatura é referente a esta viagem específica.
+                        </div>
+                    </div>
+                `;
+            }
+            
+            subscriptionDiv.innerHTML = `
+                <div style="background: #f8f9fa; padding: 2rem; border-radius: 12px;">
+                    <h3 style="margin-bottom: 1.5rem; color: var(--azul-profundo);">Detalhes da Assinatura</h3>
+                    <div style="display: grid; gap: 1rem;">
+                        <div>
+                            <strong>Plano:</strong> ${userData.plan.name}
+                        </div>
+                        <div>
+                            <strong>Valor:</strong> R$ ${userData.plan.price.toFixed(2)}${userData.plan.type === 'concierge' ? ' por viagem' : '/mês'}
+                        </div>
+                        <div>
+                            <strong>Data de Ativação:</strong> ${activationDate}
+                        </div>
+                        <div>
+                            <strong>Status:</strong> <span style="color: #059669; font-weight: 600;">Ativo</span>
+                        </div>
+                        ${userData.plan.type === 'alerts' ? `
+                            <div>
+                                <strong>Alertas Disponíveis:</strong> ${userData.plan.alerts}
+                            </div>
+                        ` : ''}
+                    </div>
+                    ${tripDatesHTML}
+                </div>
+            `;
+        }
+        
+        // ============================================
+        // ALERT ACTIONS
+        // ============================================
+        
+        async function pauseAlert(alertId) {
+            const confirmed = await customConfirm('Tem certeza que deseja pausar este alerta?', 'Pausar Alerta');
+            if (!confirmed) return;
+            
+            const alert = userData.alerts.find(a => a.id === alertId);
+            if (alert) {
+                alert.status = 'paused';
+                saveUserData(userData);
+                loadAlerts();
+                loadPlanSpecificContent();
+                customAlert('Alerta pausado com sucesso!', 'Sucesso');
+            }
+        }
+        
+        async function resumeAlert(alertId) {
+            const alert = userData.alerts.find(a => a.id === alertId);
+            if (alert) {
+                alert.status = 'active';
+                saveUserData(userData);
+                loadAlerts();
+                loadPlanSpecificContent();
+                customAlert('Alerta retomado com sucesso!', 'Sucesso');
+            }
+        }
+        
+        async function cancelAlert(alertId) {
+            const confirmed = await customConfirm('Tem certeza que deseja cancelar este alerta? Esta ação não pode ser desfeita.', 'Cancelar Alerta');
+            if (!confirmed) return;
+            
+            const alert = userData.alerts.find(a => a.id === alertId);
+            if (alert) {
+                alert.status = 'cancelled';
+                saveUserData(userData);
+                loadAlerts();
+                loadPlanSpecificContent();
+                customAlert('Alerta cancelado com sucesso!', 'Sucesso');
+            }
+        }
+        
+        // ============================================
+        // NAVIGATION
+        // ============================================
+        
+        function showSection(sectionId) {
+            // Esconder todas as seções
+            document.querySelectorAll('.portal-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Remover active de todos os links
+            document.querySelectorAll('.portal-menu a').forEach(link => {
+                link.classList.remove('active');
+            });
+            
+            // Mostrar seção selecionada
+            const section = document.getElementById('section-' + sectionId);
+            if (section) {
+                section.classList.add('active');
+            }
+            
+            // Carregar conteúdo específico da seção se necessário
+            if (sectionId === 'profile') {
+                loadProfile();
+            }
+            
+            // Adicionar active ao link clicado
+            event.target.classList.add('active');
+        }
+        
+        async function logout() {
+            const confirmed = await customConfirm('Tem certeza que deseja sair?', 'Sair');
+            if (confirmed) {
+                localStorage.removeItem('dineMouse_email');
+                window.location.href = 'index.html';
+            }
+        }
+        
+        // Fechar modal de ativação ao clicar fora
+        document.addEventListener('DOMContentLoaded', () => {
+            const activationModal = document.getElementById('activationModal');
+            if (activationModal) {
+                activationModal.addEventListener('click', (e) => {
+                    if (e.target === activationModal) {
+                        // Não permitir fechar clicando fora - deve ativar o serviço
+                        return;
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

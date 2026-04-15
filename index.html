@@ -1,0 +1,1928 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Dine Mouse - Concierge gastronômico especializado em reservas de restaurantes nos parques temáticos de Orlando e Paris. As mesas mais disputadas, sem stress.">
+    <title>Dine Mouse - Reservas nos restaurantes mais disputados da Disney sem stress e sem frustração</title>
+    <link rel="icon" type="image/png" href="favicon.png" sizes="512x512">
+    <link rel="apple-touch-icon" href="favicon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Ajustes mobile para estilos inline do index.html */
+        @media (max-width: 768px) {
+            /* Botões de teste no modal de login */
+            .login-test-buttons-container {
+                flex-direction: column !important;
+                gap: 0.75rem !important;
+            }
+            
+            .login-test-button {
+                width: 100% !important;
+                min-width: auto !important;
+                padding: 0.875rem 1.25rem !important;
+                font-size: 0.875rem !important;
+            }
+            
+            /* Textos do modal de login */
+            .login-help-section p {
+                font-size: 0.875rem !important;
+                line-height: 1.6 !important;
+            }
+            
+            .login-help-section .test-account-note {
+                font-size: 0.8rem !important;
+            }
+            
+            /* Ajustes para textos inline nos modais */
+            .payment-step h3 {
+                font-size: 1.25rem !important;
+                margin-bottom: 1.25rem !important;
+            }
+            
+            .payment-step p,
+            .payment-step-hint {
+                font-size: 0.875rem !important;
+                line-height: 1.6 !important;
+            }
+            
+            /* Ajustes para seção de ajuda/contato */
+            .help-contact-form .form-row {
+                flex-direction: column !important;
+                gap: 1rem !important;
+            }
+            
+            .help-contact-form .form-group {
+                width: 100% !important;
+            }
+            
+            /* Ajustes para radio buttons em mobile */
+            .radio-group {
+                gap: 0.75rem !important;
+            }
+            
+            .radio-label {
+                padding: 0.875rem !important;
+                font-size: 0.875rem !important;
+            }
+            
+            /* Ajustes para selects e inputs */
+            .help-contact-form select,
+            .help-contact-form input,
+            .help-contact-form textarea {
+                font-size: 1rem !important;
+                padding: 0.875rem 1rem !important;
+                min-height: 44px !important;
+            }
+            
+            /* Ajustes para botão de submit */
+            .help-submit-btn {
+                width: 100% !important;
+                padding: 1rem 1.5rem !important;
+                font-size: 1rem !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">
+                <a href="#home" class="logo-link" onclick="scrollToTop(); return false;">
+                    <span class="logo-text">Dine Mouse</span>
+                </a>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="#problema">Como funciona</a></li>
+                <li><a href="#planos">Planos</a></li>
+                <li><a href="#parques">Parques</a></li>
+                <li><a href="#faq">FAQ</a></li>
+                <li><a href="#ajuda">Ajuda</a></li>
+                <li><a href="#" onclick="openB2BModal(); return false;">Agências de Viagens</a></li>
+                <li><a href="#contato">Contato</a></li>
+            </ul>
+            <button class="cta-nav" onclick="openLoginModal()">Portal do cliente</button>
+            <button class="menu-toggle" aria-label="Menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <canvas id="particles-canvas"></canvas>
+        <div class="hero-content">
+            <div class="container">
+                <h1 class="hero-title">
+                    As mesas mais disputadas da Walt Disney World e Disneyland,<br>
+                    <span class="gradient-text">sem stress e sem frustração.</span>
+                </h1>
+                <p class="hero-subtitle">
+                    Receba alertas instantâneos por e-mail ou WhatsApp sempre que surgir disponibilidade nos restaurantes mais disputados.
+                    Ou, se preferir, deixe tudo conosco: 
+                    <strong class="highlight">nosso concierge gastronômico faz a reserva por você.</strong><br><br>
+                  
+                    Você aproveita a magia.<br>
+                    <strong>Nós cuidamos das reservas.</strong>
+                  </p>
+                <div class="hero-cta">
+                    <a href="#alertas" class="btn-primary">
+                        <span>Quero receber alertas</span>
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                            <path d="M7.5 15L12.5 10L7.5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </a>
+                    <a href="#concierge" class="btn-primary">
+                        <span>Quero que vocês reservem</span>
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                            <path d="M7.5 15L12.5 10L7.5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="scroll-indicator">
+            <div class="mouse"></div>
+        </div>
+    </section>
+
+    <!-- Problema Section -->
+    <section class="problema" id="problema">
+        <div class="container">
+            <div class="problema-header-clean">
+                <h2 class="section-title">Por que conseguir reservas na Disney é tão difícil?</h2>
+            </div>
+            
+            <div class="problema-grid-clean">
+                <div class="problema-item-clean" data-aos="fade-up" data-delay="0">
+                    <h3>Restaurantes esgotam em minutos</h3>
+                    <p>As mesas mais disputadas desaparecem em segundos logo após a abertura das reservas.</p>
+                </div>
+
+                <div class="problema-item-clean" data-aos="fade-up" data-delay="100">
+                    <h3>Sistema confuso</h3>
+                    <p>O processo de reserva é pouco intuitivo e pode ser frustrante, principalmente em outro idioma.</p>
+                </div>
+
+                <div class="problema-item-clean" data-aos="fade-up" data-delay="200">
+                    <h3>Cancelamentos imprevisíveis</h3>
+                    <p>Mesas surgem e somem sem aviso, exigindo atenção constante para não perder oportunidades.</p>
+                </div>
+
+                <div class="problema-item-clean" data-aos="fade-up" data-delay="300">
+                    <h3>Planejamento errado quebra a experiência</h3>
+                    <p>Perder uma reserva especial pode comprometer momentos únicos da sua viagem.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Solução Section -->
+    <section class="solucao" id="solucao">
+        <div class="container">
+            <h2 class="section-title">A Dine Mouse cuida de cada detalhe por você</h2>
+            <div class="solucao-grid">
+                <div class="solucao-card" data-aos="fade-up" data-delay="0">
+                    <div class="solucao-icon">
+                        <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+                            <circle cx="24" cy="24" r="20" stroke="currentColor" stroke-width="2"/>
+                            <path d="M24 12V24L32 28" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                    </div>
+                    <h3>Monitoramos reservas e cancelamentos</h3>
+                    <p>Acompanhamos as disponibilidades 24/7 e agimos no momento certo para garantir sua mesa.</p>
+                </div>
+                <div class="solucao-card" data-aos="fade-up" data-delay="100">
+                    <div class="solucao-icon">
+                        <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+                            <path d="M24 8L30 18H40L32 26L34 36L24 30L14 36L16 26L8 18H18L24 8Z" stroke="currentColor" stroke-width="2" fill="currentColor"/>
+                        </svg>
+                    </div>
+                    <h3>Reservamos nos melhores horários</h3>
+                    <p>Sabemos exatamente quando reservar cada restaurante para garantir a melhor experiência.</p>
+                </div>
+                <div class="solucao-card" data-aos="fade-up" data-delay="200">
+                    <div class="solucao-icon">
+                        <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+                            <path d="M16 24L22 30L32 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <circle cx="24" cy="24" r="20" stroke="currentColor" stroke-width="2"/>
+                        </svg>
+                    </div>
+                    <h3>Ajustamos conforme o seu roteiro</h3>
+                    <p>Adaptamos cada reserva ao seu planejamento para que tudo flua sem imprevistos.</p>
+                </div>
+                <div class="solucao-card" data-aos="fade-up" data-delay="300">
+                    <div class="solucao-icon">
+                        <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+                            <path d="M24 16C20 16 16 18 16 22C16 26 20 28 24 28C28 28 32 26 32 22C32 18 28 16 24 16Z" stroke="currentColor" stroke-width="2"/>
+                            <path d="M24 28V36" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            <circle cx="24" cy="24" r="20" stroke="currentColor" stroke-width="2"/>
+                        </svg>
+                    </div>
+                    <h3>Atendimento humano em português</h3>
+                    <p>Uma equipe dedicada, que fala sua língua e entende exatamente o que você precisa.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Parques Section -->
+    <section class="parques" id="parques">
+        <div class="container">
+            <h2 class="section-title">Onde cuidamos das suas reservas</h2>
+            <p class="section-subtitle">Somos especialistas nos restaurantes mais disputados dos parques.</p>
+            
+            <div class="parques-container">
+                <!-- América do Norte -->
+                <div class="parques-categoria" data-aos="fade-up" data-delay="0">
+                    <h3 class="categoria-titulo">América do Norte</h3>
+                    <div class="parques-lista">
+                        <div class="parque-item-lista">
+                            <span class="parque-nome">Walt Disney World</span>
+                        </div>
+                        <div class="parque-item-lista">
+                            <span class="parque-nome">Disneyland</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Internacional -->
+                <div class="parques-categoria" data-aos="fade-up" data-delay="100">
+                    <h3 class="categoria-titulo">Internacional</h3>
+                    <div class="parques-lista">
+                        <div class="parque-item-lista">
+                            <span class="parque-nome">Disneyland Paris</span>
+                        </div>
+                        <div class="parque-item-lista">
+                            <span class="parque-nome">Tokyo Disney Resort</span>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+                <br><br><p class="section-subtitle">Em breve, também atenderemos os parques de Hong Kong e Shanghai.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Planos Section -->
+    <section class="planos" id="planos">
+        <div class="container">
+            <h2 class="section-title">Escolha o plano ideal para a sua viagem</h2>
+            <p class="section-subtitle">Compare os planos e escolha a forma mais fácil de garantir suas reservas.</p>
+
+             <!-- Comparação Alertas vs Concierge -->
+             <div class="comparacao-secao" data-aos="fade-up" data-delay="250">
+                <div class="comparacao-grid">
+                    <a href="#alertas" class="comparacao-card alertas">
+                        <div class="comparacao-header">
+                            <h4>Alertas</h4>
+                        </div>
+                        <ul class="comparacao-lista">
+                            <li>Você recebe alertas de disponibilidade</li>
+                            <li>Mais autonomia e flexibilidade</li>
+                            <li>Reservas feitas por você</li>
+                            <li class="destaque">Mais controle, mais flexibilidade.</li>
+                        </ul>
+                    </a>
+                    <a href="#concierge" class="comparacao-card concierge-diff">
+                        <div class="comparacao-header">
+                            <h4>Concierge</h4>
+                        </div>
+                        <ul class="comparacao-lista">
+                            <li>Você não precisa acompanhar nada</li>
+                            <li>Monitoramos as reservas 24/7</li>
+                            <li>Fazemos a reserva por você no melhor horário</li>
+                            <li class="destaque">Experiência 100% cuidada do início ao fim</li>
+                        </ul>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Regras Importantes -->
+            <div class="regras-importantes" data-aos="fade-up" data-delay="0">
+                <div class="regra-box">
+                    <h4>Como funciona um alerta?</h4>
+                    <p><strong>1 alerta = 1 restaurante + 1 data + 1 tamanho de grupo</strong></p>
+                    <p>O alerta permanece ativo enquanto você desejar. <br>
+                        Você pode editar, pausar ou cancelar a qualquer momento.</p>
+                </div>
+                <div class="regra-box">
+                    <h4>Importante saber</h4>
+                    <p>O serviço de alertas <strong>não realiza reservas</strong>,
+                        Ele envia notificações em tempo real sempre que surge disponibilidade.
+                        <br><br>
+                        O valor pago é pelo <strong>monitoramento ativo e contínuo</strong>, não pelo restaurante em si.</p>
+                </div>
+                <div class="regra-box"> 
+                    <h4>Transparência Importante</h4>
+                    <p>No serviço de concierge, <strong>não garantimos disponibilidade</strong>,
+                        mas assumimos monitoramento ativo e ação imediata sempre que surgir uma oportunidade.
+                        
+                        A disponibilidade depende exclusivamente de cada restaurante.
+                        <br><br>
+                        O valor pago é pela <strong>execução, dedicação e tranquilidade</strong> não pelo restaurante em si.</p>
+                </div>
+            </div>
+
+            <!-- Planos B2C - Cliente Final -->
+            <div id="alertas" class="planos-secao" data-aos="fade-up" data-delay="100">
+                <div class="planos-header-magico">
+                    <h3 class="secao-titulo">Escolha Seu Plano de Alertas</h3>
+                    <p class="secao-subtitulo">Preços simples e acessíveis para sua viagem dos sonhos.</p>
+                </div>
+                <div class="planos-container-premium">
+                    <!-- Plano Individual -->
+                    <div class="plano-card-luxo individual" data-aos="fade-up" data-delay="0">
+                        <div class="plano-glow individual-glow"></div>
+                        <div class="plano-content">
+                            <div class="plano-header-luxo">
+                                <h3 class="plano-titulo-luxo">Individual</h3>
+                                <p class="plano-subtitle-luxo">Pague uma taxa única por cada alerta.</p>
+                            </div>
+                            
+                            <div class="plano-preco-luxo">
+                                <p class="preco-nota-luxo">começando em</p>
+                                <div class="preco-wrapper">
+                                    <span class="preco-simbolo">R$</span>
+                                    <span class="preco-valor-luxo">15,00</span>
+                                </div>
+                                <p class="preco-unidade-luxo">por alerta</p>
+                                <p class="preco-nota-luxo">Preço ajustado conforme datas e restaurantes</p>
+
+                                <!-- Botão que abre o modal de pagamento -->
+                                <br><button class="btn-plano-luxo btn-individual-luxo" onclick="openPaymentModal()">
+                                    <span>Criar Alerta</span>
+                                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                        <path d="M7.5 15L12.5 10L7.5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                </button>
+                            </div>
+                            
+                            <div class="plano-features-luxo">
+                                <div class="feature-item-luxo">
+                                    <div class="feature-icon">✓</div>
+                                    <span>Ideal para 1 ou 2 alertas de restaurantes</span>
+                                </div>
+                                <div class="feature-item-luxo">
+                                    <div class="feature-icon">✓</div>
+                                    <span>Pagamento único e simples</span>
+                                </div>
+                                <div class="feature-item-luxo">
+                                    <div class="feature-icon">✓</div>
+                                    <span>Sem compromisso recorrente</span>
+                                </div>
+                                <div class="feature-item-luxo">
+                                    <div class="feature-icon">✓</div>
+                                    <span>Notificação via e-mail</span>
+                                </div>
+                                <div class="feature-item-luxo disabled">
+                                    <div class="feature-icon-x">✗</div>
+                                    <span>Notificação via WhatsApp contratada separadamente</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Plano Subscrição Mensal (Featured) -->
+                    <div class="plano-card-luxo subscription featured" data-aos="fade-up" data-delay="100">
+                        <div class="plano-glow subscription-glow"></div>
+                        <div class="plano-badge-luxo">
+                            <span>Mais Popular</span>
+                        </div>
+                        <div class="plano-content">
+                            <div class="plano-header-luxo">
+                                <h3 class="plano-titulo-luxo">Subscrição Mensal</h3>
+                                <p class="plano-subtitle-luxo">Pague uma taxa mensal para receber alertas.</p>
+                            </div>
+                            
+                            <div class="plano-preco-luxo">
+                                <div class="dropdown-wrapper-luxo">
+                                    <p class="preco-nota-luxo">começando em</p>
+                                    <div class="preco-wrapper">
+                                        <span class="preco-simbolo">R$</span>
+                                        <span class="preco-valor-luxo">49,90</span>
+                                        </div>
+                                        <p class="preco-unidade-luxo">por mês</p>
+                                    
+                                    <p class="preco-nota-luxo">Vários níveis de planos disponíveis</p>
+                                    <br><button class="btn-plano-luxo btn-subscription-luxo" onclick="openSubscriptionModal()">
+                                        <span>Assinar Agora</span>
+                                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                            <path d="M7.5 15L12.5 10L7.5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                    </button>
+                                    <!-- <div class="dropdown-container">
+                                        <select id="alertasSelect" class="alertas-dropdown-luxo" onchange="updateSubscriptionPrice()">
+                                            <option value="19">5 alertas - R$ 19/mês</option>
+                                            <option value="49">15 alertas - R$ 49/mês</option>
+                                            <option value="79" selected>25 alertas - R$ 79/mês</option>
+                                            <option value="99">35 alertas - R$ 99/mês</option>
+                                            <option value="139">50 alertas - R$ 139/mês</option>
+                                        </select>
+                                    </div> -->
+                                </div>
+                            </div>
+                            <div class="plano-features-luxo">
+                                <div class="feature-item-luxo">
+                                    <div class="feature-icon">✓</div>
+                                    <span>Perfeito para 5+ restaurantes</span>
+                                </div>
+                                <div class="feature-item-luxo">
+                                    <div class="feature-icon">✓</div>
+                                    <span>Gerencie alertas facilmente</span>
+                                </div>
+                                <div class="feature-item-luxo">
+                                    <div class="feature-icon">✓</div>
+                                    <span>Total controle e flexibilidade</span>
+                                </div>
+                                <div class="feature-item-luxo">
+                                    <div class="feature-icon">✓</div>
+                                    <span>Notificação via e-mail</span>
+                                </div>
+                                <div class="feature-item-luxo disabled">
+                                    <div class="feature-icon-x">✗</div>
+                                    <span>Notificação via WhatsApp contratada separadamente</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Plano Por Viagem
+                    <div class="plano-card-luxo viagem" data-aos="fade-up" data-delay="200">
+                        <div class="plano-glow viagem-glow"></div>
+                        <div class="plano-badge-luxo entrada-badge">
+                            <span>Porta de Entrada</span>
+                        </div>
+                        <div class="plano-content">
+                            <div class="plano-icon-wrapper">
+                                <div class="plano-icon-magico">🎯</div>
+                            </div>
+                            <div class="plano-header-luxo">
+                                <h3 class="plano-titulo-luxo">Por Viagem</h3>
+                                <p class="plano-subtitle-luxo">Solução perfeita para uma única viagem</p>
+                            </div>
+                            
+                            <div class="plano-preco-luxo">
+                                <div class="preco-wrapper">
+                                    <span class="preco-simbolo">R$</span>
+                                    <span class="preco-valor-luxo">89</span>
+                                </div>
+                                <p class="preco-unidade-luxo">válido por 30 dias</p>
+                                <p class="preco-alertas-luxo">até 10 alertas ativos</p>
+                            </div>
+                            
+                            <div class="plano-features-luxo">
+                                <div class="feature-item-luxo">
+                                    <div class="feature-icon">✓</div>
+                                    <span>Sem renovação automática</span>
+                                </div>
+                                <div class="feature-item-luxo">
+                                    <div class="feature-icon">✓</div>
+                                    <span>Alertas em tempo real</span>
+                                </div>
+                                <div class="feature-item-luxo">
+                                    <div class="feature-icon">✓</div>
+                                    <span>Edite durante a vigência</span>
+                                </div>
+                                <div class="feature-item-luxo disabled">
+                                    <div class="feature-icon-x">✗</div>
+                                    <span class="feature-disabled">Sem prioridade • Sem WhatsApp/SMS</span>
+                                </div>
+                            </div> -->
+                            
+                            <!-- <button class="btn-plano-luxo btn-viagem-luxo" onclick="scrollToCTA()">
+                                <span>Começar Agora</span>
+                                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                    <path d="M7.5 15L12.5 10L7.5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div> -->
+                </div>
+            </div>
+
+            <!-- Extras / Upsells -->
+            <div class="extras-secao" data-aos="fade-up" data-delay="200">
+                <h3 class="secao-titulo">Extras Disponíveis</h3>
+                <div class="extras-grid">
+                    
+                    <div class="extra-item">
+                        <div class="extra-badge">Mais Popular</div>
+                        <div class="extra-icon">⏰</div>
+                        <h4>Notificação WhatsApp</h4>
+                        <p class="extra-preco">R$ 8 / restaurante</p>
+                        <p class="extra-desc">Receba alertas instantâneos no WhatsApp e aja mais rápido</p>
+                    </div>
+                    <div class="extra-item">
+                        <div class="extra-icon">📱</div>
+                        <h4>Telefones adicionais</h4>
+                        <p class="extra-preco">R$ 5 / por telefone</p>
+                        <p class="extra-desc">Envie alertas para mais de um número</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Plano Concierge Premium -->
+            <div id="concierge" class="concierge-secao" data-aos="fade-up" data-delay="300">
+                <div class="concierge-header">
+                    <div class="concierge-badge-premium">Concierge Dedicado</div>
+                    <h2 class="concierge-titulo">Aproveite sem se preocupar com reservas</h2>
+                    <p class="concierge-subtitulo">Nós monitoramos. Nós reservamos. Você aproveita.</p>
+                    <div class="concierge-copy">
+                        <p class="copy-magico">Enquanto você vive a magia da sua viagem, nós cuidamos de todas as reservas.</p>
+                        <p class="copy-tranquilo">Sem stress. Sem perder horários. Sem precisar acordar de madrugada.</p>
+                        <p class="copy-diferencial">Esse plano é para quem valoriza tempo, conforto e tranquilidade.</p>
+                    </div>
+                </div>
+
+                <div class="concierge-grid">
+                    <!-- Concierge Essencial -->
+                    <div class="concierge-card essencial" data-aos="fade-up" data-delay="0">
+                        <div class="concierge-card-header">
+                            <h3>Concierge Essencial</h3>
+                            <p class="concierge-perfil">Casais • Pessoas ocupadas • Primeira viagem à Disney</p>
+                        </div>
+                        
+                        <div class="concierge-preco">
+                            <p class="preco-valor">R$ 599</p>
+                            <p class="preco-unidade">por viagem</p>
+                        </div>
+                        
+                        <div class="concierge-inclui">
+                            <h4>Inclui:</h4>
+                            <ul>
+                                <li>Até 3 restaurantes</li>
+                                <li>Monitoramento contínuo</li>
+                                <li>Reserva feita pela nossa equipe</li>
+                                <li>Ajustes básicos de horário</li>
+                                <li>Aviso imediato após confirmação</li>
+                            </ul>
+                        </div>
+                        
+                        <button class="btn-concierge btn-essencial" onclick="openConciergeModal('essencial', 599)">Contratar Agora</button>
+                    </div>
+
+                    <!-- Concierge Completo (Recomendado) -->
+                    <div class="concierge-card completo featured" data-aos="fade-up" data-delay="100">
+                        <div class="concierge-card-header">
+                            <h3>Concierge Completo</h3>
+                            <p class="concierge-perfil">O equilíbrio perfeito entre controle, conforto e tranquilidade</p>
+                        </div>
+                        
+                        <div class="concierge-preco">
+                            <p class="preco-valor">R$ 949</p>
+                            <p class="preco-unidade">por viagem</p>
+                        </div>
+                        
+                        <div class="concierge-inclui">
+                            <h4>Inclui:</h4>
+                            <ul>
+                                <li>Até 6 restaurantes</li>
+                                <li>Monitoramento total durante a viagem</li>
+                                <li>Reserva + otimização de horários</li>
+                                <li>Ajustes conforme o roteiro</li>
+                                <li>Comunicação ativa via WhatsApp</li>
+                                <li>Substituição de restaurantes se necessário</li>
+                            </ul>
+                        </div>
+                        
+                        <button class="btn-concierge btn-completo-featured" onclick="openConciergeModal('completo', 949)">Contratar Agora</button>
+                    </div>
+
+                    <!-- Concierge Premium -->
+                    <div class="concierge-card premium" data-aos="fade-up" data-delay="200">
+                        <div class="concierge-card-header">
+                            <h3>Concierge Premium</h3>
+                            <p class="concierge-perfil">Prioridade máxima, atenção total e zero preocupações</p>
+                        </div>
+                        
+                        <div class="concierge-preco">
+                            <p class="preco-valor">R$ 1.499</p>
+                            <p class="preco-unidade">por viagem</p>
+                        </div>
+                        
+                        <div class="concierge-inclui">
+                            <h4>Inclui:</h4>
+                            <ul>
+                                <li>Restaurantes ilimitados durante a viagem</li>
+                                <li>Prioridade máxima</li>
+                                <li>Monitoramento antecipado</li>
+                                <li>Ajustes ilimitados</li>
+                                <li>Atendimento dedicado</li>
+                                <li>Ideal para datas críticas e restaurantes disputados</li>
+                                <li>Ideal para reservas de última hora</li>
+                            </ul>
+                        </div>
+                        
+                        <button class="btn-concierge btn-premium" onclick="openConciergeModal('premium', 1499)">Contratar Agora</button>
+                    </div>
+                </div>
+
+            <!-- Aviso Legal -->
+            <div class="aviso-legal" data-aos="fade-up" data-delay="400">
+                <p><strong>Importante:</strong> Serviço independente, sem vínculo com a Disney.
+                    O valor refere-se ao monitoramento ativo e à execução do serviço, não à reserva em si.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Prova de Valor Section -->
+    <!-- <section class="prova-valor">
+        <div class="container">
+            <div class="valor-grid">
+                <div class="valor-item" data-aos="fade-up" data-delay="0">
+                    <div class="valor-icon">⏱️</div>
+                    <h3>Economia de tempo</h3>
+                </div>
+                <div class="valor-item" data-aos="fade-up" data-delay="100">
+                    <div class="valor-icon">😌</div>
+                    <h3>Menos stress</h3>
+                </div>
+                <div class="valor-item" data-aos="fade-up" data-delay="200">
+                    <div class="valor-icon">✨</div>
+                    <h3>Mais experiências memoráveis</h3>
+                </div>
+                <div class="valor-item" data-aos="fade-up" data-delay="300">
+                    <div class="valor-icon">🎯</div>
+                    <h3>Serviço independente e especializado</h3>
+                </div>
+            </div>
+        </div>
+    </section> -->
+
+    <!-- Seção B2B
+            <div class="b2b-secao" data-aos="fade-up" data-delay="300">
+                <div class="b2b-box">
+                    <div class="b2b-content">
+                        <h3>Você é uma Agência ou Parceiro?</h3>
+                        <p>Temos planos especiais com condições diferenciadas para agências de viagem, operadoras e parceiros comerciais.</p>
+                        <ul class="b2b-beneficios">
+                            <li>✓ Planos com volume de alertas ampliado</li>
+                            <li>✓ Dashboard de gestão para múltiplos clientes</li>
+                            <li>✓ Suporte prioritário</li>
+                            <li>✓ Possibilidade de White Label</li>
+                            <li>✓ Condições especiais para parcerias</li>
+                        </ul>
+                        <button class="btn-b2b" onclick="scrollToCTA()">Acessar Área Exclusiva</button>
+                        <p class="b2b-nota">Cadastro de empresa necessário. Preços e condições disponíveis após validação.</p>
+                    </div>
+                </div>
+            </div> -->
+
+    <!-- Seção de Perguntas Frequentes -->
+    <section class="faq-section" id="faq">
+        <div class="container">
+            <div class="faq-header">
+                <h2 class="faq-title">Perguntas Frequentes</h2>
+                <p class="faq-subtitle">Tire suas dúvidas sobre o Dine Mouse</p>
+            </div>
+
+            <div class="faq-container">
+                <div class="faq-item">
+                    <button class="faq-question" onclick="toggleFaq(this)">
+                        <span>Como funciona o Dine Mouse?</span>
+                        <svg class="faq-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                            <path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                    <div class="faq-answer">
+                        <p>O Dine Mouse monitora automaticamente a disponibilidade de reservas em restaurantes e experiências da Disney (Walt Disney World, Disneyland e destinos internacionais).</p>
+                        <p>Você cria um alerta informando:</p>
+                        <ul>
+                            <li>Parque ou resort</li>
+                            <li>Restaurante(s) desejado(s)</li>
+                            <li>Data ou datas</li>
+                            <li>Tipo de refeição (café, almoço ou jantar)</li>
+                            <li>Número de pessoas</li>
+                        </ul>
+                        <p>A partir disso, o Dine Mouse passa a verificar 24 horas por dia, 7 dias por semana se surgirem novas vagas.</p>
+                        <p>Assim que uma reserva compatível for encontrada, você recebe uma notificação imediata por e-mail ou WhatsApp/SMS, com um link direto para concluir a reserva no site oficial da Disney.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" onclick="toggleFaq(this)">
+                        <span>O Dine Mouse faz a reserva por mim?</span>
+                        <svg class="faq-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                            <path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                    <div class="faq-answer">
+                        <p><strong>Depende do plano escolhido.</strong></p>
+                        <p>Plano Alerta:
+                            O Dine Mouse monitora a disponibilidade e avisa você assim que surge uma vaga.
+                            A reserva final é feita por você, usando sua conta Disney. <br><br>
+                            
+                            Plano Concierge:
+                            Nossa equipe cuida de todo o processo e realiza a reserva por você, conforme as preferências informadas.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" onclick="toggleFaq(this)">
+                        <span>Tenho garantia de conseguir a mesa?</span>
+                        <svg class="faq-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                            <path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                    <div class="faq-answer">
+                        <p><strong>Não é possível garantir a reserva.</strong></p>
+                        <p>As vagas liberadas podem ser disputadas por outros visitantes e podem desaparecer rapidamente após a notificação. Por isso, recomendamos agir o mais rápido possível ao receber o alerta.</p>
+                        <p>A boa notícia é que o Dine Mouse continua monitorando até o fim do período definido, enviando novas notificações sempre que surgirem outras oportunidades.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" onclick="toggleFaq(this)">
+                        <span>Se eu perder uma reserva, continuo recebendo alertas?</span>
+                        <svg class="faq-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                            <path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                    <div class="faq-answer">
+                        <p><strong>Sim.</strong></p>
+                        <p>Mesmo que você receba um alerta e não consiga concluir a reserva, o Dine Mouse continuará buscando novas vagas até:</p>
+                        <ul>
+                            <li>Você desativar o alerta manualmente, ou</li>
+                            <li>O período do alerta expirar</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" onclick="toggleFaq(this)">
+                        <span>Com que frequência receberei notificações?</span>
+                        <svg class="faq-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                            <path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Você receberá uma notificação sempre que uma nova reserva válida for encontrada.</p>
+                        <p>Para evitar excesso de mensagens:</p>
+                        <ul>
+                            <li>O Dine Mouse não envia alertas duplicados para o mesmo horário dentro de um intervalo curto.</li>
+                            <li>Apenas novas oportunidades relevantes geram notificação.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" onclick="toggleFaq(this)">
+                        <span>Quanto custa o Dine Mouse?</span>
+                        <svg class="faq-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                            <path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                    <div class="faq-answer">
+                        <p>O Dine Mouse oferece três formas de uso:</p>
+                        <p><strong>Alertas Avulsos</strong></p>
+                        <ul>
+                            <li>Pagamento único</li>
+                            <li>A partir de R$ 15,00 por alerta</li>
+                            <li>O valor varia conforme:
+                                <ul>
+                                    <li>Quantidade de dias monitorados</li>
+                                    <li>Antecedência em relação à data da reserva</li>
+                                </ul>
+                            </li>
+                            <li>Quanto mais tempo o alerta permanecer ativo, maior o valor e o preço é exibido de forma transparente antes da confirmação.</li>
+                        </ul>
+                        <p><strong>Planos de Assinatura</strong></p>
+                        <ul>
+                            <li>Cobrança mensal recorrente</li>
+                            <li>A partir de R$ 49,90 /mês</li>
+                            <li>Ideal para quem:
+                                <ul>
+                                    <li>Monitora vários restaurantes</li>
+                                    <li>Tem viagens longas</li>
+                                    <li>Faz mais de uma viagem por ano</li>
+                                </ul>
+                            </li>
+                            <li>Você pode trocar de plano ou cancelar a qualquer momento.</li>
+                        </ul>
+                        <p><strong>Plano Concierge</strong></p>
+                        <ul>
+                            <li>Cobrança única por viagem</li>
+                            <li>A partir de R$ 599,00</li>
+                            <li>Ideal para quem quer garantir uma mesa em um restaurante específico da Disney. <br><br>
+                                Não é possível garantir a reserva, mas nossa equipe cuida de todo o processo e realiza a reserva por você, conforme as preferências informadas.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" onclick="toggleFaq(this)">
+                        <span>Quando as reservas da Disney costumam abrir?</span>
+                        <svg class="faq-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                            <path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                    <div class="faq-answer">
+                        <p>As reservas de restaurantes da Disney geralmente abrem com 60 dias de antecedência.</p>
+                        <p>Se o restaurante estiver esgotado quando você tentar reservar, basta criar um alerta no Dine Mouse para ser avisado automaticamente caso surjam cancelamentos ou novas liberações.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" onclick="toggleFaq(this)">
+                        <span>Posso desativar um alerta depois de conseguir minha reserva?</span>
+                        <svg class="faq-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                            <path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                    <div class="faq-answer">
+                        <p><strong>Sim.</strong></p>
+                        <p>Você pode:</p>
+                        <ul>
+                            <li>Desativar alertas na área Meus Alertas</li>
+                            <li>Encerrar o monitoramento a qualquer momento</li>
+                        </ul>
+                        <p>Se estiver recebendo notificações por WhatsApp, também é possível responder:</p>
+                        <ul>
+                            <li><strong>STOP</strong> para interromper mensagens</li>
+                            <li><strong>START</strong> para voltar a recebê-las</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" onclick="toggleFaq(this)">
+                        <span>Por que o valor do alerta muda conforme escolho as datas?</span>
+                        <svg class="faq-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                            <path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                    <div class="faq-answer">
+                        <p>O preço do alerta é calculado com base no tempo total de monitoramento.</p>
+                        <p><strong>Exemplo:</strong></p>
+                        <ul>
+                            <li>Monitorar uma data distante mantém o alerta ativo por mais dias</li>
+                            <li>Isso aumenta o custo, pois o sistema ficará verificando por mais tempo</li>
+                        </ul>
+                        <p>O período ativo e o valor final são sempre mostrados antes da compra.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" onclick="toggleFaq(this)">
+                        <span>Onde encontro meus recibos?</span>
+                        <svg class="faq-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                            <path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Após cada compra:</p>
+                        <ul>
+                            <li>Você recebe o recibo automaticamente por e-mail</li>
+                            <li>Além disso, todos os recibos ficam disponíveis na área <strong>Meus Alertas</strong>, para download a qualquer momento.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" onclick="toggleFaq(this)">
+                        <span>Posso pedir reembolso?</span>
+                        <svg class="faq-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                            <path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                    <div class="faq-answer">
+                        <p><strong>Não.</strong></p>
+                        <p>O Dine Mouse oferece serviços digitais de monitoramento que são iniciados imediatamente após a compra. Por esse motivo, não realizamos reembolsos após a ativação do alerta, da assinatura ou do plano Concierge, salvo quando exigido por lei.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" onclick="toggleFaq(this)">
+                        <span>Como faço para cancelar minha assinatura?</span>
+                        <svg class="faq-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                            <path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Se você tiver uma assinatura ativa:</p>
+                        <ol>
+                            <li>Faça login na sua conta</li>
+                            <li>Acesse <strong>Minha Assinatura</strong></li>
+                            <li>Clique em <strong>Cancelar Assinatura</strong></li>
+                        </ol>
+                        <p>A assinatura não possui fidelidade e pode ser cancelada quando quiser.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" onclick="toggleFaq(this)">
+                        <span>O Dine Mouse é afiliado à Disney?</span>
+                        <svg class="faq-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                            <path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                    <div class="faq-answer">
+                        <p><strong>Não.</strong></p>
+                        <p>O Dine Mouse não possui qualquer vínculo, parceria ou endosso da The Walt Disney Company.</p>
+                        <p>Walt Disney World, Disneyland e demais marcas mencionadas são marcas registradas da Disney Enterprises, Inc. Os nomes são usados apenas para fins informativos.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" onclick="toggleFaq(this)">
+                        <span>Ainda tenho dúvidas. Como entro em contato?</span>
+                        <svg class="faq-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                            <path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Se precisar de ajuda, entre em contato com nossa equipe pela <a href="#ajuda" class="faq-link">página Contato</a>.</p>
+                        <p>Responderemos o mais rápido possível.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Seção de Ajuda / Contato -->
+    <section class="help-section" id="ajuda">
+        <div class="container">
+            <div class="help-header">
+                <h2 class="help-title">Você tem alguma dúvida? Nós podemos ajudar!</h2>
+                <a href="#" class="help-client-link" onclick="openClientPortal(); return false;">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <path d="M6 12L10 8L6 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span>Já é nosso cliente? <strong>Acesse aqui o Portal Dine Mouse</strong> para falar com o Time de Suporte.</span>
+                </a>
+                <p class="help-intro">Quer saber mais sobre nossos serviços? Preencha o formulário e entraremos em contato.</p>
+            </div>
+
+            <form id="helpContactForm" class="help-contact-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="helpFirstName">Nome:*</label>
+                        <input type="text" id="helpFirstName" name="firstName" placeholder="Digite seu nome" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="helpLastName">Sobrenome:*</label>
+                        <input type="text" id="helpLastName" name="lastName" placeholder="Digite seu sobrenome" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="helpEmail">E-mail:*</label>
+                        <input type="email" id="helpEmail" name="email" placeholder="Digite seu e-mail" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="helpCountry">País/Região:*</label>
+                        <select id="helpCountry" name="country" required>
+                            <option value="">Selecione</option>
+                            <option value="Brazil">🇧🇷 Brasil</option>
+                            <option value="United States">🇺🇸 Estados Unidos</option>
+                            <option value="United Kingdom">🇬🇧 Reino Unido</option>
+                            <option value="France">🇫🇷 França</option>
+                            <option value="Germany">🇩🇪 Alemanha</option>
+                            <option value="Italy">🇮🇹 Itália</option>
+                            <option value="Spain">🇪🇸 Espanha</option>
+                            <option value="Canada">🇨🇦 Canadá</option>
+                            <option value="Mexico">🇲🇽 México</option>
+                            <option value="Argentina">🇦🇷 Argentina</option>
+                            <option value="Chile">🇨🇱 Chile</option>
+                            <option value="Colombia">🇨🇴 Colômbia</option>
+                            <option value="Japan">🇯🇵 Japão</option>
+                            <option value="China">🇨🇳 China</option>
+                            <option value="Australia">🇦🇺 Austrália</option>
+                            <option value="Portugal">🇵🇹 Portugal</option>
+                            <option value="Other">Outro</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="helpPhoneCountry">Telefone:*</label>
+                        <div class="phone-input-wrapper">
+                            <select id="helpPhoneCountry" name="phoneCountry" required>
+                                <option value="+55">🇧🇷 +55</option>
+                                <option value="+1">🇺🇸 +1</option>
+                                <option value="+44">🇬🇧 +44</option>
+                                <option value="+33">🇫🇷 +33</option>
+                                <option value="+49">🇩🇪 +49</option>
+                                <option value="+39">🇮🇹 +39</option>
+                                <option value="+34">🇪🇸 +34</option>
+                                <option value="+1">🇨🇦 +1</option>
+                                <option value="+52">🇲🇽 +52</option>
+                                <option value="+54">🇦🇷 +54</option>
+                                <option value="+56">🇨🇱 +56</option>
+                                <option value="+57">🇨🇴 +57</option>
+                                <option value="+81">🇯🇵 +81</option>
+                                <option value="+86">🇨🇳 +86</option>
+                                <option value="+61">🇦🇺 +61</option>
+                                <option value="+351">🇵🇹 +351</option>
+                            </select>
+                            <input type="tel" id="helpPhone" name="phone" placeholder="(11) 99999-9999" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="helpTravelDate">Período da viagem (aproximado):</label>
+                        <input type="text" id="helpTravelDate" name="travelDate" placeholder="Ex: Janeiro 2025">
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <label class="form-section-label">Em qual situação você está?</label>
+                    <div class="radio-group">
+                        <label class="radio-label">
+                            <input type="radio" name="tripType" value="Estou planejando uma viagem para os parques temáticos" required>
+                            <span>Estou planejando uma viagem para os parques temáticos</span>
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="tripType" value="Já tenho viagem agendada e preciso de ajuda com reservas" required>
+                            <span>Já tenho viagem agendada e preciso de ajuda com reservas</span>
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="tripType" value="Quero conhecer melhor os serviços antes de planejar" required>
+                            <span>Quero conhecer melhor os serviços antes de planejar</span>
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="tripType" value="Estou em busca de uma reserva concierge" required>
+                            <span>Estou em busca de uma reserva concierge</span>
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="tripType" value="Sou um agente de viagens e preciso de ajuda com reservas" required>
+                            <span>Sou um agente de viagens e preciso de ajuda com os serviços</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="helpParks">Parques de interesse:*</label>
+                        <select id="helpParks" name="parks" required>
+                            <option value="">Selecione</option>
+                            <option value="Walt Disney World - Orlando">Walt Disney World – Orlando</option>
+                            <option value="Disneyland Resort - Califórnia">Disneyland Resort – Califórnia</option>
+                            <option value="Disneyland Paris">Disneyland Paris</option>
+                            <option value="Tokyo Disney Resort">Tokyo Disney Resort</option>
+                            <option value="Múltiplos parques">Múltiplos parques</option>
+                            <option value="Ainda não decidi">Ainda não decidi</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="helpService">Serviço de interesse:*</label>
+                        <select id="helpService" name="service" required>
+                            <option value="">Selecione</option>
+                            <option value="Alertas individuais">Alertas individuais</option>
+                            <option value="Plano mensal">Plano mensal</option>
+                            <option value="Concierge dedicado">Concierge dedicado</option>
+                            <option value="Sou um agente de viagens">Sou um agente de viagens</option>
+                            <option value="Quero conhecer todos">Quero conhecer todos</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <label class="form-section-label">Como você prefere ser contatado?</label>
+                    <div class="radio-group">
+                        <label class="radio-label">
+                            <input type="radio" name="contactPreference" value="Telefone" required>
+                            <span>Telefone</span>
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="contactPreference" value="WhatsApp" required>
+                            <span>WhatsApp</span>
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="contactPreference" value="E-mail" required>
+                            <span>E-mail</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="helpMessage">Deseja compartilhar alguma dúvida ou informação adicional conosco?</label>
+                    <textarea id="helpMessage" name="message" rows="5" placeholder="Conte-nos mais sobre sua necessidade ou dúvida..."></textarea>
+                </div><br>
+
+                <div class="form-consent">
+                    <label class="consent-label">
+                        <input type="checkbox" id="helpConsent" name="consent" required>
+                        <span>Eu concordo com o processamento dos meus dados (nome, endereço de e-mail) para me enviar comunicação da <strong>Dine Mouse</strong>. Este consentimento é dado livremente e posso retirar meu consentimento e cancelar a assinatura dessas comunicações a qualquer momento, sem nenhum custo com efeito para o futuro. Todas as informações sobre o tratamento de seus dados podem ser encontradas em nossa <a href="politica-privacidade.html" target="_blank" class="privacy-link">Política de Privacidade</a>.*</span>
+                    </label>
+                </div>
+
+                <button type="submit" class="help-submit-btn">
+                    <span>Enviar</span>
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <path d="M7.5 15L12.5 10L7.5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+            </form>
+        </div>
+    </section>
+
+    <!-- CTA Final Section -->
+    <section class="cta-final" id="contato">
+        <div class="container">
+            <h2 class="cta-title">Algumas viagens viram lembranças para a vida toda.</h2>
+            <p class="cta-subtitle">São nesses momentos longe das filas que sua família ri, descansa e cria lembranças que ficam para sempre. Nós te ajudamos a garantir os restaurantes mais desejados dos parques, para você focar no que realmente importa: viver o momento!</p>
+            <div class="cta-buttons">
+                <button class="btn-primary-large" onclick="openWhatsApp()">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" fill="currentColor"/>
+                    </svg>
+                    <span>Falar no WhatsApp</span>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Formulário Modal -->
+    <div class="modal" id="formModal">
+        <canvas class="modal-particles-canvas" id="formModalParticles"></canvas>
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeForm()">&times;</button>
+            <h2>Solicitar Reservas</h2>
+            <form id="contactForm" class="contact-form">
+                <div class="form-group">
+                    <label for="name">Nome completo</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">E-mail</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="phone">WhatsApp</label>
+                    <input type="tel" id="phone" name="phone" required>
+                </div>
+                <div class="form-group">
+                    <label for="dates">Datas da viagem</label>
+                    <input type="text" id="dates" name="dates" placeholder="Ex: 15/03/2024 a 22/03/2024" required>
+                </div>
+                <div class="form-group">
+                    <label for="parks">Parques de interesse</label>
+                    <select id="parks" name="parks" required>
+                        <option value="">Selecione...</option>
+                        <option value="orlando">Orlando - Disney World & Universal</option>
+                        <option value="paris">Paris - Disneyland Paris</option>
+                        <option value="ambos">Ambos</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="restaurants">Restaurantes desejados (opcional)</label>
+                    <textarea id="restaurants" name="restaurants" rows="3" placeholder="Liste os restaurantes que você gostaria de visitar..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="message">Mensagem adicional</label>
+                    <textarea id="message" name="message" rows="4" placeholder="Conte-nos mais sobre sua viagem..."></textarea>
+                </div>
+                <button type="submit" class="btn-submit">Enviar Solicitação</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal de Pagamento -->
+    <div class="payment-modal" id="paymentModal">
+        <canvas class="modal-particles-canvas" id="paymentModalParticles"></canvas>
+        <div class="payment-modal-content">
+            <button class="payment-modal-close" onclick="closePaymentModal()" aria-label="Fechar">&times;</button>
+            
+            <!-- Header do Modal -->
+            <div class="payment-modal-header">
+                <h2 class="payment-modal-title">Configure seu alerta</h2>
+                <p class="payment-modal-subtitle">Avisaremos você em tempo real assim que surgirem reservas disponíveis</p>
+            </div>
+
+            <div class="payment-modal-body">
+                <!-- Bloco: Parque Temático -->
+                <div class="payment-block">
+                    <label class="payment-label">Parque Temático</label>
+                    <select class="payment-select" id="paymentThemePark" onchange="updateRestaurantsByPark()">
+                        <option value="">Selecione um parque...</option>
+                        <option value="walt-disney-world">Walt Disney World – Orlando</option>
+                        <option value="disneyland">Disneyland Resort – Califórnia</option>
+                        <option value="disneyland-paris">Disneyland Paris</option>
+                        <option value="tokyo-disney">Tokyo Disney Resort</option>
+                    </select>
+                </div>
+
+                <!-- Bloco: Seleção de Restaurante -->
+                <div class="payment-block">
+                    <label class="payment-label">Restaurante</label>
+                    <select class="payment-select" id="paymentRestaurant" onchange="updatePrice()">
+                        <option value="">Selecione um restaurante...</option>
+                        <!-- Será preenchido dinamicamente baseado no parque -->
+                    </select>
+                    <div id="selectedRestaurantsList" class="selected-restaurants-list"></div>
+                </div>
+
+                <!-- Bloco: Adicionar Data -->
+                <div class="payment-block">
+                    <label class="payment-label">Adicionar Data do Alerta</label>
+                    <div class="date-form-container">
+                        <div class="date-form-row">
+                            <div class="date-form-field">
+                                <label class="date-form-label">Data</label>
+                                <input type="date" id="paymentDateInput" class="payment-input" min="" max="" onchange="validateDate()">
+                            </div>
+                            <div class="date-form-field">
+                                <label class="date-form-label">Tipo de Refeição</label>
+                                <select id="paymentMealType" class="payment-select-small">
+                                    <option value="Café da Manhã">Café da Manhã</option>
+                                    <option value="Almoço">Almoço</option>
+                                    <option value="Jantar" selected>Jantar</option>
+                                </select>
+                            </div>
+                            <div class="date-form-field">
+                                <label class="date-form-label">Número de Pessoas</label>
+                                <input type="number" id="paymentPartySize" class="payment-input-small" min="1" max="20" value="2">
+                            </div>
+                            <div class="date-form-field date-form-button">
+                                <button type="button" class="btn-add-date" onclick="addDate()">
+                                    <span>+ Adicionar</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bloco: Datas Adicionadas -->
+                <div class="payment-block">
+                    <label class="payment-label">Datas do alerta</label>
+                    <div class="dates-list" id="paymentDatesList">
+                        <p class="no-dates-message" id="noDatesMessage">Nenhuma data adicionada ainda. Use o formulário acima para adicionar.</p>
+                    </div>
+                </div>
+
+                <!-- Bloco: Extras / Upsells -->
+                <div class="payment-block payment-extras-block">
+                    <label class="payment-label">Extras Disponíveis</label>
+                    <div class="extras-list">
+                        <div class="extra-checkbox-item">
+                            <label class="extra-checkbox-label">
+                                <input type="checkbox" class="extra-checkbox" id="extraWhatsApp" onchange="updateExtras()">
+                                <div class="extra-checkbox-content">
+                                    <div class="extra-checkbox-header">
+                                        <div class="extra-checkbox-text">
+                                            <span class="extra-checkbox-title">Notificação WhatsApp</span>
+                                            <span class="extra-checkbox-badge">Mais Popular</span>
+                                        </div>
+                                    </div>
+                                    <p class="extra-checkbox-desc">Receba alertas instantâneos no WhatsApp e aja mais rápido</p>
+                                    <span class="extra-checkbox-price">R$ 8 / por telefone</span>
+                                </div>
+                            </label>
+                        </div>
+                        <div class="extra-checkbox-item extra-phone-item">
+                            <div class="extra-checkbox-content">
+                                <div class="extra-checkbox-header">
+                                    <div class="extra-checkbox-text">
+                                        <span class="extra-checkbox-title">Telefones adicionais</span>
+                                    </div>
+                                </div>
+                                <p class="extra-checkbox-desc">Envie alertas para mais de um número</p>
+                                <div class="extra-phone-controls">
+                                    <span class="extra-checkbox-price">R$ 5 / por telefone</span>
+                                    <div class="phone-quantity-controls">
+                                        <button type="button" class="quantity-btn quantity-minus" onclick="changePhoneQuantity(-1)">−</button>
+                                        <input type="number" id="phoneQuantity" class="phone-quantity-input" min="0" max="10" value="0" onchange="updatePhoneQuantity()" readonly>
+                                        <button type="button" class="quantity-btn quantity-plus" onclick="changePhoneQuantity(1)">+</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bloco: Resumo do Pagamento -->
+                <div class="payment-block payment-summary-block">
+                    <div class="summary-content">
+                        <div class="summary-row">
+                            <span class="summary-label">Tipo:</span>
+                            <span class="summary-value">Alerta avulso</span>
+                        </div>
+                        <div id="summaryExtras" class="summary-extras"></div>
+                        <div class="summary-row summary-price">
+                            <span class="summary-label">Valor:</span>
+                            <span class="summary-value price-value">R$ 0,00</span>
+                        </div>
+                        <p class="summary-note">Você paga apenas pelo monitoramento, não pela reserva.</p>
+                    </div>
+                </div>
+
+                <!-- Upsell de Assinatura -->
+                <div class="payment-block payment-upsell-block" id="paymentUpsellBlock">
+                    <div class="upsell-content">
+                        <div class="upsell-text">
+                            <h4 class="upsell-title">Precisa monitorar vários restaurantes ou viagens?</h4>
+                            <p class="upsell-description">Tenha mais alertas com nossos planos a partir de R$ 49,90 por mês.</p>
+                        </div>
+                        <button class="upsell-button" onclick="scrollToCTA()">Ver planos</button>
+                    </div>
+                </div>
+
+                <!-- Passo 3: Dados do Usuário (escondido inicialmente) -->
+                <div id="paymentStep3" class="payment-step" style="display: none;">
+                    <div class="payment-block payment-step">
+                        <h3 style="margin-bottom: 1.5rem; color: var(--roxo-magico);">Preencha seus dados</h3>
+                        <p style="margin-bottom: 1.5rem; color: #666; font-size: 0.95rem;">Precisamos de algumas informações para configurar seus alertas.</p>
+                    </div>
+
+                    <!-- Nome -->
+                    <div class="payment-block">
+                        <label class="payment-label" for="paymentUserName">Nome completo *</label>
+                        <input type="text" id="paymentUserName" class="payment-input" placeholder="Seu nome completo" required>
+                    </div>
+
+                    <!-- Email -->
+                    <div class="payment-block">
+                        <label class="payment-label" for="paymentUserEmail">E-mail *</label>
+                        <input type="email" id="paymentUserEmail" class="payment-input" placeholder="seu@email.com" required>
+                    </div>
+
+                    <!-- Telefones -->
+                    <div class="payment-block">
+                        <label class="payment-label">Números de telefone para receber alertas *</label>
+                        <p class="payment-step-hint" style="margin-bottom: 1rem; color: #666; font-size: 0.9rem;">Adicione os números que receberão os alertas via WhatsApp</p>
+                        <div id="paymentPhonesContainer">
+                            <!-- Campos de telefone serão adicionados dinamicamente aqui -->
+                        </div>
+                    </div>
+
+                    <!-- Botão Voltar -->
+                    <div class="payment-block">
+                        <button type="button" class="btn-back-plan" onclick="backToPaymentStep2()">
+                            ← Voltar
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CTA Principal -->
+            <div class="payment-modal-footer">
+                <div class="payment-block payment-terms-block" id="paymentTermsBlock">
+                    <label class="payment-terms-label">
+                        <input type="checkbox" id="paymentTermsCheckbox" name="terms" required>
+                        <span>Li e concordo com os <a href="termos-uso.html" target="_blank" class="terms-link">Termos de Uso</a> e estou ciente de que os serviços não são reembolsáveis após a ativação.*</span>
+                    </label>
+                </div>
+                <button id="paymentCTA" class="payment-cta-button" onclick="handleCheckout()">
+                    <span>Confirmar e pagar</span>
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <path d="M7.5 15L12.5 10L7.5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+                <button id="paymentCTA3" class="payment-cta-button" onclick="handlePaymentUserData()" style="display: none;">
+                    <span>Finalizar cadastro</span>
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <path d="M7.5 15L12.5 10L7.5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+                <p class="payment-security-note" id="paymentSecurityNote">Pagamento seguro • Cancelamento a qualquer momento</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Subscrição Mensal -->
+    <div class="payment-modal subscription-modal" id="subscriptionModal">
+        <canvas class="modal-particles-canvas" id="subscriptionModalParticles"></canvas>
+        <div class="payment-modal-content">
+            <button class="payment-modal-close" onclick="closeSubscriptionModal()" aria-label="Fechar">&times;</button>
+            
+            <!-- Header do Modal -->
+            <div class="payment-modal-header">
+                <h2 class="payment-modal-title">Assinar Plano Mensal</h2>
+                <p class="payment-modal-subtitle">Escolha seu plano e configure seus alertas ilimitados</p>
+            </div>
+
+            <div class="payment-modal-body">
+                <!-- Passo 1: Seleção de Plano -->
+                <div id="subscriptionStep1" class="subscription-step">
+                    <div class="payment-block">
+                        <label class="payment-label">Escolha seu plano</label>
+                        <div class="subscription-plans-grid">
+                            <div class="subscription-plan-card" data-alerts="5" data-price="49.90" onclick="selectSubscriptionPlan(5, 49.90)">
+                                <div class="plan-card-header">
+                                    <h3 class="plan-card-title">5 Alertas</h3>
+                                    <div class="plan-card-price">
+                                        <span class="plan-price-symbol">R$</span>
+                                        <span class="plan-price-value">49,90</span>
+                                        <span class="plan-price-period">/mês</span>
+                                    </div>
+                                </div>
+                                <p class="plan-card-desc">Ideal para poucos restaurantes</p>
+                            </div>
+                            <div class="subscription-plan-card" data-alerts="15" data-price="119.90" onclick="selectSubscriptionPlan(15, 119.90)">
+                                <div class="plan-card-header">
+                                    <h3 class="plan-card-title">15 Alertas</h3>
+                                    <div class="plan-card-price">
+                                        <span class="plan-price-symbol">R$</span>
+                                        <span class="plan-price-value">119,90</span>
+                                        <span class="plan-price-period">/mês</span>
+                                    </div>
+                                </div>
+                                <p class="plan-card-desc">Para viagens médias</p>
+                            </div>
+                            <div class="subscription-plan-card featured" data-alerts="25" data-price="197.90" onclick="selectSubscriptionPlan(25, 197.90)">
+                                <div class="plan-card-badge">Mais Popular</div>
+                                <div class="plan-card-header">
+                                    <h3 class="plan-card-title">25 Alertas</h3>
+                                    <div class="plan-card-price">
+                                        <span class="plan-price-symbol">R$</span>
+                                        <span class="plan-price-value">197,90</span>
+                                        <span class="plan-price-period">/mês</span>
+                                    </div>
+                                </div>
+                                <p class="plan-card-desc">Mais escolhido</p>
+                            </div>
+                            <div class="subscription-plan-card" data-alerts="35" data-price="249.90" onclick="selectSubscriptionPlan(35, 249.90)">
+                                <div class="plan-card-header">
+                                    <h3 class="plan-card-title">35 Alertas</h3>
+                                    <div class="plan-card-price">
+                                        <span class="plan-price-symbol">R$</span>
+                                        <span class="plan-price-value">249,90</span>
+                                        <span class="plan-price-period">/mês</span>
+                                    </div>
+                                </div>
+                                <p class="plan-card-desc">Para grupos grandes</p>
+                            </div>
+                            <div class="subscription-plan-card" data-alerts="50" data-price="359.90" onclick="selectSubscriptionPlan(50, 359.90)">
+                                <div class="plan-card-header">
+                                    <h3 class="plan-card-title">50 Alertas</h3>
+                                    <div class="plan-card-price">
+                                        <span class="plan-price-symbol">R$</span>
+                                        <span class="plan-price-value">359,90</span>
+                                        <span class="plan-price-period">/mês</span>
+                                    </div>
+                                </div>
+                                <p class="plan-card-desc">Máxima flexibilidade</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Passo 2: Configuração de Alertas (escondido inicialmente) -->
+                <div id="subscriptionStep2" class="subscription-step" style="display: none;">
+                    <!-- Parque Temático -->
+                    <div class="payment-block">
+                        <label class="payment-label">Parque Temático</label>
+                        <select class="payment-select" id="subscriptionThemePark" onchange="updateSubscriptionRestaurants()">
+                            <option value="">Selecione um parque...</option>
+                            <option value="walt-disney-world">Walt Disney World – Orlando</option>
+                            <option value="disneyland">Disneyland Resort – Califórnia</option>
+                            <option value="disneyland-paris">Disneyland Paris</option>
+                            <option value="tokyo-disney">Tokyo Disney Resort</option>
+                        </select>
+                    </div>
+
+                    <!-- Restaurantes -->
+                    <div class="payment-block">
+                        <label class="payment-label">Restaurantes (<span id="alertsUsed">0</span> / <span id="alertsLimit">0</span> alertas usados)</label>
+                        <select class="payment-select" id="subscriptionRestaurant" onchange="addSubscriptionRestaurant()">
+                            <option value="">Selecione um restaurante...</option>
+                        </select>
+                        <div id="subscriptionRestaurantsList" class="subscription-restaurants-list"></div>
+                    </div>
+
+                    <!-- Extras -->
+                    <div class="payment-block payment-extras-block">
+                        <label class="payment-label">Extras Disponíveis</label>
+                        <div class="extras-list">
+                            <div class="extra-checkbox-item">
+                                <label class="extra-checkbox-label">
+                                    <input type="checkbox" class="extra-checkbox" id="subscriptionWhatsApp" onchange="updateSubscriptionPrice()">
+                                    <div class="extra-checkbox-content">
+                                        <div class="extra-checkbox-header">
+                                            <div class="extra-checkbox-text">
+                                                <span class="extra-checkbox-title">Notificação WhatsApp</span>
+                                                <span class="extra-checkbox-badge">Mais Popular</span>
+                                            </div>
+                                        </div>
+                                        <p class="extra-checkbox-desc">Receba alertas instantâneos no WhatsApp e aja mais rápido</p>
+                                        <span class="extra-checkbox-price">R$ 8 / por telefone</span>
+                                    </div>
+                                </label>
+                            </div>
+                            <div class="extra-checkbox-item extra-phone-item">
+                                <div class="extra-checkbox-content">
+                                    <div class="extra-checkbox-header">
+                                        <div class="extra-checkbox-text">
+                                            <span class="extra-checkbox-title">Telefones adicionais</span>
+                                        </div>
+                                    </div>
+                                    <p class="extra-checkbox-desc">Envie alertas para mais de um número</p>
+                                    <div class="extra-phone-controls">
+                                        <span class="extra-checkbox-price">R$ 5 / por telefone</span>
+                                        <div class="phone-quantity-controls">
+                                            <button type="button" class="quantity-btn quantity-minus" onclick="changeSubscriptionPhoneQuantity(-1)">−</button>
+                                            <input type="number" id="subscriptionPhoneQuantity" class="phone-quantity-input" min="0" max="10" value="0" onchange="updateSubscriptionPhoneQuantity()" readonly>
+                                            <button type="button" class="quantity-btn quantity-plus" onclick="changeSubscriptionPhoneQuantity(1)">+</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Resumo do Pagamento -->
+                    <div class="payment-block payment-summary-block">
+                        <div class="summary-content">
+                            <div class="summary-row">
+                                <span class="summary-label">Tipo:</span>
+                                <span class="summary-value">Subscrição Mensal</span>
+                            </div>
+                            <div id="subscriptionSummaryExtras" class="summary-extras"></div>
+                            <div class="summary-row summary-price">
+                                <span class="summary-label">Valor mensal:</span>
+                                <span class="summary-value price-value" id="subscriptionPriceValue">R$ 0,00</span>
+                            </div>
+                            <p class="summary-note">Pagamento recorrente mensal • Cancele a qualquer momento</p>
+                        </div>
+                    </div>
+
+                    <!-- Botão Voltar -->
+                    <div class="payment-block">
+                        <button type="button" class="btn-back-plan" onclick="backToPlanSelection()">
+                            ← Voltar para seleção de plano
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Passo 3: Dados do Usuário (escondido inicialmente) -->
+                <div id="subscriptionStep3" class="subscription-step" style="display: none;">
+                    <div class="payment-block payment-step">
+                        <h3 style="margin-bottom: 1.5rem; color: var(--roxo-magico);">Preencha seus dados</h3>
+                        <p style="margin-bottom: 1.5rem; color: #666; font-size: 0.95rem;">Precisamos de algumas informações para configurar seus alertas.</p>
+                    </div>
+
+                    <!-- Nome -->
+                    <div class="payment-block">
+                        <label class="payment-label" for="subscriptionUserName">Nome completo *</label>
+                        <input type="text" id="subscriptionUserName" class="payment-input" placeholder="Seu nome completo" required>
+                    </div>
+
+                    <!-- Email -->
+                    <div class="payment-block">
+                        <label class="payment-label" for="subscriptionUserEmail">E-mail *</label>
+                        <input type="email" id="subscriptionUserEmail" class="payment-input" placeholder="seu@email.com" required>
+                    </div>
+
+                    <!-- Telefones -->
+                    <div class="payment-block">
+                        <label class="payment-label">Números de telefone para receber alertas *</label>
+                        <p class="payment-step-hint" style="margin-bottom: 1rem; color: #666; font-size: 0.9rem;">Adicione os números que receberão os alertas via WhatsApp</p>
+                        <div id="subscriptionPhonesContainer">
+                            <!-- Campos de telefone serão adicionados dinamicamente aqui -->
+                        </div>
+                    </div>
+
+                    <!-- Botão Voltar -->
+                    <div class="payment-block">
+                        <button type="button" class="btn-back-plan" onclick="backToSubscriptionStep2()">
+                            ← Voltar
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CTA Principal -->
+            <div class="payment-modal-footer">
+                <div class="payment-block payment-terms-block" id="subscriptionTermsBlock" style="display: none;">
+                    <label class="payment-terms-label">
+                        <input type="checkbox" id="subscriptionTermsCheckbox" name="terms" required>
+                        <span>Li e concordo com os <a href="termos-uso.html" target="_blank" class="terms-link">Termos de Uso</a> e estou ciente de que os serviços não são reembolsáveis após a ativação.*</span>
+                    </label>
+                </div>
+                <button id="subscriptionCTA" class="payment-cta-button" onclick="handleSubscriptionCheckout()" style="display: none;">
+                    <span>Confirmar e assinar</span>
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <path d="M7.5 15L12.5 10L7.5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+                <button id="subscriptionCTA3" class="payment-cta-button" onclick="handleSubscriptionUserData()" style="display: none;">
+                    <span>Finalizar cadastro</span>
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <path d="M7.5 15L12.5 10L7.5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+                <p class="payment-security-note" id="subscriptionSecurityNote" style="display: none;">Pagamento seguro • Cancelamento a qualquer momento</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Pagamento Concierge -->
+    <div class="payment-modal concierge-modal" id="conciergeModal">
+        <canvas class="modal-particles-canvas" id="conciergeModalParticles"></canvas>
+        <div class="payment-modal-content">
+            <button class="payment-modal-close" onclick="closeConciergeModal()" aria-label="Fechar">&times;</button>
+            
+            <!-- Header do Modal -->
+            <div class="payment-modal-header">
+                <h2 class="payment-modal-title">Contratar Concierge Dedicado</h2>
+                <p class="payment-modal-subtitle">Preencha seus dados para que possamos iniciar o atendimento premium</p>
+            </div>
+
+            <div class="payment-modal-body">
+                <!-- Resumo do Plano -->
+                <div class="payment-block concierge-plan-summary">
+                    <div class="concierge-plan-info">
+                        <h3 id="conciergePlanName">Concierge Essencial</h3>
+                        <div class="concierge-plan-price">
+                            <span class="plan-price-symbol">R$</span>
+                            <span class="plan-price-value" id="conciergePlanPrice">599</span>
+                            <span class="plan-price-period">por viagem</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Formulário -->
+                <div class="payment-block">
+                    <label class="payment-label">Período da viagem</label>
+                    <p class="payment-label-hint">De qual o período da sua viagem?</p>
+                    <div class="date-range-container">
+                        <div class="date-input-wrapper">
+                            <label class="date-input-label">Data inicial</label>
+                            <input type="date" 
+                                   class="payment-input" 
+                                   id="conciergeTripDateStart" 
+                                   min="" 
+                                   required>
+                        </div>
+                        <!-- <div class="date-range-separator">até</div> -->
+                        <div class="date-input-wrapper">
+                            <label class="date-input-label">Data final</label>
+                            <input type="date" 
+                                   class="payment-input" 
+                                   id="conciergeTripDateEnd" 
+                                   min="" 
+                                   required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="payment-block">
+                    <label class="payment-label">Número de pessoas</label>
+                    <p class="payment-label-hint">Quantas pessoas estarão na viagem?</p>
+                    <input type="number" 
+                           class="payment-input" 
+                           id="conciergePartySize" 
+                           min="1" 
+                           max="20" 
+                           value="2" 
+                           required>
+                </div>
+
+                <div class="payment-block">
+                    <label class="payment-label">Nome para contato</label>
+                    <p class="payment-label-hint">Nome da pessoa responsável</p>
+                    <input type="text" 
+                           class="payment-input" 
+                           id="conciergeContactName" 
+                           placeholder="Digite seu nome completo"
+                           required>
+                </div>
+
+                <div class="payment-block">
+                    <label class="payment-label">Telefone para contato</label>
+                    <p class="payment-label-hint">Número com WhatsApp</p>
+                    <div class="phone-input-container">
+                        <select class="payment-select phone-country-select" id="conciergePhoneCountry" required>
+                            <option value="+55">🇧🇷 Brasil (+55)</option>
+                            <option value="+1">🇺🇸 Estados Unidos (+1)</option>
+                            <option value="+44">🇬🇧 Reino Unido (+44)</option>
+                            <option value="+33">🇫🇷 França (+33)</option>
+                            <option value="+49">🇩🇪 Alemanha (+49)</option>
+                            <option value="+39">🇮🇹 Itália (+39)</option>
+                            <option value="+34">🇪🇸 Espanha (+34)</option>
+                            <option value="+1">🇨🇦 Canadá (+1)</option>
+                            <option value="+52">🇲🇽 México (+52)</option>
+                            <option value="+54">🇦🇷 Argentina (+54)</option>
+                            <option value="+55">🇨🇱 Chile (+56)</option>
+                            <option value="+57">🇨🇴 Colômbia (+57)</option>
+                            <option value="+81">🇯🇵 Japão (+81)</option>
+                            <option value="+86">🇨🇳 China (+86)</option>
+                            <option value="+61">🇦🇺 Austrália (+61)</option>
+                            <option value="+351">🇵🇹 Portugal (+351)</option>
+                            <option value="">Outro país...</option>
+                        </select>
+                        <input type="tel" 
+                               class="payment-input phone-number-input" 
+                               id="conciergePhone" 
+                               placeholder="(11) 99999-9999"
+                               required>
+                    </div>
+                </div>
+
+                <!-- Mensagem após pagamento -->
+                <div class="payment-block concierge-info-box">
+                    <div class="concierge-info-text">
+                        <p class="concierge-info-title">Após o pagamento</p>
+                        <p class="concierge-info-desc">O concierge dedicado para a família entrará em contato para alinhar os detalhes e iniciar o monitoramento dos restaurantes.</p>
+                    </div>
+                </div>
+
+                <!-- Link para Política de Privacidade no consentimento -->
+                <div class="payment-block">
+                    <p class="payment-consent-link">
+                        Ao continuar, você concorda com nossa <a href="politica-privacidade.html" target="_blank" class="privacy-policy-link">Política de Privacidade</a>.
+                    </p>
+                </div>
+
+                <!-- Resumo do Pagamento -->
+                <div class="payment-block payment-summary-block">
+                    <div class="summary-content">
+                        <div class="summary-row">
+                            <span class="summary-label">Tipo:</span>
+                            <span class="summary-value">Concierge Dedicado</span>
+                        </div>
+                        <div class="summary-row summary-price">
+                            <span class="summary-label">Valor total:</span>
+                            <span class="summary-value price-value" id="conciergeTotalPrice">R$ 599,00</span>
+                        </div>
+                        <p class="summary-note">Pagamento único • Serviço válido para toda a viagem</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CTA Principal -->
+            <div class="payment-modal-footer">
+                <div class="payment-block payment-terms-block">
+                    <label class="payment-terms-label">
+                        <input type="checkbox" id="conciergeTermsCheckbox" name="terms" required>
+                        <span>Li e concordo com os <a href="termos-uso.html" target="_blank" class="terms-link">Termos de Uso</a> e estou ciente de que os serviços não são reembolsáveis após a ativação.*</span>
+                    </label>
+                </div>
+                <button class="payment-cta-button" onclick="handleConciergeCheckout()">
+                    <span>Confirmar e pagar</span>
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <path d="M7.5 15L12.5 10L7.5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+                <p class="payment-security-note">Pagamento seguro • Concierge entrará em contato em até 24hs após a confirmação</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal B2B / Agências de Viagens -->
+    <div class="payment-modal b2b-modal" id="b2bModal">
+        <canvas class="modal-particles-canvas" id="b2bModalParticles"></canvas>
+        <div class="payment-modal-content b2b-modal-content">
+            <button class="payment-modal-close" onclick="closeB2BModal()" aria-label="Fechar">&times;</button>
+            
+            <!-- Header do Modal -->
+            <div class="payment-modal-header">
+                <h2 class="payment-modal-title">Agências de Viagens e Parceiros</h2>
+                <p class="payment-modal-subtitle">Planos especiais para profissionais do setor</p>
+            </div>
+
+            <div class="payment-modal-body">
+                <div class="b2b-content-modal">
+                    <p class="b2b-intro">Temos planos especiais com condições diferenciadas para agências de viagem, operadoras e parceiros comerciais.</p>
+                    
+                    <div class="b2b-beneficios-list">
+                        <h3 class="b2b-section-title">Benefícios exclusivos:</h3>
+                        <ul class="b2b-beneficios">
+                            <li>
+                                <span class="b2b-check">✓</span>
+                                <span>Planos com volume de alertas ampliado</span>
+                            </li>
+                            <li>
+                                <span class="b2b-check">✓</span>
+                                <span>Dashboard de gestão para múltiplos clientes</span>
+                            </li>
+                            <li>
+                                <span class="b2b-check">✓</span>
+                                <span>Suporte prioritário</span>
+                            </li>
+                            <li>
+                                <span class="b2b-check">✓</span>
+                                <span>Condições especiais para parcerias</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="b2b-cta-section">
+                        <button class="payment-cta-button b2b-cta-button" onclick="closeB2BModal(); scrollToSection('ajuda');">
+                            <span>Quero conhecer os planos B2B</span>
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                <path d="M7.5 15L12.5 10L7.5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </button>
+                        <p class="b2b-nota">Cadastro de empresa necessário. Preços e condições disponíveis após validação.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <h3>Dine Mouse</h3>
+                    <p>Monitoramento de reservas e concierge gastronômico Disney</p>
+                </div>
+                <div class="footer-links">
+                    <div class="footer-column">
+                        <h4>Links</h4>
+                        <ul>
+                            <li><a href="#planos">Planos</a></li>
+                            <li><a href="#parques">Parques</a></li>
+                            <li><a href="#contato">Contato</a></li>
+                            <li><a href="#ajuda">Ajuda</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Legal</h4>
+                        <ul>
+                            <li><a href="politica-privacidade.html">Política de Privacidade</a></li>
+                            <li><a href="termos-uso.html">Termos de Serviço</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!-- <div class="footer-company">
+                <p class="footer-company-label">Empresa</p>
+                <p class="footer-company-name">Mios Tech Global Inc.</p>
+                <p class="footer-company-role">Responsável legal pela operação do serviço Dine Mouse</p>
+            </div> -->
+            <div class="footer-disclaimer">
+                <p>O Dine Mouse é um serviço independente de monitoramento e concierge gastronômico para restaurantes da Disney, criado para ajudar famílias e viajantes a encontrar reservas em parques temáticos. Não somos afiliados, patrocinados ou endossados pela Disney ou por qualquer parque temático.</p>
+            </div>
+            <div class="footer-copyright">
+                <p>&copy; 2026 Dine Mouse · Mios Tech Global Inc. Todos os direitos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modal de Login -->
+    <div class="modal" id="loginModal">
+        <canvas class="modal-particles-canvas" id="loginModalParticles"></canvas>
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeLoginModal()" aria-label="Fechar">&times;</button>
+            <h2>Portal do Cliente</h2>
+            <p class="modal-subtitle">Acesse sua conta para gerenciar seus alertas e reservas</p>
+            
+            <form id="loginForm" class="contact-form">
+                <div class="form-group">
+                    <label for="loginEmail">E-mail</label>
+                    <input type="email" id="loginEmail" name="email" required autocomplete="email" placeholder="seu@email.com">
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Senha</label>
+                    <input type="password" id="loginPassword" name="password" required autocomplete="current-password" placeholder="Digite sua senha">
+                </div>
+                <div class="form-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="rememberMe" name="rememberMe">
+                        <span>Lembrar-me</span>
+                    </label>
+                </div>
+                <button type="submit" class="btn-submit">Entrar</button>
+                <p class="login-help-text" style="text-align: center; margin-top: 1rem; color: #666; font-size: 0.9rem;">
+                    Esqueceu sua senha? <a href="#" style="color: var(--roxo-magico);">Recuperar senha</a>
+                </p>
+                <div class="login-help-section" style="text-align: center; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid #e0e0e0;">
+                    <p style="color: #666; font-size: 0.85rem; margin-bottom: 0.75rem;">Não tem uma conta? Crie uma conta de teste:</p>
+                    <div class="login-test-buttons-container" style="display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; margin-bottom: 0.75rem;">
+                        <button type="button" class="login-test-button" onclick="createTestAccount()" style="background: transparent; border: 2px solid var(--roxo-magico); color: var(--roxo-magico); padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; font-size: 0.9rem; flex: 1; min-width: 150px;">
+                            🧪 Alertas
+                        </button>
+                        <button type="button" class="login-test-button" onclick="createTestConciergeAccount()" style="background: transparent; border: 2px solid var(--dourado-suave); color: var(--azul-profundo); padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; font-size: 0.9rem; flex: 1; min-width: 150px;">
+                            👑 Concierge
+                        </button>
+                    </div>
+                    <p class="test-account-note" style="color: #999; font-size: 0.75rem;">Contas de teste com dados pré-configurados</p>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modais Customizados para Alert, Confirm e Prompt -->
+    <div class="custom-modal-overlay" id="customModalOverlay">
+        <canvas class="modal-particles-canvas" id="customModalParticles"></canvas>
+        <div class="custom-modal" id="customModal">
+            <div class="custom-modal-header">
+                <h3 class="custom-modal-title" id="customModalTitle"></h3>
+            </div>
+            <div class="custom-modal-body">
+                <p class="custom-modal-message" id="customModalMessage"></p>
+                <div class="custom-modal-input-container" id="customModalInputContainer" style="display: none;">
+                    <input type="text" class="custom-modal-input" id="customModalInput" placeholder="">
+                </div>
+            </div>
+            <div class="custom-modal-footer" id="customModalFooter">
+                <!-- Botões serão adicionados dinamicamente -->
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

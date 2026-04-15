@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Política de Privacidade do Dine Mouse - Proteção de dados pessoais">
+    <title>Política de Privacidade - Dine Mouse</title>
+    <link rel="icon" type="image/png" href="favicon.png" sizes="512x512">
+    <link rel="apple-touch-icon" href="favicon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .privacy-page {
+            padding: 120px 0 4rem;
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            min-height: 100vh;
+        }
+        
+        .privacy-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        .privacy-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .privacy-title {
+            font-family: var(--font-display);
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--azul-profundo);
+            margin-bottom: 1rem;
+        }
+        
+        .privacy-update {
+            color: #666;
+            font-size: 0.95rem;
+            font-style: italic;
+        }
+        
+        .privacy-content {
+            background: #ffffff;
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(11, 28, 45, 0.08);
+            line-height: 1.8;
+        }
+        
+        .privacy-section {
+            margin-bottom: 2.5rem;
+        }
+        
+        .privacy-section:last-child {
+            margin-bottom: 0;
+        }
+        
+        .privacy-section h2 {
+            font-family: var(--font-display);
+            font-size: 1.75rem;
+            color: var(--azul-profundo);
+            margin-bottom: 1rem;
+            margin-top: 2rem;
+        }
+        
+        .privacy-section h2:first-child {
+            margin-top: 0;
+        }
+        
+        .privacy-section h3 {
+            font-family: var(--font-primary);
+            font-size: 1.2rem;
+            color: var(--roxo-magico);
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .privacy-section p {
+            color: #555;
+            margin-bottom: 1rem;
+        }
+        
+        .privacy-section ul {
+            margin: 1rem 0;
+            padding-left: 2rem;
+            color: #555;
+        }
+        
+        .privacy-section li {
+            margin-bottom: 0.75rem;
+        }
+        
+        .privacy-section strong {
+            color: var(--azul-profundo);
+            font-weight: 600;
+        }
+        
+        .privacy-intro {
+            font-size: 1.05rem;
+            color: #555;
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 2px solid rgba(75, 63, 114, 0.1);
+        }
+        
+        .privacy-contact {
+            background: linear-gradient(135deg, rgba(230, 199, 122, 0.1) 0%, rgba(75, 63, 114, 0.05) 100%);
+            padding: 2rem;
+            border-radius: 16px;
+            border: 2px solid rgba(230, 199, 122, 0.2);
+            margin-top: 2rem;
+        }
+        
+        .privacy-contact h3 {
+            color: var(--azul-profundo);
+            margin-top: 0;
+        }
+        
+        .privacy-contact p {
+            margin-bottom: 0.5rem;
+        }
+        
+        .privacy-contact a {
+            color: var(--roxo-magico);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s ease;
+        }
+        
+        .privacy-contact a:hover {
+            color: var(--dourado-suave);
+            text-decoration: underline;
+        }
+        
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--roxo-magico);
+            text-decoration: none;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            transition: all 0.3s ease;
+        }
+        
+        .back-link:hover {
+            color: var(--dourado-suave);
+            transform: translateX(-5px);
+        }
+        
+        @media (max-width: 768px) {
+            .privacy-page {
+                padding: 100px 0 2rem;
+            }
+            
+            .privacy-container {
+                padding: 0 1rem;
+            }
+            
+            .privacy-title {
+                font-size: 2rem;
+            }
+            
+            .privacy-content {
+                padding: 2rem 1.5rem;
+            }
+            
+            .privacy-section h2 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">
+                <a href="index.html" style="text-decoration: none;">
+                    <span class="logo-text">Dine Mouse</span>
+                </a>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html#problema">Como funciona</a></li>
+                <li><a href="index.html#planos">Planos</a></li>
+                <li><a href="index.html#parques">Parques</a></li>
+                <li><a href="index.html#faq">FAQ</a></li>
+                <li><a href="index.html#ajuda">Ajuda</a></li>
+                <li><a href="index.html#contato">Contato</a></li>
+            </ul>
+            <button class="cta-nav" onclick="window.location.href='index.html'; setTimeout(() => { if(typeof openLoginModal === 'function') openLoginModal(); }, 100);">Portal do cliente</button>
+            <button class="menu-toggle" aria-label="Menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <div class="privacy-page">
+        <div class="privacy-container">
+            <a href="index.html" class="back-link">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                    <path d="M10 12L6 8L10 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span>Voltar ao site</span>
+            </a>
+
+            <div class="privacy-header">
+                <h1 class="privacy-title">Política de Privacidade – Dine Mouse</h1>
+                <p class="privacy-update">Última atualização: Janeiro de 2026</p>
+            </div>
+
+            <div class="privacy-content">
+                <div class="privacy-intro">
+                    <p>O Dine Mouse valoriza a sua privacidade e está comprometido em proteger os dados pessoais de seus usuários. Esta Política de Privacidade descreve como coletamos, utilizamos, armazenamos e protegemos suas informações ao utilizar nossos serviços.</p>
+                    <p><strong>Ao acessar ou utilizar o Dine Mouse, você concorda com as práticas descritas nesta Política.</strong></p>
+                </div>
+
+                <div class="privacy-section">
+                    <h2>1. Quem somos</h2>
+                    <p>O Dine Mouse é uma plataforma que monitora a disponibilidade de reservas em restaurantes e experiências dos parques Disney, notificando os usuários quando surgem oportunidades compatíveis com suas preferências.</p>
+                    <p><strong>O Dine Mouse não é afiliado, patrocinado ou endossado pela The Walt Disney Company.</strong></p>
+                </div>
+
+                <div class="privacy-section">
+                    <h2>2. Dados que coletamos</h2>
+                    <p>Podemos coletar os seguintes dados pessoais:</p>
+                    
+                    <h3>2.1 Dados fornecidos pelo usuário</h3>
+                    <ul>
+                        <li>Nome</li>
+                        <li>Endereço de e-mail</li>
+                        <li>Número de telefone (para notificações via WhatsApp ou SMS)</li>
+                        <li>Preferências de restaurantes, datas, horários e tamanho do grupo</li>
+                        <li>Informações de conta (login e senha, quando aplicável)</li>
+                    </ul>
+
+                    <h3>2.2 Dados de pagamento</h3>
+                    <p>Os pagamentos são processados por provedores externos de pagamento (ex: Stripe, PayPal).</p>
+                    <p><strong>O Dine Mouse não armazena dados completos de cartão de crédito.</strong></p>
+
+                    <h3>2.3 Dados coletados automaticamente</h3>
+                    <ul>
+                        <li>Endereço IP</li>
+                        <li>Tipo de navegador e dispositivo</li>
+                        <li>Páginas acessadas</li>
+                        <li>Dados de cookies e tecnologias similares</li>
+                    </ul>
+                </div>
+
+                <div class="privacy-section">
+                    <h2>3. Como utilizamos seus dados</h2>
+                    <p>Utilizamos seus dados para:</p>
+                    <ul>
+                        <li>Criar e gerenciar alertas de monitoramento</li>
+                        <li>Enviar notificações sobre disponibilidade de reservas</li>
+                        <li>Prestar suporte ao cliente</li>
+                        <li>Processar pagamentos e emitir recibos</li>
+                        <li>Melhorar nossos serviços, desempenho e segurança</li>
+                        <li>Cumprir obrigações legais e regulatórias</li>
+                    </ul>
+                </div>
+
+                <div class="privacy-section">
+                    <h2>4. Funcionamento dos serviços</h2>
+                    
+                    <h3>Plano Alerta</h3>
+                    <ul>
+                        <li>Monitoramos continuamente a disponibilidade de reservas</li>
+                        <li>Enviamos notificações quando uma vaga é encontrada</li>
+                        <li>O usuário é responsável por concluir a reserva no site oficial da Disney</li>
+                    </ul>
+
+                    <h3>Plano Concierge</h3>
+                    <p>Mediante contratação específica, o Dine Mouse pode realizar a reserva em nome do usuário, conforme as preferências fornecidas</p>
+                    <p>As diferenças entre os planos são sempre informadas de forma clara antes da contratação.</p>
+                </div>
+
+                <div class="privacy-section">
+                    <h2>5. Compartilhamento de dados</h2>
+                    <p><strong>O Dine Mouse não vende nem comercializa seus dados pessoais.</strong></p>
+                    <p>Podemos compartilhar informações apenas com:</p>
+                    <ul>
+                        <li>Provedores de pagamento</li>
+                        <li>Serviços de envio de mensagens (SMS, WhatsApp, e-mail)</li>
+                        <li>Fornecedores de infraestrutura e hospedagem</li>
+                        <li>Autoridades legais, quando exigido por lei</li>
+                    </ul>
+                    <p>Todos os parceiros seguem padrões adequados de segurança e confidencialidade.</p>
+                </div>
+
+                <div class="privacy-section">
+                    <h2>6. Cookies e tecnologias similares</h2>
+                    <p>Utilizamos cookies para:</p>
+                    <ul>
+                        <li>Garantir o funcionamento adequado do site</li>
+                        <li>Melhorar a experiência do usuário</li>
+                        <li>Analisar métricas de uso e desempenho</li>
+                    </ul>
+                    <p>Você pode gerenciar ou desativar cookies nas configurações do seu navegador.</p>
+                </div>
+
+                <div class="privacy-section">
+                    <h2>7. Armazenamento e segurança dos dados</h2>
+                    <p>Adotamos medidas técnicas e organizacionais para proteger seus dados contra:</p>
+                    <ul>
+                        <li>Acesso não autorizado</li>
+                        <li>Perda</li>
+                        <li>Uso indevido</li>
+                        <li>Alteração ou divulgação indevida</li>
+                    </ul>
+                    <p>Os dados são armazenados apenas pelo tempo necessário para cumprir as finalidades descritas nesta Política.</p>
+                </div>
+
+                <div class="privacy-section">
+                    <h2>8. Seus direitos</h2>
+                    <p>De acordo com a LGPD e o GDPR, você tem direito a:</p>
+                    <ul>
+                        <li>Acessar seus dados pessoais</li>
+                        <li>Corrigir informações incorretas ou desatualizadas</li>
+                        <li>Solicitar a exclusão de seus dados</li>
+                        <li>Revogar o consentimento para o uso de dados</li>
+                        <li>Solicitar portabilidade, quando aplicável</li>
+                    </ul>
+                    <p>Para exercer seus direitos, entre em contato conosco.</p>
+                </div>
+
+                <div class="privacy-section">
+                    <h2>9. Cancelamento e comunicações</h2>
+                    <ul>
+                        <li>Você pode desativar alertas a qualquer momento na área <strong>Meus Alertas</strong></li>
+                        <li>Para notificações via SMS, é possível responder <strong>STOP</strong> para cancelar mensagens</li>
+                        <li>Assinaturas podem ser canceladas a qualquer momento, conforme descrito nos Termos de Uso</li>
+                    </ul>
+                </div>
+
+                <div class="privacy-section">
+                    <h2>10. Links para sites de terceiros</h2>
+                    <p>O Dine Mouse pode conter links para sites externos, incluindo o site oficial da Disney.</p>
+                    <p>Não nos responsabilizamos pelas práticas de privacidade desses terceiros.</p>
+                </div>
+
+                <div class="privacy-section">
+                    <h2>11. Alterações nesta Política</h2>
+                    <p>Esta Política de Privacidade pode ser atualizada periodicamente.</p>
+                    <p>Sempre que houver alterações relevantes, a data de atualização será modificada no topo deste documento.</p>
+                    <p>Recomendamos que você revise esta Política regularmente.</p>
+                </div>
+
+                <div class="privacy-contact">
+                    <h2>12. Contato</h2>
+                    <p>Se tiver dúvidas sobre esta Política de Privacidade ou sobre o tratamento de seus dados, entre em contato conosco:</p>
+                    <p>📧 <strong>E-mail:</strong> <a href="mailto:hello@dinemouse.com ">hello@dinemouse.com </a></p>
+                    <p>🌐 <strong>Site:</strong> <a href="https://www.dinemouse.com">www.dinemouse.com</a></p>
+                </div>
+                <div class="privacy-contact">
+                    <h2>13. Observação legal importante</h2>
+                    <p>O Dine Mouse é um serviço independente e não possui qualquer vínculo com a The Walt Disney Company.</p>
+                    <p>Walt Disney World, Disneyland e demais marcas citadas pertencem aos seus respectivos proprietários.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <h3>Dine Mouse</h3>
+                    <p>Concierge gastronômico premium</p>
+                </div>
+                <div class="footer-links">
+                    <div class="footer-column">
+                        <h4>Links</h4>
+                        <ul>
+                            <li><a href="index.html#planos">Planos</a></li>
+                            <li><a href="index.html#parques">Parques</a></li>
+                            <li><a href="index.html#contato">Contato</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Legal</h4>
+                        <ul>
+                            <li><a href="politica-privacidade.html">Política de Privacidade</a></li>
+                            <li><a href="#termos">Termos de Serviço</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-disclaimer">
+                <p>Dine Mouse é um serviço independente de concierge gastronômico. Não somos afiliados à Disney ou a qualquer parque temático.</p>
+            </div>
+            <div class="footer-copyright">
+                <p>&copy; 2024 Dine Mouse. Todos os direitos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

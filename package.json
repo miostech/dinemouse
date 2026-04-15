@@ -1,0 +1,23 @@
+{
+  "name": "dinemouse",
+  "version": "1.0.0",
+  "description": "Dine Mouse - Landing Page Premium",
+  "scripts": {
+    "dev": "node server.js",
+    "start": "node server.js",
+    "serve": "npx serve . -p 3000"
+  },
+  "keywords": [
+    "landing-page",
+    "restaurant-reservations",
+    "concierge"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "mongoose": "^9.4.1"
+  }
+}

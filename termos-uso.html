@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Termos de Uso do Dine Mouse - Regras e condições de uso da plataforma">
+    <title>Termos de Uso - Dine Mouse</title>
+    <link rel="icon" type="image/png" href="favicon.png" sizes="512x512">
+    <link rel="apple-touch-icon" href="favicon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .terms-page {
+            padding: 120px 0 4rem;
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            min-height: 100vh;
+        }
+        
+        .terms-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        .terms-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .terms-title {
+            font-family: var(--font-display);
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--azul-profundo);
+            margin-bottom: 1rem;
+        }
+        
+        .terms-update {
+            color: #666;
+            font-size: 0.95rem;
+            font-style: italic;
+        }
+        
+        .terms-content {
+            background: #ffffff;
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(11, 28, 45, 0.08);
+            line-height: 1.8;
+        }
+        
+        .terms-section {
+            margin-bottom: 2.5rem;
+        }
+        
+        .terms-section:last-child {
+            margin-bottom: 0;
+        }
+        
+        .terms-section h2 {
+            font-family: var(--font-display);
+            font-size: 1.75rem;
+            color: var(--azul-profundo);
+            margin-bottom: 1rem;
+            margin-top: 2rem;
+        }
+        
+        .terms-section h2:first-child {
+            margin-top: 0;
+        }
+        
+        .terms-section h3 {
+            font-family: var(--font-primary);
+            font-size: 1.2rem;
+            color: var(--roxo-magico);
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .terms-section p {
+            color: #555;
+            margin-bottom: 1rem;
+        }
+        
+        .terms-section ul {
+            margin: 1rem 0;
+            padding-left: 2rem;
+            color: #555;
+        }
+        
+        .terms-section li {
+            margin-bottom: 0.75rem;
+        }
+        
+        .terms-section ol {
+            margin: 1rem 0;
+            padding-left: 2rem;
+            color: #555;
+        }
+        
+        .terms-section strong {
+            color: var(--azul-profundo);
+            font-weight: 600;
+        }
+        
+        .terms-intro {
+            font-size: 1.05rem;
+            color: #555;
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 2px solid rgba(75, 63, 114, 0.1);
+        }
+        
+        .terms-contact {
+            background: linear-gradient(135deg, rgba(230, 199, 122, 0.1) 0%, rgba(75, 63, 114, 0.05) 100%);
+            padding: 2rem;
+            border-radius: 16px;
+            border: 2px solid rgba(230, 199, 122, 0.2);
+            margin-top: 2rem;
+        }
+        
+        .terms-contact h3 {
+            color: var(--azul-profundo);
+            margin-top: 0;
+        }
+        
+        .terms-contact p {
+            margin-bottom: 0.5rem;
+        }
+        
+        .terms-contact a {
+            color: var(--roxo-magico);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s ease;
+        }
+        
+        .terms-contact a:hover {
+            color: var(--dourado-suave);
+            text-decoration: underline;
+        }
+        
+        .terms-warning {
+            background: linear-gradient(135deg, rgba(255, 193, 7, 0.1) 0%, rgba(255, 152, 0, 0.05) 100%);
+            padding: 2rem;
+            border-radius: 16px;
+            border: 2px solid rgba(255, 193, 7, 0.3);
+            margin-top: 2rem;
+        }
+        
+        .terms-warning h3 {
+            color: var(--azul-profundo);
+            margin-top: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--roxo-magico);
+            text-decoration: none;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            transition: all 0.3s ease;
+        }
+        
+        .back-link:hover {
+            color: var(--dourado-suave);
+            transform: translateX(-5px);
+        }
+        
+        @media (max-width: 768px) {
+            .terms-page {
+                padding: 100px 0 2rem;
+            }
+            
+            .terms-container {
+                padding: 0 1rem;
+            }
+            
+            .terms-title {
+                font-size: 2rem;
+            }
+            
+            .terms-content {
+                padding: 2rem 1.5rem;
+            }
+            
+            .terms-section h2 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">
+                <a href="index.html" style="text-decoration: none;">
+                    <span class="logo-text">Dine Mouse</span>
+                </a>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html#problema">Como funciona</a></li>
+                <li><a href="index.html#planos">Planos</a></li>
+                <li><a href="index.html#parques">Parques</a></li>
+                <li><a href="index.html#faq">FAQ</a></li>
+                <li><a href="index.html#ajuda">Ajuda</a></li>
+                <li><a href="index.html#contato">Contato</a></li>
+            </ul>
+            <button class="cta-nav" onclick="window.location.href='index.html'; setTimeout(() => { if(typeof openLoginModal === 'function') openLoginModal(); }, 100);">Portal do cliente</button>
+            <button class="menu-toggle" aria-label="Menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <div class="terms-page">
+        <div class="terms-container">
+            <a href="index.html" class="back-link">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                    <path d="M10 12L6 8L10 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span>Voltar ao site</span>
+            </a>
+
+            <div class="terms-header">
+                <h1 class="terms-title">Termos de Uso – Dine Mouse</h1>
+                <p class="terms-update">Última atualização: Janeiro de 2026</p>
+            </div>
+
+            <div class="terms-content">
+                <div class="terms-intro">
+                    <p>Estes Termos de Uso regulam o acesso e a utilização da plataforma Dine Mouse.</p>
+                    <p><strong>Ao acessar, criar uma conta ou utilizar nossos serviços, você declara que leu, compreendeu e concorda com estes Termos.</strong></p>
+                    <p><strong>Se você não concordar com qualquer condição aqui descrita, não deverá utilizar o Dine Mouse.</strong></p>
+                </div>
+
+                <div class="terms-section">
+                    <h2>1. Sobre o Dine Mouse</h2>
+                    <p>O Dine Mouse é uma plataforma independente que monitora a disponibilidade de reservas em restaurantes e experiências dos parques Disney e notifica os usuários quando surgem vagas compatíveis com suas preferências.</p>
+                    <p><strong>O Dine Mouse não é afiliado, patrocinado ou endossado pela The Walt Disney Company ou por quaisquer de suas subsidiárias.</strong></p>
+                </div>
+
+                <div class="terms-section">
+                    <h2>2. Elegibilidade</h2>
+                    <p>Para utilizar o Dine Mouse, você deve:</p>
+                    <ul>
+                        <li>Ter pelo menos 18 anos de idade, ou</li>
+                        <li>Ter autorização legal de um responsável</li>
+                    </ul>
+                    <p>Ao utilizar o serviço, você declara possuir capacidade legal para aceitar estes Termos.</p>
+                </div>
+
+                <div class="terms-section">
+                    <h2>3. Criação de conta</h2>
+                    <p>Algumas funcionalidades exigem a criação de uma conta.</p>
+                    <p>Você é responsável por:</p>
+                    <ul>
+                        <li>Manter suas credenciais em sigilo</li>
+                        <li>Fornecer informações verdadeiras e atualizadas</li>
+                        <li>Todas as atividades realizadas em sua conta</li>
+                    </ul>
+                    <p>O Dine Mouse não se responsabiliza por acessos indevidos decorrentes de negligência do usuário.</p>
+                </div>
+
+                <div class="terms-section">
+                    <h2>4. Funcionamento dos serviços</h2>
+                    
+                    <h3>4.1 Plano Alerta</h3>
+                    <p>No Plano Alerta, o Dine Mouse:</p>
+                    <ul>
+                        <li>Monitora continuamente a disponibilidade de reservas</li>
+                        <li>Envia notificações quando uma vaga compatível é encontrada</li>
+                    </ul>
+                    <p>O Dine Mouse não realiza reservas, não bloqueia mesas e não garante disponibilidade.</p>
+                    <p>A reserva final deve ser feita exclusivamente pelo usuário, por meio de sua própria conta Disney.</p>
+
+                    <h3>4.2 Plano Concierge</h3>
+                    <p>No Plano Concierge, mediante contratação específica:</p>
+                    <ul>
+                        <li>O Dine Mouse pode realizar a reserva em nome do usuário</li>
+                        <li>As reservas seguem as preferências informadas (datas, horários, restaurantes e tamanho do grupo)</li>
+                    </ul>
+                    <p>O serviço Concierge não garante sucesso na reserva, pois depende da disponibilidade do sistema oficial da Disney.</p>
+                </div>
+
+                <div class="terms-section">
+                    <h2>5. Limitações e ausência de garantia</h2>
+                    <p>O Dine Mouse não garante:</p>
+                    <ul>
+                        <li>Que uma reserva será encontrada</li>
+                        <li>Que uma vaga permanecerá disponível após o envio da notificação</li>
+                        <li>Que o usuário conseguirá concluir a reserva após o alerta</li>
+                        <li>Disponibilidade contínua ou ininterrupta do serviço</li>
+                    </ul>
+                    <p>As reservas dependem exclusivamente dos sistemas oficiais da Disney e de fatores externos fora do nosso controle.</p>
+                </div>
+
+                <div class="terms-section">
+                    <h2>6. Pagamentos e preços</h2>
+                    
+                    <h3>6.1 Alertas avulsos</h3>
+                    <ul>
+                        <li>Cobrança única</li>
+                        <li>O valor varia conforme o período de monitoramento</li>
+                        <li>O preço final é exibido antes da confirmação da compra</li>
+                    </ul>
+
+                    <h3>6.2 Assinaturas</h3>
+                    <ul>
+                        <li>Cobrança mensal recorrente</li>
+                        <li>Renovação automática</li>
+                        <li>Cancelamento disponível a qualquer momento</li>
+                    </ul>
+                    <p>Os pagamentos são processados por provedores externos.</p>
+                    <p><strong>O Dine Mouse não armazena dados completos de cartão de crédito.</strong></p>
+                </div>
+
+                <div class="terms-section">
+                    <h2>7. Cancelamentos e política de reembolso</h2>
+                    
+                    <h3>7.1. Alertas avulsos</h3>
+                    <p>Ao adquirir um alerta avulso, o serviço de monitoramento é iniciado imediatamente.</p>
+                    <p>Por esse motivo, não há reembolso após a ativação do alerta, independentemente de o usuário receber ou não notificações ou conseguir realizar a reserva.</p>
+
+                    <h3>7.2. Planos de assinatura</h3>
+                    <p>As assinaturas são cobradas de forma recorrente e não são reembolsáveis, total ou parcialmente, após o início do período contratado.</p>
+                    <p>O cancelamento impede apenas futuras cobranças, mantendo o acesso ativo até o final do período já pago.</p>
+
+                    <h3>7.3. Plano Concierge</h3>
+                    <p>O serviço Concierge envolve trabalho humano e monitoramento dedicado.</p>
+                    <p>Após o início do serviço, não há reembolso, independentemente do resultado da tentativa de reserva, pois a disponibilidade depende exclusivamente dos sistemas oficiais da Disney.</p>
+
+                    <h3>7.4. Exceções</h3>
+                    <p>Reembolsos só ocorrerão quando:</p>
+                    <ul>
+                        <li>Exigidos por lei aplicável, ou</li>
+                        <li>Em caso de falha técnica comprovada e exclusivamente atribuível ao Dine Mouse</li>
+                    </ul>
+                </div>
+
+                <div class="terms-section">
+                    <h2>8. Comunicações</h2>
+                    <p>Ao utilizar o Dine Mouse, você concorda em receber:</p>
+                    <ul>
+                        <li>Notificações de alertas por e-mail, WhatsApp ou SMS</li>
+                        <li>Comunicações administrativas e operacionais</li>
+                    </ul>
+                    <p>Você pode cancelar notificações a qualquer momento:</p>
+                    <ul>
+                        <li>Pela área <strong>Meus Alertas</strong></li>
+                        <li>Respondendo <strong>STOP</strong> para mensagens SMS</li>
+                    </ul>
+                </div>
+
+                <div class="terms-section">
+                    <h2>9. Uso aceitável</h2>
+                    <p>Você concorda em não:</p>
+                    <ul>
+                        <li>Utilizar o serviço para fins ilegais</li>
+                        <li>Tentar acessar sistemas internos sem autorização</li>
+                        <li>Copiar, revender ou explorar comercialmente o serviço sem permissão</li>
+                        <li>Utilizar bots, scripts ou automações para interferir no funcionamento da plataforma</li>
+                    </ul>
+                    <p>O uso indevido pode resultar em suspensão ou encerramento da conta, sem aviso prévio.</p>
+                </div>
+
+                <div class="terms-section">
+                    <h2>10. Propriedade intelectual</h2>
+                    <p>Todo o conteúdo do Dine Mouse, incluindo:</p>
+                    <ul>
+                        <li>Marca</li>
+                        <li>Logotipo</li>
+                        <li>Interface</li>
+                        <li>Textos e código</li>
+                    </ul>
+                    <p>é protegido por direitos de propriedade intelectual e não pode ser copiado ou reutilizado sem autorização expressa.</p>
+                </div>
+
+                <div class="terms-section">
+                    <h2>11. Links para terceiros</h2>
+                    <p>O Dine Mouse pode conter links para sites de terceiros, incluindo o site oficial da Disney.</p>
+                    <p>Não somos responsáveis pelo conteúdo, disponibilidade ou políticas desses sites.</p>
+                </div>
+
+                <div class="terms-section">
+                    <h2>12. Encerramento do serviço</h2>
+                    <p>O Dine Mouse pode:</p>
+                    <ul>
+                        <li>Suspender ou encerrar contas que violem estes Termos</li>
+                        <li>Modificar ou descontinuar funcionalidades, com ou sem aviso prévio</li>
+                    </ul>
+                    <p>Sempre que possível, avisaremos sobre mudanças relevantes.</p>
+                </div>
+
+                <div class="terms-section">
+                    <h2>13. Alterações nos Termos</h2>
+                    <p>Estes Termos podem ser atualizados a qualquer momento.</p>
+                    <p>A versão vigente será sempre a mais recente publicada no site.</p>
+                    <p>O uso contínuo da plataforma após alterações implica aceitação automática dos novos Termos.</p>
+                </div>
+
+                <div class="terms-section">
+                    <h2>14. Limitação de responsabilidade</h2>
+                    <p>Na máxima extensão permitida por lei, o Dine Mouse não será responsável por:</p>
+                    <ul>
+                        <li>Perdas financeiras</li>
+                        <li>Perda de reservas</li>
+                        <li>Frustrações de viagem</li>
+                        <li>Danos indiretos ou consequenciais</li>
+                    </ul>
+                    <p>O serviço é fornecido "como está", sem garantias explícitas ou implícitas.</p>
+                </div>
+
+                <div class="terms-section">
+                    <h2>15. Legislação aplicável</h2>
+                    <p>Estes Termos são regidos pelas leis aplicáveis ao local de operação da empresa responsável pelo Dine Mouse, respeitando normas de proteção ao consumidor, LGPD e GDPR quando aplicável.</p>
+                </div>
+
+                <div class="terms-contact">
+                    <h2>16. Contato</h2>
+                    <p>Se tiver dúvidas sobre estes Termos de Uso, entre em contato:</p>
+                    <p>📧 <strong>E-mail:</strong> <a href="mailto:hello@dinemouse.com ">hello@dinemouse.com </a></p>
+                    <p>🌐 <strong>Site:</strong> <a href="https://www.dinemouse.com">www.dinemouse.com</a></p>
+                </div>
+
+                <div class="terms-warning">
+                    <h3>⚠️ Aviso legal final</h3>
+                    <p>O Dine Mouse é um serviço independente.</p>
+                    <p>Walt Disney World, Disneyland, Mickey Mouse e demais marcas mencionadas são marcas registradas da Disney Enterprises, Inc.</p>
+                    <p>O uso desses nomes é meramente informativo e não implica vínculo ou endosso.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <h3>Dine Mouse</h3>
+                    <p>Concierge gastronômico premium</p>
+                </div>
+                <div class="footer-links">
+                    <div class="footer-column">
+                        <h4>Links</h4>
+                        <ul>
+                            <li><a href="index.html#planos">Planos</a></li>
+                            <li><a href="index.html#parques">Parques</a></li>
+                            <li><a href="index.html#contato">Contato</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Legal</h4>
+                        <ul>
+                            <li><a href="politica-privacidade.html">Política de Privacidade</a></li>
+                            <li><a href="termos-uso.html">Termos de Serviço</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-disclaimer">
+                <p>Dine Mouse é um serviço independente de concierge gastronômico. Não somos afiliados à Disney ou a qualquer parque temático.</p>
+            </div>
+            <div class="footer-copyright">
+                <p>&copy; 2024 Dine Mouse. Todos os direitos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
