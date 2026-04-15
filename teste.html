@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Ambiente de teste — Dine Mouse</title>
+    <link rel="icon" type="image/png" href="favicon.png" sizes="512x512">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="teste-page">
+    <main class="teste-wrap">
+        <a class="teste-back" href="index.html">← Voltar ao site</a>
+        <h1 class="teste-title">Ambiente de teste</h1>
+        <p class="teste-toolkit-intro" style="color: #555; line-height: 1.65;">
+            Uso interno (equipe). Depois de criar uma conta de teste, você será encaminhado ao portal com dados pré-configurados no navegador.
+        </p>
+
+        <div class="teste-toolkit">
+            <p style="color: #666; font-size: 0.9rem; margin-bottom: 0.75rem;">Não tem uma conta? Crie uma conta de teste:</p>
+            <div class="login-test-buttons-container">
+                <button type="button" class="login-test-button login-test-button--alerts" onclick="createTestAccount()">
+                    🧪 Alertas
+                </button>
+                <button type="button" class="login-test-button login-test-button--concierge" onclick="createTestConciergeAccount()">
+                    👑 Concierge
+                </button>
+            </div>
+            <p class="test-account-note" style="color: #999; font-size: 0.75rem; margin: 0;">Contas de teste com dados pré-configurados (localStorage neste dispositivo).</p>
+        </div>
+    </main>
+
+    <div class="custom-modal-overlay" id="customModalOverlay">
+        <canvas class="modal-particles-canvas" id="customModalParticles"></canvas>
+        <div class="custom-modal" id="customModal">
+            <div class="custom-modal-header">
+                <h3 class="custom-modal-title" id="customModalTitle"></h3>
+            </div>
+            <div class="custom-modal-body">
+                <p class="custom-modal-message" id="customModalMessage"></p>
+                <div class="custom-modal-input-container" id="customModalInputContainer" style="display: none;">
+                    <input type="text" class="custom-modal-input" id="customModalInput" placeholder="">
+                </div>
+            </div>
+            <div class="custom-modal-footer" id="customModalFooter"></div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

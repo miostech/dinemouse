@@ -5263,6 +5263,58 @@ a.comparacao-card:hover {
     font-style: italic;
 }
 
+.b2b-form-section {
+    text-align: left;
+    max-height: min(70vh, 640px);
+    overflow-y: auto;
+    padding-right: 0.25rem;
+}
+
+.b2b-back-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    margin-bottom: 1.25rem;
+    padding: 0.35rem 0;
+    background: none;
+    border: none;
+    font-family: var(--font-body, inherit);
+    font-size: 0.95rem;
+    color: var(--azul-profundo);
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.b2b-back-button:hover {
+    color: var(--dourado-suave);
+}
+
+.b2b-form-title {
+    font-family: var(--font-display);
+    font-size: 1.45rem;
+    color: var(--azul-profundo);
+    margin: 0 0 0.5rem;
+    text-align: center;
+}
+
+.b2b-form-subtitle {
+    font-size: 0.95rem;
+    color: #555;
+    line-height: 1.65;
+    margin: 0 0 1.5rem;
+    text-align: center;
+}
+
+.b2b-company-form {
+    margin-top: 0.5rem;
+}
+
+.b2b-company-form .b2b-submit-btn {
+    width: 100%;
+    margin-top: 0.5rem;
+}
+
 @media (max-width: 768px) {
     .b2b-modal-content {
         max-width: 100%;
@@ -5422,19 +5474,108 @@ a.comparacao-card:hover {
     text-decoration: underline;
 }
 
-/* Botões de criar conta de teste */
-.modal-content button[onclick="createTestAccount()"]:hover {
+/* Página /teste — uso interno */
+.teste-page .teste-wrap {
+    max-width: 560px;
+    margin: 0 auto;
+    padding: 2rem 1.25rem 4rem;
+}
+
+.teste-page .teste-back {
+    display: inline-block;
+    margin-bottom: 1.5rem;
+    color: var(--roxo-magico);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.teste-page .teste-back:hover {
+    text-decoration: underline;
+}
+
+.teste-page .teste-title {
+    font-family: var(--font-display);
+    color: var(--azul-profundo);
+    font-size: 1.75rem;
+    margin-bottom: 0.75rem;
+}
+
+.teste-page .teste-toolkit {
+    margin-top: 2rem;
+    padding: 1.75rem;
+    border: 1px solid #e0e0e0;
+    border-radius: 16px;
+    background: var(--branco);
+    box-shadow: var(--shadow-sm, 0 2px 8px rgba(0, 0, 0, 0.06));
+    text-align: center;
+}
+
+.teste-page .login-test-buttons-container {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 0.75rem;
+}
+
+.teste-page .login-test-button {
+    background: transparent;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+    flex: 1;
+    min-width: 150px;
+}
+
+.teste-page .login-test-button--alerts {
+    border: 2px solid var(--roxo-magico);
+    color: var(--roxo-magico);
+}
+
+.teste-page .login-test-button--concierge {
+    border: 2px solid var(--dourado-suave);
+    color: var(--azul-profundo);
+}
+
+/* Botões de criar conta de teste (página /teste apenas) */
+.teste-page .login-test-button--alerts:hover {
     background: var(--roxo-magico);
     color: var(--branco);
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(75, 63, 114, 0.3);
 }
 
-.modal-content button[onclick="createTestConciergeAccount()"]:hover {
+.teste-page .login-test-button--concierge:hover {
     background: var(--dourado-suave);
     color: var(--azul-profundo);
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(230, 199, 122, 0.3);
+}
+
+@media (max-width: 768px) {
+    .teste-page .login-test-buttons-container {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .teste-page .login-test-button {
+        width: 100%;
+        min-width: auto;
+        padding: 0.875rem 1.25rem;
+        font-size: 0.875rem;
+    }
+
+    .teste-page .teste-toolkit-intro {
+        font-size: 0.875rem;
+        line-height: 1.6;
+    }
+
+    .teste-page .test-account-note {
+        font-size: 0.8rem;
+    }
 }
 
 .contact-form {

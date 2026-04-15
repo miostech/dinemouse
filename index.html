@@ -14,29 +14,6 @@
     <style>
         /* Ajustes mobile para estilos inline do index.html */
         @media (max-width: 768px) {
-            /* Botões de teste no modal de login */
-            .login-test-buttons-container {
-                flex-direction: column !important;
-                gap: 0.75rem !important;
-            }
-            
-            .login-test-button {
-                width: 100% !important;
-                min-width: auto !important;
-                padding: 0.875rem 1.25rem !important;
-                font-size: 0.875rem !important;
-            }
-            
-            /* Textos do modal de login */
-            .login-help-section p {
-                font-size: 0.875rem !important;
-                line-height: 1.6 !important;
-            }
-            
-            .login-help-section .test-account-note {
-                font-size: 0.8rem !important;
-            }
-            
             /* Ajustes para textos inline nos modais */
             .payment-step h3 {
                 font-size: 1.25rem !important;
@@ -1782,38 +1759,98 @@
 
             <div class="payment-modal-body">
                 <div class="b2b-content-modal">
-                    <p class="b2b-intro">Temos planos especiais com condições diferenciadas para agências de viagem, operadoras e parceiros comerciais.</p>
-                    
-                    <div class="b2b-beneficios-list">
-                        <h3 class="b2b-section-title">Benefícios exclusivos:</h3>
-                        <ul class="b2b-beneficios">
-                            <li>
-                                <span class="b2b-check">✓</span>
-                                <span>Planos com volume de alertas ampliado</span>
-                            </li>
-                            <li>
-                                <span class="b2b-check">✓</span>
-                                <span>Dashboard de gestão para múltiplos clientes</span>
-                            </li>
-                            <li>
-                                <span class="b2b-check">✓</span>
-                                <span>Suporte prioritário</span>
-                            </li>
-                            <li>
-                                <span class="b2b-check">✓</span>
-                                <span>Condições especiais para parcerias</span>
-                            </li>
-                        </ul>
+                    <div id="b2bLanding" class="b2b-landing">
+                        <p class="b2b-intro">Temos planos especiais com condições diferenciadas para agências de viagem, operadoras e parceiros comerciais.</p>
+
+                        <div class="b2b-beneficios-list">
+                            <h3 class="b2b-section-title">Benefícios exclusivos:</h3>
+                            <ul class="b2b-beneficios">
+                                <li>
+                                    <span class="b2b-check">✓</span>
+                                    <span>Planos com volume de alertas ampliado</span>
+                                </li>
+                                <li>
+                                    <span class="b2b-check">✓</span>
+                                    <span>Dashboard de gestão para múltiplos clientes</span>
+                                </li>
+                                <li>
+                                    <span class="b2b-check">✓</span>
+                                    <span>Suporte prioritário</span>
+                                </li>
+                                <li>
+                                    <span class="b2b-check">✓</span>
+                                    <span>Condições especiais para parcerias</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="b2b-cta-section">
+                            <button type="button" class="payment-cta-button b2b-cta-button" onclick="showB2BCompanyForm()">
+                                <span>Quero conhecer os planos B2B</span>
+                                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                    <path d="M7.5 15L12.5 10L7.5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </button>
+                            <p class="b2b-nota">Cadastro de empresa necessário. Preços e condições disponíveis após validação.</p>
+                        </div>
                     </div>
 
-                    <div class="b2b-cta-section">
-                        <button class="payment-cta-button b2b-cta-button" onclick="closeB2BModal(); scrollToSection('ajuda');">
-                            <span>Quero conhecer os planos B2B</span>
-                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                                <path d="M7.5 15L12.5 10L7.5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                        </button>
-                        <p class="b2b-nota">Cadastro de empresa necessário. Preços e condições disponíveis após validação.</p>
+                    <div id="b2bFormSection" class="b2b-form-section" hidden>
+                        <button type="button" class="b2b-back-button" onclick="hideB2BCompanyForm()">← Voltar</button>
+                        <h3 class="b2b-form-title">Proposta para empresas</h3>
+                        <p class="b2b-form-subtitle">Informe os dados da agência ou empresa. Entraremos em contato com planos e condições comerciais.</p>
+
+                        <form id="b2bCompanyForm" class="contact-form b2b-company-form">
+                            <div class="form-group">
+                                <label for="b2bCompanyName">Nome da empresa / agência *</label>
+                                <input type="text" id="b2bCompanyName" name="companyName" required autocomplete="organization">
+                            </div>
+                            <div class="form-group">
+                                <label for="b2bContactName">Nome do responsável *</label>
+                                <input type="text" id="b2bContactName" name="contactName" required autocomplete="name">
+                            </div>
+                            <div class="form-group">
+                                <label for="b2bEmail">E-mail corporativo *</label>
+                                <input type="email" id="b2bEmail" name="email" required autocomplete="email">
+                            </div>
+                            <div class="form-group">
+                                <label for="b2bPhone">WhatsApp ou telefone *</label>
+                                <input type="tel" id="b2bPhone" name="phone" required autocomplete="tel">
+                            </div>
+                            <div class="form-group">
+                                <label for="b2bCountry">País *</label>
+                                <select id="b2bCountry" name="country" required>
+                                    <option value="">Selecione</option>
+                                    <option value="Brasil">Brasil</option>
+                                    <option value="Estados Unidos">Estados Unidos</option>
+                                    <option value="Portugal">Portugal</option>
+                                    <option value="México">México</option>
+                                    <option value="Outro">Outro</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="b2bWebsite">Site da empresa (opcional)</label>
+                                <input type="text" id="b2bWebsite" name="website" placeholder="https://www.suaempresa.com">
+                            </div>
+                            <div class="form-group">
+                                <label for="b2bMonthlyVolume">Volume aproximado de reservas Disney / mês *</label>
+                                <select id="b2bMonthlyVolume" name="monthlyVolume" required>
+                                    <option value="">Selecione</option>
+                                    <option value="Até 5">Até 5</option>
+                                    <option value="6 a 20">6 a 20</option>
+                                    <option value="21 a 50">21 a 50</option>
+                                    <option value="Mais de 50">Mais de 50</option>
+                                    <option value="Ainda não atuo — quero informações">Ainda não atuo — quero informações</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="b2bMessage">Mensagem (opcional)</label>
+                                <textarea id="b2bMessage" name="message" rows="4" placeholder="Conte-nos sobre sua operação ou necessidades..."></textarea>
+                            </div>
+                            <button type="submit" class="payment-cta-button b2b-cta-button b2b-submit-btn">
+                                <span>Enviar solicitação</span>
+                            </button>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -1886,20 +1923,8 @@
                 </div>
                 <button type="submit" class="btn-submit">Entrar</button>
                 <p class="login-help-text" style="text-align: center; margin-top: 1rem; color: #666; font-size: 0.9rem;">
-                    Esqueceu sua senha? <a href="#" style="color: var(--roxo-magico);">Recuperar senha</a>
+                    Esqueceu sua senha? <a href="#" class="login-recover-link" onclick="event.preventDefault(); startPasswordRecoveryFlow();" style="color: var(--roxo-magico); font-weight: 600;">Recuperar senha</a>
                 </p>
-                <div class="login-help-section" style="text-align: center; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid #e0e0e0;">
-                    <p style="color: #666; font-size: 0.85rem; margin-bottom: 0.75rem;">Não tem uma conta? Crie uma conta de teste:</p>
-                    <div class="login-test-buttons-container" style="display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; margin-bottom: 0.75rem;">
-                        <button type="button" class="login-test-button" onclick="createTestAccount()" style="background: transparent; border: 2px solid var(--roxo-magico); color: var(--roxo-magico); padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; font-size: 0.9rem; flex: 1; min-width: 150px;">
-                            🧪 Alertas
-                        </button>
-                        <button type="button" class="login-test-button" onclick="createTestConciergeAccount()" style="background: transparent; border: 2px solid var(--dourado-suave); color: var(--azul-profundo); padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; font-size: 0.9rem; flex: 1; min-width: 150px;">
-                            👑 Concierge
-                        </button>
-                    </div>
-                    <p class="test-account-note" style="color: #999; font-size: 0.75rem;">Contas de teste com dados pré-configurados</p>
-                </div>
             </form>
         </div>
     </div>

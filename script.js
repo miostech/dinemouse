@@ -3,6 +3,26 @@ const WHATSAPP_BUSINESS_NUMBER = '14074295155';
 
 // Endpoint para gravar o lead no MongoDB (servidor local em dev-server.js). Mesma origem em dev/prod.
 const CONTACT_LEADS_API = '/api/contact-leads';
+const B2B_LEADS_API = '/api/b2b-leads';
+const PORTAL_REGISTER_API = '/api/portal/register';
+const AUTH_LOGIN_API = '/api/auth/login';
+const AUTH_FORGOT_PASSWORD_API = '/api/auth/forgot-password';
+
+async function syncPortalUserToServer(email, password, userData) {
+    try {
+        const r = await fetch(PORTAL_REGISTER_API, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password, userData }),
+        });
+        if (!r.ok) {
+            const t = await r.text();
+            console.warn('portal-register:', r.status, t);
+        }
+    } catch (err) {
+        console.warn('portal-register:', err);
+    }
+}
 
 // ============================================
 // CUSTOM MODALS (Alert, Confirm, Prompt)
@@ -152,7 +172,7 @@ function customConfirm(message, title = 'Confirmação') {
 /**
  * Modal customizado para substituir prompt()
  */
-function customPrompt(message, defaultValue = '', title = 'Entrada') {
+function customPrompt(message, defaultValue = '', title = 'Entrada', inputType = 'text') {
     return new Promise((resolve) => {
         const overlay = document.getElementById('customModalOverlay');
         const modal = document.getElementById('customModal');
@@ -165,8 +185,9 @@ function customPrompt(message, defaultValue = '', title = 'Entrada') {
         // Mostrar input
         inputContainer.style.display = 'block';
         input.value = defaultValue;
-        input.type = 'text';
-        input.placeholder = 'Digite aqui...';
+        input.type = inputType === 'password' ? 'password' : 'text';
+        input.placeholder = inputType === 'password' ? '••••••••' : 'Digite aqui...';
+        input.autocomplete = inputType === 'password' ? 'new-password' : 'off';
         
         // Configurar conteúdo
         modalTitle.textContent = title;
@@ -1077,6 +1098,7 @@ if (contactForm) {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
+                    source: 'modal',
                     name: data.name,
                     email: data.email,
                     phone: data.phone,
@@ -2424,14 +2446,18 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // ============================================
-// HELP CONTACT FORM - REDIRECT TO WHATSAPP
+// HELP CONTACT FORM — grava lead no MongoDB e redireciona ao WhatsApp
 // ============================================
 document.addEventListener('DOMContentLoaded', () => {
     const helpForm = document.getElementById('helpContactForm');
     if (helpForm) {
-        helpForm.addEventListener('submit', function(e) {
+        helpForm.addEventListener('submit', async function (e) {
             e.preventDefault();
-            
+
+            const submitBtn = helpForm.querySelector('.help-submit-btn');
+            const submitSpan = submitBtn?.querySelector('span');
+            const originalBtnText = submitSpan ? submitSpan.textContent : '';
+
             // Coletar dados do formulário
             const formData = {
                 firstName: document.getElementById('helpFirstName').value.trim(),
@@ -2445,17 +2471,63 @@ document.addEventListener('DOMContentLoaded', () => {
                 travelDate: document.getElementById('helpTravelDate').value.trim(),
                 tripType: document.querySelector('input[name="tripType"]:checked')?.value || '',
                 contactPreference: document.querySelector('input[name="contactPreference"]:checked')?.value || '',
-                message: document.getElementById('helpMessage').value.trim()
+                message: document.getElementById('helpMessage').value.trim(),
             };
-            
+
             // Validar campos obrigatórios
-            if (!formData.firstName || !formData.lastName || !formData.email || 
-                !formData.country || !formData.phone || !formData.parks || 
-                !formData.service || !formData.tripType || !formData.contactPreference) {
+            if (
+                !formData.firstName ||
+                !formData.lastName ||
+                !formData.email ||
+                !formData.country ||
+                !formData.phone ||
+                !formData.parks ||
+                !formData.service ||
+                !formData.tripType ||
+                !formData.contactPreference
+            ) {
                 customAlert('Por favor, preencha todos os campos obrigatórios.', 'Atenção');
                 return;
             }
-            
+
+            if (submitSpan) submitSpan.textContent = 'Enviando...';
+            if (submitBtn) submitBtn.disabled = true;
+
+            const leadPayload = {
+                source: 'help',
+                name: `${formData.firstName} ${formData.lastName}`.trim(),
+                email: formData.email,
+                phone: `${formData.phoneCountry} ${formData.phone}`.trim(),
+                dates: formData.travelDate || 'Não especificado',
+                parks: formData.parks,
+                restaurants: formData.service,
+                message: [
+                    `País/Região: ${formData.country}`,
+                    `Situação: ${formData.tripType}`,
+                    `Preferência de contato: ${formData.contactPreference}`,
+                    formData.message && `Mensagem adicional: ${formData.message}`,
+                ]
+                    .filter(Boolean)
+                    .join('\n'),
+            };
+
+            let savedOk = false;
+            try {
+                const res = await fetch(CONTACT_LEADS_API, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(leadPayload),
+                });
+                savedOk = res.ok;
+            } catch (err) {
+                console.warn('Lead (help) não gravado no servidor:', err);
+            }
+
+            const alertMsg = savedOk
+                ? 'Obrigado! Recebemos seus dados. Estamos abrindo o WhatsApp para você falar com a equipe.'
+                : 'Não foi possível guardar o pedido no sistema agora. Estamos abrindo o WhatsApp para não perder seu contato.';
+            await customAlert(alertMsg, savedOk ? 'Sucesso' : 'Atenção');
+
             // Construir mensagem para WhatsApp
             let whatsappMessage = `Olá! Gostaria de entrar em contato com a Dine Mouse.\n\n`;
             whatsappMessage += `*INFORMAÇÕES DE CONTATO:*\n`;
@@ -2488,8 +2560,12 @@ document.addEventListener('DOMContentLoaded', () => {
             
             // Abrir WhatsApp
             window.open(whatsappUrl, '_blank');
+
+            helpForm.reset();
+            if (submitSpan) submitSpan.textContent = originalBtnText;
+            if (submitBtn) submitBtn.disabled = false;
         });
-        
+
         // Máscara de telefone para o formulário de ajuda
         const helpPhoneInput = document.getElementById('helpPhone');
         const helpPhoneCountrySelect = document.getElementById('helpPhoneCountry');
@@ -2536,9 +2612,34 @@ function openClientPortal() {
 // ============================================
 // B2B MODAL
 // ============================================
+function resetB2BModalView() {
+    const landing = document.getElementById('b2bLanding');
+    const formSection = document.getElementById('b2bFormSection');
+    const form = document.getElementById('b2bCompanyForm');
+    if (landing) landing.hidden = false;
+    if (formSection) formSection.hidden = true;
+    if (form) form.reset();
+}
+
+function showB2BCompanyForm() {
+    const landing = document.getElementById('b2bLanding');
+    const formSection = document.getElementById('b2bFormSection');
+    if (landing) landing.hidden = true;
+    if (formSection) formSection.hidden = false;
+    document.getElementById('b2bCompanyName')?.focus();
+}
+
+function hideB2BCompanyForm() {
+    const landing = document.getElementById('b2bLanding');
+    const formSection = document.getElementById('b2bFormSection');
+    if (landing) landing.hidden = false;
+    if (formSection) formSection.hidden = true;
+}
+
 function openB2BModal() {
     const modal = document.getElementById('b2bModal');
     if (modal) {
+        resetB2BModalView();
         modal.classList.add('active');
         document.body.style.overflow = 'hidden';
         // Inicializar partículas
@@ -2551,6 +2652,7 @@ function closeB2BModal() {
     if (modal) {
         modal.classList.remove('active');
         document.body.style.overflow = '';
+        resetB2BModalView();
         // Destruir partículas
         destroyModalParticles('b2bModalParticles');
     }
@@ -2570,7 +2672,7 @@ function scrollToSection(sectionId) {
     }, 100);
 }
 
-// Fechar modal B2B ao clicar fora ou pressionar Escape
+// Fechar modal B2B ao clicar fora ou pressionar Escape + envio do formulário B2B
 document.addEventListener('DOMContentLoaded', () => {
     const b2bModal = document.getElementById('b2bModal');
     if (b2bModal) {
@@ -2580,12 +2682,61 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
-    
+
+    const b2bCompanyForm = document.getElementById('b2bCompanyForm');
+    if (b2bCompanyForm) {
+        b2bCompanyForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const submitLabel = b2bCompanyForm.querySelector('.b2b-submit-btn span');
+            const submitButton = b2bCompanyForm.querySelector('.b2b-submit-btn');
+            const originalText = submitLabel ? submitLabel.textContent : '';
+            if (submitLabel) submitLabel.textContent = 'Enviando...';
+            if (submitButton) submitButton.disabled = true;
+
+            const fd = new FormData(b2bCompanyForm);
+            const payload = {
+                companyName: (fd.get('companyName') || '').toString().trim(),
+                contactName: (fd.get('contactName') || '').toString().trim(),
+                email: (fd.get('email') || '').toString().trim(),
+                phone: (fd.get('phone') || '').toString().trim(),
+                country: (fd.get('country') || '').toString().trim(),
+                website: (fd.get('website') || '').toString().trim(),
+                monthlyVolume: (fd.get('monthlyVolume') || '').toString().trim(),
+                message: (fd.get('message') || '').toString().trim(),
+            };
+
+            let savedOk = false;
+            try {
+                const res = await fetch(B2B_LEADS_API, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload),
+                });
+                savedOk = res.ok;
+            } catch (err) {
+                console.warn('Lead B2B não gravado no servidor:', err);
+            }
+
+            const alertMsg = savedOk
+                ? 'Recebemos os dados da sua empresa. Nossa equipe comercial entrará em contato em breve.'
+                : 'Não foi possível registrar sua solicitação agora. Tente novamente em instantes ou fale conosco pelo WhatsApp na página de contato.';
+            await customAlert(alertMsg, savedOk ? 'Sucesso' : 'Atenção');
+
+            if (submitLabel) submitLabel.textContent = originalText;
+            if (submitButton) submitButton.disabled = false;
+
+            if (savedOk) {
+                b2bCompanyForm.reset();
+                closeB2BModal();
+            }
+        });
+    }
+
     // Fechar com Escape
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
-            const b2bModal = document.getElementById('b2bModal');
-            if (b2bModal && b2bModal.classList.contains('active')) {
+            const b2bModalEl = document.getElementById('b2bModal');
+            if (b2bModalEl && b2bModalEl.classList.contains('active')) {
                 closeB2BModal();
             }
         }
@@ -2602,7 +2753,7 @@ function openLoginModal() {
     
     // Se já tem dados do usuário e email salvo, redirecionar direto para o portal
     if (userData && savedEmail) {
-        window.location.href = 'portal.html';
+        window.location.href = '/portal';
         return;
     }
     
@@ -2624,10 +2775,9 @@ function openLoginModal() {
 }
 
 /**
- * Função para criar uma conta de teste rapidamente
- * Útil para desenvolvimento e testes
+ * Contas de teste: usar apenas em /teste (não exposto no site principal).
  */
-function createTestAccount() {
+async function createTestAccount() {
     const testEmail = 'teste@dinemouse.com';
     const testPassword = 'Teste123!';
     
@@ -2675,19 +2825,19 @@ function createTestAccount() {
     // Salvar dados
     localStorage.setItem('dineMouse_userData', JSON.stringify(testUserData));
     localStorage.setItem('dineMouse_email', testEmail);
-    
-    customAlert(
+
+    await syncPortalUserToServer(testEmail, testPassword, testUserData);
+
+    await customAlert(
         `✅ Conta de teste criada com sucesso!\n\n` +
         `📧 Email: ${testEmail}\n` +
         `🔑 Senha: ${testPassword}\n\n` +
         `Você pode usar essas credenciais para fazer login no portal.`,
         'Conta Criada'
     );
-    
-    // Abrir modal de login com dados preenchidos
+
     openLoginModal();
-    
-    // Preencher campos automaticamente
+
     setTimeout(() => {
         const emailInput = document.getElementById('loginEmail');
         const passwordInput = document.getElementById('loginPassword');
@@ -2696,11 +2846,7 @@ function createTestAccount() {
     }, 300);
 }
 
-/**
- * Função para criar uma conta de teste do tipo Concierge
- * Útil para desenvolvimento e testes
- */
-function createTestConciergeAccount() {
+async function createTestConciergeAccount() {
     const testEmail = 'concierge@dinemouse.com';
     const testPassword = 'Concierge123!';
     
@@ -2749,8 +2895,10 @@ function createTestConciergeAccount() {
     // Salvar dados
     localStorage.setItem('dineMouse_userData', JSON.stringify(testUserData));
     localStorage.setItem('dineMouse_email', testEmail);
-    
-    customAlert(
+
+    await syncPortalUserToServer(testEmail, testPassword, testUserData);
+
+    await customAlert(
         `✅ Conta de teste Concierge criada com sucesso!\n\n` +
         `📧 Email: ${testEmail}\n` +
         `🔑 Senha: ${testPassword}\n\n` +
@@ -2759,11 +2907,9 @@ function createTestConciergeAccount() {
         `Você pode usar essas credenciais para fazer login no portal.`,
         'Conta Criada'
     );
-    
-    // Abrir modal de login com dados preenchidos
+
     openLoginModal();
-    
-    // Preencher campos automaticamente
+
     setTimeout(() => {
         const emailInput = document.getElementById('loginEmail');
         const passwordInput = document.getElementById('loginPassword');
@@ -2789,6 +2935,62 @@ function closeLoginModal() {
     }
 }
 
+/**
+ * Recuperação por e-mail: pedido ao servidor (token em MongoDB + Resend).
+ */
+async function startPasswordRecoveryFlow() {
+    const emailInput = document.getElementById('loginEmail');
+    const prefill = emailInput ? emailInput.value.trim() : '';
+
+    const emailRaw = await customPrompt(
+        'Informe o e-mail da sua conta Dine Mouse. Enviaremos um link para redefinir a senha:',
+        prefill,
+        'Recuperar senha',
+        'text'
+    );
+    if (emailRaw === null) return;
+
+    const email = String(emailRaw).trim().toLowerCase();
+    if (!email) {
+        await customAlert('Digite um e-mail válido.', 'Atenção');
+        return;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        await customAlert('O formato do e-mail não é válido.', 'Atenção');
+        return;
+    }
+
+    try {
+        const r = await fetch(AUTH_FORGOT_PASSWORD_API, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email }),
+        });
+        const data = await r.json().catch(() => ({}));
+
+        if (!r.ok) {
+            await customAlert(
+                'Não foi possível processar o pedido agora. Tente mais tarde ou use a página de contato.',
+                'Erro'
+            );
+            return;
+        }
+
+        const base =
+            data.message ||
+            'Se existir uma conta com este e-mail, enviámos instruções para redefinir a senha.';
+        await customAlert(
+            `${base}\n\nVerifique a caixa de entrada e o spam. O link expira em 1 hora.`,
+            'Recuperar senha'
+        );
+    } catch {
+        await customAlert(
+            'Não foi possível contactar o servidor. Verifique a ligação à internet ou tente mais tarde.',
+            'Erro'
+        );
+    }
+}
+
 // Fechar modal de login ao clicar fora ou pressionar Escape
 document.addEventListener('DOMContentLoaded', () => {
     const loginModal = document.getElementById('loginModal');
@@ -2810,45 +3012,65 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
     
-    // Submeter formulário de login
+    // Submeter formulário de login (localStorage ou servidor MongoDB)
     const loginForm = document.getElementById('loginForm');
     if (loginForm) {
-        loginForm.addEventListener('submit', function(e) {
+        loginForm.addEventListener('submit', async function (e) {
             e.preventDefault();
-            
+
             const email = document.getElementById('loginEmail').value.trim();
             const password = document.getElementById('loginPassword').value;
             const rememberMe = document.getElementById('rememberMe').checked;
-            
-            // Validação básica
+
             if (!email || !password) {
                 customAlert('Por favor, preencha todos os campos.', 'Atenção');
                 return;
             }
-            
-            // Verificar credenciais (em produção, seria verificado no backend)
-            const userData = localStorage.getItem('dineMouse_userData');
-            if (userData) {
-                const user = JSON.parse(userData);
-                
-                // Verificar email e senha
-                if (user.email === email && user.password === password) {
-                    // Login bem-sucedido
-                    console.log('Login successful:', { email, rememberMe });
-                    
-                    // Salvar email se "lembrar-me" estiver marcado
-                    if (rememberMe) {
-                        localStorage.setItem('dineMouse_email', email);
+
+            const emailNorm = email.toLowerCase();
+            const userDataRaw = localStorage.getItem('dineMouse_userData');
+            if (userDataRaw) {
+                try {
+                    const user = JSON.parse(userDataRaw);
+                    const uEmail = user.email ? String(user.email).trim().toLowerCase() : '';
+                    if (uEmail === emailNorm && user.password === password) {
+                        if (rememberMe) {
+                            localStorage.setItem('dineMouse_email', email);
+                        }
+                        window.location.href = '/portal';
+                        return;
                     }
-                    
-                    // Redirecionar para o portal do cliente
-                    window.location.href = 'portal.html';
-                } else {
-                    customAlert('Email ou senha incorretos. Por favor, verifique suas credenciais.\n\nDica: Verifique o console do navegador após o pagamento para ver a senha gerada.', 'Erro de Login');
+                } catch {
+                    /* continua para API */
                 }
-            } else {
-                customAlert('Nenhuma conta encontrada com este email.\n\nPor favor, realize um pagamento primeiro para criar sua conta.', 'Conta Não Encontrada');
             }
+
+            try {
+                const r = await fetch(AUTH_LOGIN_API, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password }),
+                });
+                if (r.ok) {
+                    const data = await r.json();
+                    if (data.userData) {
+                        localStorage.setItem('dineMouse_userData', JSON.stringify(data.userData));
+                        if (rememberMe) {
+                            localStorage.setItem('dineMouse_email', email);
+                        }
+                        window.location.href = '/portal';
+                        return;
+                    }
+                }
+            } catch {
+                /* mensagem abaixo */
+            }
+
+            customAlert(
+                'E-mail ou senha incorretos.\n\n' +
+                    'Se redefiniu a senha pelo e-mail, use a nova senha. Caso ainda não tenha conta no servidor, faça login neste aparelho com a conta criada aqui ou use «Recuperar senha».',
+                'Erro de login'
+            );
         });
     }
     
@@ -2942,7 +3164,9 @@ async function simulatePaymentAndSendEmail(planType, planData) {
     // Salvar dados do usuário (em produção, seria salvo no backend)
     localStorage.setItem('dineMouse_userData', JSON.stringify(userData));
     localStorage.setItem('dineMouse_email', userEmail);
-    
+
+    await syncPortalUserToServer(userEmail, tempPassword, userData);
+
     // Simular envio de email
     console.log('=== SIMULAÇÃO DE EMAIL ===');
     console.log(`Para: ${userEmail}`);
@@ -2960,7 +3184,7 @@ async function simulatePaymentAndSendEmail(planType, planData) {
         }).join(', ');
         console.log(`Telefones cadastrados: ${phonesList}\n`);
     }
-    console.log(`Acesse: ${window.location.origin}/portal.html\n`);
+    console.log(`Acesse: ${window.location.origin}/portal\n`);
     console.log(`IMPORTANTE: Altere sua senha no primeiro acesso.\n\n`);
     console.log(`Plano contratado: ${userData.plan.name}\n`);
     if (planType === 'subscription') {

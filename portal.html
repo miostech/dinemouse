@@ -5,12 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Portal do Cliente Dine Mouse - Gerencie seus alertas e reservas">
     <title>Portal do Cliente - Dine Mouse</title>
-    <link rel="icon" type="image/png" href="favicon.png" sizes="512x512">
-    <link rel="apple-touch-icon" href="favicon.png">
+    <link rel="icon" type="image/png" href="/favicon.png" sizes="512x512">
+    <link rel="apple-touch-icon" href="/favicon.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="/styles.css">
     <style>
         .portal-container {
             max-width: 1200px;
@@ -878,7 +878,7 @@
         <div class="portal-header">
             <h1>Seu Portal Dine Mouse</h1>
             <div class="portal-nav">
-                <a href="index.html" class="btn-logout">Voltar ao site</a>
+                <a href="/index.html" class="btn-logout">Voltar ao site</a>
                 <button class="btn-logout" onclick="logout()">Sair</button>
             </div>
         </div>
@@ -1500,7 +1500,7 @@
                     <div class="empty-state">
                         <div class="empty-state-icon">📋</div>
                         <p>Você ainda não possui alertas ${userData.plan.type !== 'alerts' ? '(disponível apenas para planos de alertas)' : 'ativos'}.</p>
-                        ${userData.plan.type === 'alerts' ? '<p><a href="index.html#planos">Criar primeiro alerta</a></p>' : ''}
+                        ${userData.plan.type === 'alerts' ? '<p><a href="/index.html#planos">Criar primeiro alerta</a></p>' : ''}
                     </div>
                 `;
                 return;
@@ -1813,7 +1813,7 @@
             const confirmed = await customConfirm('Tem certeza que deseja sair?', 'Sair');
             if (confirmed) {
                 localStorage.removeItem('dineMouse_email');
-                window.location.href = 'index.html';
+                window.location.href = '/index.html';
             }
         }
         

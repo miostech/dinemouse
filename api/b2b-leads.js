@@ -1,5 +1,5 @@
 const { connectMongo } = require('../lib/mongo');
-const ContactLead = require('../lib/ContactLead');
+const B2BLead = require('../lib/B2BLead');
 
 function parseBody(req) {
     const b = req.body;
@@ -34,29 +34,27 @@ module.exports = async (req, res) => {
         return res.status(400).json({ ok: false, error: 'invalid_body' });
     }
 
-    const { name, email, phone, dates, parks, restaurants, message, source } = body;
+    const { companyName, contactName, email, phone, country, website, monthlyVolume, message } = body;
 
-    if (!name || !email || !phone || !dates || !parks) {
+    if (!companyName || !contactName || !email || !phone || !country || !monthlyVolume) {
         return res.status(400).json({ ok: false, error: 'missing_fields' });
     }
 
-    const sourceNorm = source === 'help' ? 'help' : 'modal';
-
     try {
         await connectMongo();
-        const doc = await ContactLead.create({
-            source: sourceNorm,
-            name,
+        const doc = await B2BLead.create({
+            companyName,
+            contactName,
             email,
             phone,
-            dates,
-            parks,
-            restaurants: restaurants ?? '',
+            country,
+            website: website ?? '',
+            monthlyVolume,
             message: message ?? '',
         });
         return res.status(201).json({ ok: true, id: String(doc._id) });
     } catch (err) {
-        console.error('contact-leads:', err);
+        console.error('b2b-leads:', err);
         return res.status(500).json({ ok: false, error: 'server_error' });
     }
 };
