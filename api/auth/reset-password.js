@@ -1,4 +1,4 @@
-const { authLogin } = require('../lib/authLogin');
+const { authResetPassword } = require('../../lib/authResetPassword');
 
 module.exports = async (req, res) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -12,5 +12,5 @@ module.exports = async (req, res) => {
         return res.status(405).json({ ok: false, error: 'method_not_allowed' });
     }
 
-    return authLogin(req, res);
+    return authResetPassword(req, res);
 };

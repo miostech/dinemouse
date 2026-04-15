@@ -1,4 +1,4 @@
-const { authPortalRegister } = require('../lib/authPortalRegister');
+const { authForgotPassword } = require('../../lib/authForgotPassword');
 
 module.exports = async (req, res) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -12,5 +12,5 @@ module.exports = async (req, res) => {
         return res.status(405).json({ ok: false, error: 'method_not_allowed' });
     }
 
-    return authPortalRegister(req, res);
+    return authForgotPassword(req, res);
 };
