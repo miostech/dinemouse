@@ -155,6 +155,8 @@ function renderArticle(post, titleMap) {
     <meta property="og:title" content="${escapeHtml(post.title)}">
     <meta property="og:description" content="${escapeHtml(post.metaDesc)}">
     <meta property="og:url" content="${canonical}">
+    <meta property="og:site_name" content="Dine Mouse">
+    <meta property="og:locale" content="pt_BR">
     <meta property="og:image" content="https://www.dinemouse.com/logoDine.png">
     <meta name="twitter:card" content="summary_large_image">
     <meta property="article:published_time" content="${post.date}">
