@@ -6,7 +6,8 @@
     "dev": "node dev-server.js",
     "start": "node dev-server.js",
     "serve": "npx serve . -p 3000",
-    "seed:user": "node scripts/seed-portal-user.js"
+    "seed:user": "node scripts/seed-portal-user.js",
+    "blog:generate": "node scripts/generate-blog.mjs"
   },
   "keywords": [
     "landing-page",

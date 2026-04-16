@@ -2446,7 +2446,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // ============================================
-// HELP CONTACT FORM — grava lead no MongoDB e redireciona ao WhatsApp
+// HELP CONTACT FORM - grava lead no MongoDB e redireciona ao WhatsApp
 // ============================================
 document.addEventListener('DOMContentLoaded', () => {
     const helpForm = document.getElementById('helpContactForm');
