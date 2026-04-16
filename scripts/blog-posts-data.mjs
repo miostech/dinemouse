@@ -1,4 +1,7 @@
 /** Dados para gerar artigos do blog (node scripts/generate-blog.mjs) */
+import { EDITORIAL_PART1 } from './blog-editorial-part1.mjs';
+import { EDITORIAL_PART2 } from './blog-editorial-part2.mjs';
+
 export const EXISTING_INDEX = [
     {
         slug: 'como-conseguir-reserva-cinderellas-royal-table',
@@ -830,6 +833,8 @@ export const NEW_POSTS = [
             ),
         ],
     },
+    ...EDITORIAL_PART1,
+    ...EDITORIAL_PART2,
 ];
 
 /** Datas de publicação variadas (ISO + etiqueta PT) - aplicadas a cada slug gerado */
@@ -865,6 +870,7 @@ const PUBLISH_DATES = {
 };
 
 for (const post of NEW_POSTS) {
+    if (post.date && post.dateLabel) continue;
     const d = PUBLISH_DATES[post.slug];
     if (!d) throw new Error(`blog-posts-data: falta data para slug "${post.slug}"`);
     post.date = d.date;

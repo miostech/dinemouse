@@ -19,6 +19,30 @@ function escapeHtml(s) {
         .replace(/"/g, '&quot;');
 }
 
+/** Converte **negrito** do markdown leve em <strong>; escapa o restante. */
+function escapeHtmlWithBold(s) {
+    const str = String(s);
+    let out = '';
+    let i = 0;
+    const len = str.length;
+    while (i < len) {
+        const open = str.indexOf('**', i);
+        if (open === -1) {
+            out += escapeHtml(str.slice(i));
+            break;
+        }
+        out += escapeHtml(str.slice(i, open));
+        const close = str.indexOf('**', open + 2);
+        if (close === -1) {
+            out += escapeHtml(str.slice(open));
+            break;
+        }
+        out += '<strong>' + escapeHtml(str.slice(open + 2, close)) + '</strong>';
+        i = close + 2;
+    }
+    return out;
+}
+
 function escapeJsonLdString(s) {
     return String(s).replace(/\\/g, '\\\\').replace(/"/g, '\\"');
 }
@@ -93,8 +117,10 @@ function renderArticle(post, titleMap) {
 
     const sectionsHtml = post.sections
         .map((sec) => {
-            const ps = sec.paragraphs.map((p) => `                <p>${escapeHtml(p)}</p>`).join('\n');
-            return `                <h2>${escapeHtml(sec.h2)}</h2>\n${ps}`;
+            const ps = sec.paragraphs
+                .map((p) => `                <p>${escapeHtmlWithBold(p)}</p>`)
+                .join('\n');
+            return `                <h2>${escapeHtmlWithBold(sec.h2)}</h2>\n${ps}`;
         })
         .join('\n\n');
 
@@ -108,7 +134,7 @@ function renderArticle(post, titleMap) {
         publisher: { '@type': 'Organization', name: 'Dine Mouse', url: 'https://www.dinemouse.com' },
         description: post.metaDesc,
         keywords: post.keywords,
-        mainEntityOfPage: canonical,
+        mainEntityOfPage: { '@type': 'WebPage', '@id': canonical },
     };
 
     return `<!DOCTYPE html>
@@ -129,6 +155,9 @@ function renderArticle(post, titleMap) {
     <meta property="og:title" content="${escapeHtml(post.title)}">
     <meta property="og:description" content="${escapeHtml(post.metaDesc)}">
     <meta property="og:url" content="${canonical}">
+    <meta property="og:image" content="https://www.dinemouse.com/logoDine.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta property="article:published_time" content="${post.date}">
     <script type="application/ld+json">
     ${JSON.stringify(jsonLd, null, 4)}
     </script>
@@ -146,10 +175,10 @@ ${NAV}
                 <h1 itemprop="headline">${escapeHtml(post.title)}</h1>
                 <p class="post-meta">
                     <time datetime="${post.date}" itemprop="datePublished">${post.dateLabel}</time>
-                    · Walt Disney World
+                    · ${escapeHtml(post.geoLabel || 'Walt Disney World')}
                 </p>
 
-                <p>${escapeHtml(post.lead)}</p>
+                <p>${escapeHtmlWithBold(post.lead)}</p>
 
 ${sectionsHtml}
 
