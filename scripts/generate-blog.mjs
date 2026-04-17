@@ -10,6 +10,37 @@ import { NEW_POSTS, EXISTING_INDEX } from './blog-posts-data.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, '..');
+const MONTHS_PT = [
+    'janeiro',
+    'fevereiro',
+    'março',
+    'abril',
+    'maio',
+    'junho',
+    'julho',
+    'agosto',
+    'setembro',
+    'outubro',
+    'novembro',
+    'dezembro',
+];
+
+function isoLocalDate(date) {
+    const y = date.getFullYear();
+    const m = String(date.getMonth() + 1).padStart(2, '0');
+    const d = String(date.getDate()).padStart(2, '0');
+    return `${y}-${m}-${d}`;
+}
+
+function safePublishedDate(isoDate) {
+    const today = isoLocalDate(new Date());
+    return isoDate > today ? today : isoDate;
+}
+
+function dateLabelPtBr(isoDate) {
+    const [y, m, d] = isoDate.split('-').map(Number);
+    return `${d} de ${MONTHS_PT[m - 1]} de ${y}`;
+}
 
 function escapeHtml(s) {
     return String(s)
@@ -104,6 +135,8 @@ const FOOTER = `    <footer class="footer">
     <script src="/script.js"></script>`;
 
 function renderArticle(post, titleMap) {
+    const publishedDate = safePublishedDate(post.date);
+    const publishedLabel = dateLabelPtBr(publishedDate);
     const canonical = `https://www.dinemouse.com/blog/${post.slug}/`;
     const breadcrumb = post.breadcrumb || post.title.slice(0, 40);
     const relatedItems = post.related
@@ -128,8 +161,8 @@ function renderArticle(post, titleMap) {
         '@context': 'https://schema.org',
         '@type': 'BlogPosting',
         headline: post.title,
-        datePublished: post.date,
-        dateModified: post.date,
+        datePublished: publishedDate,
+        dateModified: publishedDate,
         author: { '@type': 'Organization', name: 'Dine Mouse' },
         publisher: { '@type': 'Organization', name: 'Dine Mouse', url: 'https://www.dinemouse.com' },
         description: post.metaDesc,
@@ -159,7 +192,7 @@ function renderArticle(post, titleMap) {
     <meta property="og:locale" content="pt_BR">
     <meta property="og:image" content="https://www.dinemouse.com/logoDine.png">
     <meta name="twitter:card" content="summary_large_image">
-    <meta property="article:published_time" content="${post.date}">
+    <meta property="article:published_time" content="${publishedDate}">
     <script type="application/ld+json">
     ${JSON.stringify(jsonLd, null, 4)}
     </script>
@@ -176,7 +209,7 @@ ${NAV}
             <article class="post-article" itemscope itemtype="https://schema.org/BlogPosting">
                 <h1 itemprop="headline">${escapeHtml(post.title)}</h1>
                 <p class="post-meta">
-                    <time datetime="${post.date}" itemprop="datePublished">${post.dateLabel}</time>
+                    <time datetime="${publishedDate}" itemprop="datePublished">${publishedLabel}</time>
                     · ${escapeHtml(post.geoLabel || 'Walt Disney World')}
                 </p>
 
@@ -225,15 +258,29 @@ function main() {
     }
 
     const allForIndex = [
-        ...EXISTING_INDEX.map((e) => ({ ...e, isExisting: true })),
-        ...NEW_POSTS.map((p) => ({
+        ...EXISTING_INDEX.map((e, idx) => {
+            const date = safePublishedDate(e.date);
+            return {
+                ...e,
+                date,
+                dateLabel: dateLabelPtBr(date),
+                orderRank: idx,
+                isExisting: true,
+            };
+        }),
+        ...NEW_POSTS.map((p, idx) => ({
             slug: p.slug,
             title: p.title,
-            date: p.date,
-            dateLabel: p.dateLabel,
+            date: safePublishedDate(p.date),
+            dateLabel: dateLabelPtBr(safePublishedDate(p.date)),
             excerpt: p.excerpt,
+            orderRank: 100000 + idx,
         })),
-    ].sort((a, b) => b.date.localeCompare(a.date));
+    ].sort((a, b) => {
+        const byDate = b.date.localeCompare(a.date);
+        if (byDate !== 0) return byDate;
+        return (b.orderRank || 0) - (a.orderRank || 0);
+    });
 
     const blogPostJson = allForIndex
         .map(

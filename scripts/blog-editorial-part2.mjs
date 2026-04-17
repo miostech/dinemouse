@@ -669,4 +669,111 @@ export const EDITORIAL_PART2 = [
             ),
         ],
     },
+    {
+        slug: 'ingresso-disney-mais-barato-a-tarde',
+        title: 'Ingresso Disney mais barato à tarde: existe mesmo? (Guia 2026)',
+        date: '2026-04-17',
+        dateLabel: '17 de abril de 2026',
+        metaDesc:
+            'Ingresso Disney mais barato à tarde existe? Entenda preço por data, diferença para Disney After Hours e estratégia real para economizar em 2026.',
+        keywords:
+            'ingresso Disney mais barato, Disney à tarde vale a pena, Disney After Hours preço, como economizar na Disney, ingressos Disney Orlando 2026',
+        excerpt:
+            'Entrar depois do almoço não reduz o preço do ingresso regular, mas pode melhorar conforto e filas. Veja quando vale usar a estratégia da tarde e quando considerar o After Hours.',
+        breadcrumb: 'Ingressos 2026',
+        lead: 'Se você pesquisou **“ingresso Disney mais barato à tarde”**, a resposta objetiva é: **não existe desconto por horário de entrada** no ingresso regular da Walt Disney World. O que existe é estratégia de uso do dia e, separadamente, um produto premium noturno chamado **Disney After Hours**.',
+        related: [
+            'ingresso-disney-preco',
+            'como-evitar-filas-disney',
+            'lightning-lane-disney-explicacao',
+            'quanto-custa-disney-visao-geral',
+            'disney-orlando-roteiro',
+        ],
+        sections: [
+            S(
+                'A Disney vende ingresso mais barato à tarde?',
+                'Não. Entrar às 9h ou às 15h no mesmo dia e parque mantém o mesmo preço do ingresso regular.',
+                'O valor é definido por data, parque escolhido e tipo de ingresso, não pelo horário em que você passa na catraca.'
+            ),
+            S(
+                'Então o que é o “ingresso da tarde/noite”?',
+                'Em muitos casos, as pessoas estão a falar do Disney After Hours: evento especial com acesso no fim da tarde/noite e filas menores.',
+                'Importante: não é versão barata do ingresso comum. Em vários dias, pode custar mais caro por ser uma experiência premium.'
+            ),
+            S(
+                'Estratégia inteligente para economizar sem mito',
+                'Usar ingresso normal e entrar entre 14h e 16h pode funcionar para quem quer evitar calor intenso, reduzir desgaste físico e aproveitar melhor o período noturno.',
+                'Você não paga menos, mas pode ganhar eficiência de energia e qualidade de experiência ao ficar até o fechamento.'
+            ),
+            S(
+                'After Hours vs ingresso normal (decisão prática)',
+                'Ingresso normal: melhor custo para dia completo e perfil que aceita mais fila.',
+                'After Hours: melhor para quem prioriza baixa lotação, ritmo rápido e menos tempo em fila, aceitando preço superior.'
+            ),
+            S(
+                'Perguntas frequentes (FAQ)',
+                'Existe ingresso Disney mais barato por horário em 2026? Não. O preço varia por data e demanda.',
+                'Vale a pena ir à Disney à tarde? Sim, especialmente por conforto térmico e dinâmica de filas à noite.',
+                'Disney After Hours é mais barato? Não. Em geral é um evento especial mais caro que o ingresso regular.'
+            ),
+            S(
+                'Conclusão',
+                'Se o objetivo é poupar, foque em calendário de baixa demanda, composição correta de dias e controle de extras, não em “desconto da tarde”.',
+                'Se o objetivo é velocidade e conforto premium, o After Hours pode ser uma boa compra para noites específicas.'
+            ),
+        ],
+    },
+    {
+        slug: 'after-hours-disney-vale-a-pena-primeira-viagem',
+        title: 'After Hours Disney vale a pena na primeira viagem? Guia prático para decidir',
+        date: '2026-04-17',
+        dateLabel: '17 de abril de 2026',
+        metaDesc:
+            'After Hours Disney vale a pena para quem vai pela primeira vez? Entenda perfil ideal, custo por hora, limites e quando o ingresso normal rende mais.',
+        keywords:
+            'After Hours Disney vale a pena, Disney After Hours primeira viagem, evento noturno Disney, filas baixas Disney, custo por hora Disney',
+        excerpt:
+            'After Hours pode ser excelente para quem prioriza filas curtas, mas nem sempre é a melhor compra para primeira viagem. Veja quando faz sentido e quando evitar.',
+        breadcrumb: 'After Hours',
+        lead: 'O **Disney After Hours** seduz quem sonha com parque mais vazio e ritmo rápido, mas na **primeira viagem** a decisão precisa ser racional: para alguns perfis, é a melhor noite da viagem; para outros, é uma compra cara que substitui horas de parque diurno que fariam mais diferença.',
+        related: [
+            'ingresso-disney-mais-barato-a-tarde',
+            'ingresso-disney-preco',
+            'como-evitar-filas-disney',
+            'genie-plus-vale-a-pena',
+            'disney-orlando-roteiro',
+        ],
+        sections: [
+            S(
+                'O que é o After Hours na prática',
+                'É um evento noturno com capacidade reduzida e janela de entrada geralmente no fim da tarde, seguido de horas exclusivas com menor fila.',
+                'Não substitui todos os objetivos de um dia completo de parque, especialmente para quem quer “ver tudo” na primeira visita.'
+            ),
+            S(
+                'Quando vale a pena para primeira viagem',
+                'Vale para quem prioriza atrações concorridas com menos espera, aguenta virar noite e já aceitou pagar mais por conforto.',
+                'Também funciona para grupos pequenos sem criança muito nova, com logística flexível no dia seguinte.'
+            ),
+            S(
+                'Quando NÃO vale a pena',
+                'Se o orçamento está apertado, o ingresso diurno bem planejado costuma entregar melhor custo por hora total de parque.',
+                'Se o grupo depende de rotina cedo, carrinho, pausa longa e refeições completas, o ganho do evento pode cair.'
+            ),
+            S(
+                'Comparação rápida com ingresso normal',
+                'Ingresso normal oferece mais horas totais e maior variedade de experiências ao longo do dia.',
+                'After Hours oferece menos horas, porém com maior fluidez nas atrações principais.'
+            ),
+            S(
+                'Checklist de decisão antes de comprar',
+                'Objetivo da noite (atrações, fotos, sensação de parque vazio), tolerância a horário tardio e impacto no dia seguinte.',
+                'Calcule custo por hora útil e compare com um dia normal bem executado com estratégia de filas.'
+            ),
+            S(
+                'Conclusão',
+                'Na primeira viagem, After Hours vale quando você compra conforto e velocidade com consciência do preço premium.',
+                'Sem esse alinhamento, invista no básico bem feito: calendário, rota inteligente e gestão de energia.'
+            ),
+        ],
+    },
 ];
