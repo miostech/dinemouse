@@ -43,6 +43,17 @@ class DisneyBrowser {
         }
         fs.mkdirSync(config.browser.sessionDir, { recursive: true });
 
+        // Remove travas obsoletas do perfil. Sem isso, após um restart (deploy/crash)
+        // o Chrome vê o SingletonLock antigo e recusa abrir ("profile appears to be
+        // in use"), causando loop de reinício no servidor.
+        for (const lock of ['SingletonLock', 'SingletonCookie', 'SingletonSocket']) {
+            try {
+                fs.rmSync(`${config.browser.sessionDir}/${lock}`, { force: true });
+            } catch {
+                /* noop */
+            }
+        }
+
         const headless = overrides.headless !== undefined ? overrides.headless : config.browser.headless;
         const channel = overrides.channel !== undefined ? overrides.channel : config.browser.channel;
 
