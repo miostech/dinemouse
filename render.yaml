@@ -1,0 +1,47 @@
+# Blueprint do Render para o worker de monitoramento.
+# https://render.com/docs/blueprint-spec
+#
+# Passos:
+#   1. No seu Mac: npm run worker:login  (salva a sessão MyDisney no MongoDB)
+#   2. Suba este repo no Render como Blueprint.
+#   3. Preencha as variáveis (as com sync:false pedem valor no painel).
+#
+# O worker restaura a sessão do MongoDB sozinho — não precisa logar no servidor.
+services:
+  - type: worker # background worker (sem HTTP)
+    name: dinemouse-worker
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    plan: starter # ~512MB-1GB; Chrome precisa de memória
+    autoDeploy: true
+    disk:
+      name: worker-data
+      mountPath: /data # persiste sessão/catálogo entre deploys (opcional; sessão também fica no Mongo)
+      sizeGB: 1
+    envVars:
+      - key: MONGODB_URI
+        sync: false
+      - key: RESEND_API_KEY
+        sync: false
+      - key: RESEND_FROM
+        sync: false
+      - key: APP_PUBLIC_URL
+        value: https://www.dinemouse.com
+      - key: OPS_ALERT_EMAIL
+        sync: false
+      # WhatsApp (Meta Cloud API) — preencha quando o template estiver aprovado
+      - key: WHATSAPP_PROVIDER
+        value: meta
+      - key: WHATSAPP_PHONE_NUMBER_ID
+        sync: false
+      - key: WHATSAPP_ACCESS_TOKEN
+        sync: false
+      - key: WHATSAPP_TEMPLATE_NAME
+        value: vaga_disponivel
+      - key: WHATSAPP_TEMPLATE_LANG
+        value: pt_BR
+      # Ritmo / anti-bloqueio (ajuste conforme necessário)
+      - key: WORKER_INTERVAL_MS
+        value: "60000"
+      - key: WORKER_MAX_GROUPS_PER_CYCLE
+        value: "8"

@@ -17,6 +17,12 @@ Thumbs.db
 *.swp
 *.swo
 
+# Worker (runtime: sessão MyDisney, amostras de JSON, cache do catálogo)
+worker/.session/
+worker/.session_bak/
+worker/samples/
+worker/data/
+
 # Logs
 *.log
 npm-debug.log*

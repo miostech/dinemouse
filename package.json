@@ -7,7 +7,14 @@
     "start": "node dev-server.js",
     "serve": "npx serve . -p 3000",
     "seed:user": "node scripts/seed-portal-user.js",
-    "blog:generate": "node scripts/generate-blog.mjs"
+    "blog:generate": "node scripts/generate-blog.mjs",
+    "worker": "node worker/index.js",
+    "worker:login": "node worker/index.js login",
+    "worker:save-session": "node worker/index.js save-session",
+    "worker:once": "node worker/index.js once",
+    "worker:probe": "node worker/index.js probe",
+    "worker:catalog": "node worker/index.js catalog",
+    "alerts:backfill": "node scripts/backfill-alerts.js"
   },
   "keywords": [
     "landing-page",
@@ -21,6 +28,7 @@
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
-    "mongoose": "^9.4.1"
+    "mongoose": "^9.4.1",
+    "playwright": "^1.48.0"
   }
 }
