@@ -3,12 +3,14 @@
 FROM node:20-slim
 
 # Não baixar o Chromium do Playwright — usamos o Chrome do sistema (channel=chrome).
+# Perfil do Chrome em pasta EFÊMERA (/tmp), não no disco persistente: evita a
+# trava "profile in use" que persiste entre restarts. O login vem do MongoDB.
 ENV PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 \
     WORKER_BROWSER_CHANNEL=chrome \
     WORKER_HEADLESS=true \
-    WORKER_SESSION_DIR=/data/session \
+    WORKER_SESSION_DIR=/tmp/dm-session \
     WORKER_CATALOG_PATH=/data/wdw-catalog.json \
-    WORKER_SAMPLES_DIR=/data/samples \
+    WORKER_SAMPLES_DIR=/tmp/dm-samples \
     NODE_ENV=production
 
 # Google Chrome estável + fontes necessárias.
