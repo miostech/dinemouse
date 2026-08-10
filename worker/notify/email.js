@@ -17,8 +17,10 @@ function slotsHtml(slots) {
         .join('');
 }
 
-function buildHtml({ restaurantName, date, meal, partySize, slots }) {
+function buildHtml({ restaurantName, date, meal, partySize, slots, restaurantUrl }) {
     const portalUrl = `${config.notify.appPublicUrl.replace(/\/$/, '')}/portal`;
+    // Link direto pro restaurante quando temos; senão, a busca geral de reservas.
+    const reserveUrl = restaurantUrl || config.notify.reserveUrl;
     return `
 <!DOCTYPE html>
 <html>
@@ -34,15 +36,18 @@ function buildHtml({ restaurantName, date, meal, partySize, slots }) {
   </table>
   <p style="margin-bottom:4px;"><strong>Horários disponíveis agora:</strong></p>
   <ul style="padding-left:20px; margin-top:4px;">${slotsHtml(slots)}</ul>
+  <p style="margin:20px 0;">
+    <a href="${reserveUrl}" style="display:inline-block; padding:12px 24px; background:#4B3F72; color:#fff; text-decoration:none; border-radius:8px; font-weight:600;">Reservar na Disney</a>
+  </p>
   <p style="font-size:0.9rem; color:#666;">⚠️ Essas vagas somem rápido. Reserve o quanto antes no site oficial da Disney.</p>
   <p style="font-size:0.9rem;">Gerencie seus alertas no <a href="${portalUrl}" style="color:#4B3F72;">Portal Dine Mouse</a>.</p>
 </body>
 </html>`.trim();
 }
 
-async function sendAvailabilityEmail({ to, restaurantName, date, meal, partySize, slots }) {
+async function sendAvailabilityEmail({ to, restaurantName, date, meal, partySize, slots, restaurantUrl }) {
     const subject = `Vaga disponível: ${restaurantName} em ${date}`;
-    const html = buildHtml({ restaurantName, date, meal, partySize, slots });
+    const html = buildHtml({ restaurantName, date, meal, partySize, slots, restaurantUrl });
 
     if (!config.notify.resendApiKey) {
         console.warn(`[email] RESEND_API_KEY ausente — e-mail NÃO enviado para ${to}.`);
@@ -67,4 +72,4 @@ async function sendAvailabilityEmail({ to, restaurantName, date, meal, partySize
     return { sent: true };
 }
 
-module.exports = { sendAvailabilityEmail };
+module.exports = { sendAvailabilityEmail, buildHtml };

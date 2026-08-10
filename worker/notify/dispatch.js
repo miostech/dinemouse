@@ -6,7 +6,7 @@ const { sendAvailabilityWhatsApp } = require('./whatsapp');
  * Roteia a notificação de novas vagas para os canais desejados do alerta.
  * @returns {Promise<{email?:object, whatsapp?:object}>}
  */
-async function dispatchAvailability(alert, restaurantName, slots) {
+async function dispatchAvailability(alert, restaurantName, slots, restaurantUrl) {
     if (config.notify.dryRun) {
         console.log(
             `[dry-run] notificaria ${alert.userEmail} — ${restaurantName} ${alert.date}: ` +
@@ -21,6 +21,7 @@ async function dispatchAvailability(alert, restaurantName, slots) {
         meal: alert.meal || '',
         partySize: alert.partySize,
         slots,
+        restaurantUrl: restaurantUrl || null,
     };
     const result = {};
 

@@ -109,6 +109,8 @@ const config = {
         resendApiKey: process.env.RESEND_API_KEY || '',
         resendFrom: process.env.RESEND_FROM || 'Dine Mouse <onboarding@resend.dev>',
         appPublicUrl: process.env.APP_PUBLIC_URL || 'https://www.dinemouse.com',
+        // URL do botão "Reservar na Disney" (mesma do botão do template WhatsApp).
+        reserveUrl: process.env.RESERVE_URL || 'https://disneyworld.disney.go.com/dine-res/',
         // E-mail do operador p/ avisos de saúde do worker (sessão caiu, bloqueio).
         opsEmail: process.env.OPS_ALERT_EMAIL || '',
         // Cooldown entre avisos repetidos do mesmo tipo ao operador (ms).

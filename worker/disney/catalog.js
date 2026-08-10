@@ -230,6 +230,14 @@ function resolveRestaurant(customerName, index) {
     return bestScore >= minNeeded ? best : null;
 }
 
+/** URL completa da página do restaurante (para deep-link no e-mail). */
+function restaurantUrl(entry) {
+    const u = entry && entry.url;
+    if (!u) return null;
+    if (/^https?:\/\//i.test(u)) return u;
+    return 'https://disneyworld.disney.go.com' + (u.startsWith('/') ? u : '/' + u);
+}
+
 function tomorrowISO() {
     const d = new Date(Date.now() + 24 * 60 * 60 * 1000);
     return d.toISOString().slice(0, 10);
@@ -244,5 +252,6 @@ module.exports = {
     syncCatalog,
     buildIndex,
     resolveRestaurant,
+    restaurantUrl,
     tomorrowISO,
 };

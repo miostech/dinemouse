@@ -109,7 +109,13 @@ async function runCycle(browser) {
         return { checked: 0, notified: 0 };
     }
 
-    const { index } = await ensureCatalog(browser);
+    const { cat, index } = await ensureCatalog(browser);
+    // Mapa facilityId -> URL do restaurante (para deep-link no e-mail).
+    const urlById = new Map();
+    for (const r of (cat && cat.restaurants) || []) {
+        const u = catalog.restaurantUrl(r);
+        if (u) urlById.set(r.id, u);
+    }
 
     // Resolve facilityId de quem ainda não tem.
     const resolvable = [];
@@ -204,7 +210,7 @@ async function runCycle(browser) {
                 };
 
                 if (newSlots.length) {
-                    await dispatchAvailability(alert, alert.restaurantName, newSlots);
+                    await dispatchAvailability(alert, alert.restaurantName, newSlots, urlById.get(alert.facilityId));
                     notified += 1;
                     update.notifiedSlots = [...already];
                     update.lastNotifiedAt = new Date();
