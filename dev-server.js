@@ -14,6 +14,9 @@ const { authPortalRegister } = require('./lib/authPortalRegister');
 const { authLogin } = require('./lib/authLogin');
 const { authForgotPassword } = require('./lib/authForgotPassword');
 const { authResetPassword } = require('./lib/authResetPassword');
+const { createCheckout } = require('./lib/stripeCheckout');
+const { stripeWebhook } = require('./lib/stripeWebhook');
+const { createPortalSession } = require('./lib/stripePortal');
 
 const PORT = process.env.PORT || 3000;
 const MONGODB_URI = process.env.MONGODB_URI;
@@ -25,6 +28,10 @@ if (!MONGODB_URI) {
 
 const app = express();
 app.use(cors({ origin: true }));
+
+// Webhook da Stripe ANTES do parser JSON: precisa do corpo cru p/ a assinatura.
+app.post('/api/stripe/webhook', express.raw({ type: 'application/json' }), stripeWebhook);
+
 app.use(express.json({ limit: '1mb' }));
 
 // Rotas da API antes do static (evita ambiguidade e garante POST em /api/*)
@@ -82,6 +89,8 @@ app.post('/api/b2b-leads', async (req, res) => {
 });
 
 app.post('/api/portal/register', authPortalRegister);
+app.post('/api/stripe/create-checkout', createCheckout);
+app.post('/api/stripe/portal', createPortalSession);
 app.post('/api/auth/login', authLogin);
 app.post('/api/auth/forgot-password', authForgotPassword);
 app.post('/api/auth/reset-password', authResetPassword);

@@ -7,6 +7,33 @@ const B2B_LEADS_API = '/api/b2b-leads';
 const PORTAL_REGISTER_API = '/api/portal/register';
 const AUTH_LOGIN_API = '/api/auth/login';
 const AUTH_FORGOT_PASSWORD_API = '/api/auth/forgot-password';
+const STRIPE_CHECKOUT_API = '/api/stripe/create-checkout';
+
+/**
+ * Inicia o pagamento: envia o carrinho ao backend, que cria a sessão de Stripe
+ * Checkout e devolve a URL. Redireciona o cliente para o pagamento seguro.
+ */
+async function startStripeCheckout(cart) {
+    try {
+        const r = await fetch(STRIPE_CHECKOUT_API, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(cart),
+        });
+        const data = await r.json().catch(() => ({}));
+        if (r.ok && data.ok && data.url) {
+            window.location.href = data.url; // vai para o Stripe Checkout
+            return true;
+        }
+        console.error('checkout:', r.status, data);
+        await customAlert('Não foi possível iniciar o pagamento. Tente novamente em instantes.', 'Erro');
+        return false;
+    } catch (err) {
+        console.error('checkout:', err);
+        await customAlert('Erro de conexão ao iniciar o pagamento. Verifique sua internet e tente novamente.', 'Erro');
+        return false;
+    }
+}
 
 async function syncPortalUserToServer(email, password, userData) {
     try {
@@ -787,10 +814,13 @@ function handleSubscriptionUserData() {
         email: email,
         phones: phones
     };
-    
-    // Processar pagamento e enviar email
-    simulatePaymentAndSendEmail('subscription', subscriptionData);
-    closeSubscriptionModal();
+
+    // Iniciar assinatura (Stripe Billing). Redireciona no sucesso.
+    startStripeCheckout({
+        planType: 'subscription',
+        customer: { email, name, phones },
+        subscription: { tier: 'mensal' },
+    });
 }
 
 // Fechar modal de subscrição ao clicar fora ou pressionar Escape
@@ -2054,10 +2084,16 @@ function handlePaymentUserData() {
         email: email,
         phones: phones
     };
-    
-    // Processar pagamento e enviar email
-    simulatePaymentAndSendEmail('alerts', paymentModalData);
-    closePaymentModal();
+
+    // Iniciar pagamento seguro (Stripe Checkout). Redireciona no sucesso.
+    startStripeCheckout({
+        planType: 'alerts',
+        customer: { email, name, phones },
+        themePark: paymentModalData.themePark,
+        selectedRestaurant: paymentModalData.selectedRestaurant,
+        dates: paymentModalData.dates,
+        extras: paymentModalData.extras,
+    });
 }
 
 // Fechar modal ao clicar fora
@@ -2351,9 +2387,20 @@ function handleConciergeCheckout() {
         const confirmCheckout = await customConfirm(confirmMessage, 'Confirmar Concierge');
         
         if (confirmCheckout) {
-            // Simular processamento de pagamento
-            simulatePaymentAndSendEmail('concierge', conciergeData);
-            closeConciergeModal();
+            // Iniciar pagamento seguro (Stripe Checkout). O e-mail é coletado
+            // pelo próprio Stripe (o formulário do concierge não pede e-mail).
+            startStripeCheckout({
+                planType: 'concierge',
+                customer: { name: contactName, phones: [{ full: fullPhone }] },
+                concierge: {
+                    plan: conciergeData.plan,
+                    tripDateStart,
+                    tripDateEnd,
+                    partySize,
+                    contactName,
+                    phone: fullPhone,
+                },
+            });
         }
     })();
 }
