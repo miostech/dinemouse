@@ -1312,14 +1312,21 @@
             const planInfoCard = document.getElementById('planInfoCard');
             if (!planInfoCard) return;
             
-            const activationDate = userData.activationDate 
+            const hasActivationDate = !!userData.activationDate;
+            const activationLabel = hasActivationDate ? 'Ativo desde' : 'Status';
+            const activationValue = hasActivationDate
                 ? new Date(userData.activationDate).toLocaleDateString('pt-BR', {
                     day: '2-digit',
                     month: 'long',
                     year: 'numeric'
                 })
                 : 'Ativo';
-            
+
+            // Rótulo do valor conforme o tipo de cobrança.
+            const valorLabel = userData.plan.type === 'concierge'
+                ? 'Valor por Viagem'
+                : (isMonthlyPlan() ? 'Valor Mensal' : 'Valor (pagamento único)');
+
             let planInfoHTML = `
                 <div class="plan-info-header">
                     <div>
@@ -1327,13 +1334,13 @@
                         <div class="plan-info-subtitle">Plano ${userData.plan.type === 'concierge' ? 'Concierge' : 'Alertas'}</div>
                     </div>
                     <div class="activation-date">
-                        <strong>Data de Ativação</strong>
-                        <span>${activationDate}</span>
+                        <strong>${activationLabel}</strong>
+                        <span>${activationValue}</span>
                     </div>
                 </div>
                 <div class="plan-details">
                     <div class="plan-detail-item">
-                        <div class="plan-detail-label">${userData.plan.type === 'concierge' ? 'Valor por Viagem' : 'Valor Mensal'}</div>
+                        <div class="plan-detail-label">${valorLabel}</div>
                         <div class="plan-detail-value">R$ ${userData.plan.price.toFixed(2)}</div>
                     </div>
             `;
