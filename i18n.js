@@ -15,8 +15,26 @@
     const originals = new WeakMap(); // nó de texto -> valor PT original
     const SKIP = new Set(['SCRIPT', 'STYLE', 'NOSCRIPT', 'CODE', 'PRE', 'TEXTAREA']);
 
+    // Detecção automática pelo idioma do navegador: português -> 'pt',
+    // qualquer outro -> 'en'. Só vale na 1ª visita (sem escolha manual salva).
+    function detectLang() {
+        try {
+            const langs = navigator.languages && navigator.languages.length
+                ? navigator.languages
+                : [navigator.language || navigator.userLanguage || ''];
+            for (const l of langs) {
+                if (/^pt(-|_|$)/i.test(String(l))) return 'pt';
+            }
+        } catch { /* sem navigator */ }
+        return 'en';
+    }
+
     function getLang() {
-        try { return localStorage.getItem(KEY) === 'en' ? 'en' : 'pt'; } catch { return 'pt'; }
+        try {
+            const stored = localStorage.getItem(KEY);
+            if (stored === 'en' || stored === 'pt') return stored; // escolha manual manda
+        } catch { /* sem storage */ }
+        return detectLang();
     }
     function setLang(l) {
         try { localStorage.setItem(KEY, l === 'en' ? 'en' : 'pt'); } catch { /* ignore */ }
