@@ -67,8 +67,10 @@
                 } else {
                     out = raw;
                 }
-                // Converte moeda mesmo em nós sem tradução (preços soltos e dinâmicos).
-                n.nodeValue = convertCurrency(out);
+                // Converte moeda e sufixos comuns mesmo em nós sem tradução (dinâmicos).
+                out = convertCurrency(out);
+                if (out.indexOf('/mês') !== -1) out = out.replace(/\/mês/g, '/month');
+                n.nodeValue = out;
             } else {
                 n.nodeValue = raw;
             }

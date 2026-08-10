@@ -59,7 +59,18 @@
             background: var(--roxo-magico);
             color: var(--branco);
         }
-        
+
+        /* Botão de idioma no portal (header claro): usa a cor da marca. */
+        .portal-nav .lang-toggle {
+            color: var(--roxo-magico);
+            border-color: var(--roxo-magico);
+            margin-left: 0;
+        }
+        .portal-nav .lang-toggle:hover {
+            background: var(--roxo-magico);
+            color: var(--branco);
+        }
+
         .portal-content {
             display: grid;
             grid-template-columns: 280px 1fr;
@@ -861,6 +872,7 @@
             <div class="portal-nav">
                 <a href="/index.html" class="btn-logout">Voltar ao site</a>
                 <button class="btn-logout" onclick="logout()">Sair</button>
+                <button class="lang-toggle" type="button" onclick="i18nToggle()" aria-label="Switch to English">EN</button>
             </div>
         </div>
 
@@ -2043,5 +2055,7 @@
         }
         
     </script>
+    <script src="/i18n-dict.js"></script>
+    <script src="/i18n.js"></script>
 </body>
 </html>
