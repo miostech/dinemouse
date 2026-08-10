@@ -1220,6 +1220,21 @@
             localStorage.setItem('dineMouse_userData', JSON.stringify(data));
         }
 
+        /** Slug do parque -> nome amigável (ex.: 'walt-disney-world' -> 'Walt Disney World'). */
+        const PARK_NAMES = {
+            'walt-disney-world': 'Walt Disney World',
+            'disneyland': 'Disneyland Resort',
+            'disneyland-paris': 'Disneyland Paris',
+            'tokyo-disney': 'Tokyo Disney Resort',
+        };
+        function parkDisplayName(park) {
+            const key = String(park || '').trim();
+            if (!key) return '—';
+            if (PARK_NAMES[key.toLowerCase()]) return PARK_NAMES[key.toLowerCase()];
+            // Fallback: tira hífens e capitaliza (cobre slugs novos e mantém nomes já legíveis).
+            return key.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
+        }
+
         /** Nº de alertas do plano, com fallback para a contagem real de alertas. */
         function planAlertCount() {
             const p = userData.plan || {};
@@ -1655,7 +1670,7 @@
                         </div>
                         <div class="alert-info">
                             <div class="alert-info-item">
-                                <strong>Parque:</strong> ${alert.park}
+                                <strong>Parque:</strong> ${parkDisplayName(alert.park)}
                             </div>
                             <div class="alert-info-item">
                                 <strong>Data:</strong> ${new Date(alert.date).toLocaleDateString('pt-BR')}
