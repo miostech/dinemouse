@@ -620,6 +620,7 @@ function handleSubscriptionCheckout() {
 
             // Pré-preenche se o cliente já estiver logado ("Confirme seus dados").
             prefillStep3('subscription');
+            updatePhonesHint('subscription');
         }
     })();
 }
@@ -1925,6 +1926,7 @@ function handleCheckout() {
 
             // Pré-preenche se o cliente já estiver logado ("Confirme seus dados").
             prefillStep3('payment');
+            updatePhonesHint('payment');
         }
     })();
 }
@@ -2003,6 +2005,26 @@ function prefillStep3(kind) {
         if (c && country) c.value = country;
         if (n && local && !n.value) n.value = local;
     });
+}
+
+/**
+ * Ajusta o texto de ajuda dos telefones conforme a Notificação WhatsApp foi
+ * contratada ou não — pra ninguém achar que vai receber no WhatsApp sem ter
+ * contratado. kind: 'payment' | 'subscription'.
+ */
+function updatePhonesHint(kind) {
+    const prefix = kind === 'subscription' ? 'subscription' : 'payment';
+    const hint = document.getElementById(prefix + 'PhonesHint');
+    if (!hint) return;
+    const data = kind === 'subscription' ? subscriptionData : paymentModalData;
+    const hasWhatsapp = !!(data && data.extras && data.extras.whatsapp);
+    if (hasWhatsapp) {
+        hint.innerHTML = '📱 Você contratou a <strong>Notificação WhatsApp</strong>: os alertas vão para os números abaixo (e também por e-mail).';
+        hint.style.color = '#1a7a4c';
+    } else {
+        hint.innerHTML = 'ℹ️ Seus alertas são enviados por <strong>e-mail</strong>. Para receber também no WhatsApp, volte e contrate a <strong>Notificação WhatsApp</strong> nos extras.';
+        hint.style.color = '#666';
+    }
 }
 
 function setupPaymentPhones() {
