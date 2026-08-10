@@ -1277,15 +1277,53 @@
         function saveUserData(data) {
             localStorage.setItem('dineMouse_userData', JSON.stringify(data));
         }
-        
+
+        /**
+         * Busca os dados MAIS RECENTES do servidor (usando as credenciais salvas)
+         * e atualiza userData + localStorage. Sem isso, o portal mostra o cache
+         * antigo — e uma compra nova feita com a sessão aberta não aparece.
+         */
+        async function refreshUserDataFromServer() {
+            let creds = null;
+            try { creds = JSON.parse(localStorage.getItem('dineMouse_userData') || 'null'); } catch { creds = null; }
+            if (!creds || !creds.email || !creds.password) return false;
+            try {
+                const r = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: creds.email, password: creds.password }),
+                });
+                const data = await r.json().catch(() => ({}));
+                if (r.ok && data.ok && data.userData) {
+                    userData = data.userData;
+                    saveUserData(userData);
+                    return true;
+                }
+            } catch (e) {
+                console.warn('refreshUserDataFromServer:', e);
+            }
+            return false;
+        }
+
         // ============================================
         // INITIALIZATION
         // ============================================
-        
+
         let userData = getUserData();
-        
-        document.addEventListener('DOMContentLoaded', () => {
-            // Verificar se é primeiro acesso e mostrar modal de ativação
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Sempre buscar dados frescos do servidor (evita cache desatualizado).
+            const refreshed = await refreshUserDataFromServer();
+
+            // Voltou do checkout mas sem sessão ativa (cliente novo): orienta login.
+            const params = new URLSearchParams(window.location.search);
+            if (params.get('checkout') === 'success' && !refreshed) {
+                await customAlert(
+                    'Pagamento confirmado! 🎉 Enviamos seu acesso por e-mail. Faça login para ver seus alertas.',
+                    'Compra confirmada'
+                );
+            }
+
             if (userData.isFirstAccess && !userData.activationDate) {
                 showActivationModal();
             } else {
