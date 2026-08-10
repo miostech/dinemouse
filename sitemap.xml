@@ -11,6 +11,11 @@
         <priority>0.9</priority>
     </url>
     <url>
+        <loc>https://www.dinemouse.com/blog/halloween-disney-orlando-reservas/</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
         <loc>https://www.dinemouse.com/blog/fuso-horario-reservas-disney-brasil/</loc>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
