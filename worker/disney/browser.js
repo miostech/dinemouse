@@ -311,6 +311,7 @@ class DisneyBrowser {
     async _login() {
         const page = this.page;
         this.loginBlockedByOtp = false;
+        this._loginStartedAt = Date.now(); // p/ só ler OTPs recebidos após isto
         console.log('[browser] tentando login MyDisney (auto)...');
 
         await this._clickSignIn();
@@ -349,19 +350,36 @@ class DisneyBrowser {
         }
 
         // Espera concluir: o iframe some (sucesso) ou aparece o pedido de OTP.
-        for (let i = 0; i < 25; i++) {
+        const otpSel =
+            'input[autocomplete="one-time-code"], input[name*="code" i], input[id*="otp" i], input[name*="passcode" i], input[name*="oneTime" i], input[name*="securityCode" i]';
+        let otpTried = false;
+        for (let i = 0; i < 40; i++) {
             await page.waitForTimeout(1000);
             const f = this._findOneIdFrame();
-            if (!f) break;
-            // Disney pediu CÓDIGO DE VERIFICAÇÃO (OTP por e-mail)?
-            const otp = f
-                .locator('input[autocomplete="one-time-code"], input[name*="code" i], input[id*="otp" i], input[name*="passcode" i], input[name*="oneTime" i], input[name*="securityCode" i]')
-                .first();
-            if (await otp.isVisible().catch(() => false)) {
+            if (!f) break; // login concluído
+            if (otpTried) continue;
+
+            const otp = f.locator(otpSel).first();
+            if (!(await otp.isVisible().catch(() => false))) continue;
+            otpTried = true;
+
+            // Disney pediu código de verificação → lê do e-mail e preenche.
+            console.warn('[browser] OneID pediu código (OTP). Buscando no e-mail...');
+            const { fetchOtpCode } = require('./otpMail');
+            const code = await fetchOtpCode({ sinceMs: this._loginStartedAt, timeoutMs: 120000 }).catch(() => null);
+            if (!code) {
                 this.loginBlockedByOtp = true;
-                console.warn('[browser] OneID pediu CÓDIGO DE VERIFICAÇÃO (OTP por e-mail) — auto-login não passa sem ler o e-mail.');
+                console.warn('[browser] não obtive o código OTP (IMAP não configurado ou e-mail não chegou).');
                 return false;
             }
+            await otp.fill(code).catch(() => {});
+            await this._oneIdSubmit(f, /verif|confirm|submit|continue|continuar|enviar|log ?in|entrar/i);
+            console.log('[browser] código OTP enviado; aguardando conclusão do login...');
+            for (let j = 0; j < 20; j++) {
+                await page.waitForTimeout(1000);
+                if (!this._findOneIdFrame()) break;
+            }
+            break;
         }
 
         // Recarrega o formulário para pegar o novo bearer da sessão logada.

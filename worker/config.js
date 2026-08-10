@@ -30,6 +30,16 @@ const config = {
             '/finder/api/v1/explorer-service/list-ancestor-entities/wdw/80007798;entityType=destination/{date}/dining',
     },
 
+    // ---- Leitura de OTP por e-mail (IMAP) para auto-login ----
+    // A Disney envia um código por e-mail após a senha. Com isso configurado,
+    // o worker lê o código e completa o login sozinho.
+    otpMail: {
+        host: process.env.EMAIL_IMAP_HOST || '',
+        port: Number(process.env.EMAIL_IMAP_PORT || 993),
+        user: process.env.EMAIL_IMAP_USER || '',
+        password: process.env.EMAIL_IMAP_PASSWORD || '',
+    },
+
     // ---- Sessão MyDisney (opcional) ----
     // Se fornecidos, o worker tenta logar para obter uma sessão real.
     // Sem eles, é preciso "primar" a sessão manualmente uma vez (headful).
