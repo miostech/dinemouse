@@ -65,6 +65,23 @@ async function tryFetchOnce(c, sinceMs) {
     }
 }
 
+/** O erro do IMAP é de autenticação (senha errada / precisa App Password)? */
+function isAuthError(e) {
+    if (!e) return false;
+    if (e.authenticationFailed || e.serverResponseCode === 'AUTHENTICATIONFAILED') return true;
+    const t = `${e.responseText || ''} ${e.message || ''}`.toLowerCase();
+    return /authenticationfailed|invalid credentials|application-specific password|username and password not accepted|auth\w*\s*fail|\[auth\]/i.test(t);
+}
+
+/** Loga uma orientação clara quando o IMAP recusa a autenticação. */
+function logAuthHelp(e) {
+    console.error('[otp] ❌ O e-mail RECUSOU a autenticação IMAP (credencial inválida).');
+    console.error('[otp]    Para Gmail pessoal a senha NORMAL não funciona — use uma APP PASSWORD:');
+    console.error('[otp]    Conta Google → Segurança → Verificação em 2 etapas → Senhas de app → gere uma (16 caracteres)');
+    console.error('[otp]    e coloque em EMAIL_IMAP_PASSWORD. (IMAP estar "ligado" não muda isso.)');
+    console.error('[otp]    Detalhe do servidor:', (e && (e.responseText || e.message)) || 'sem detalhe');
+}
+
 /**
  * Busca (com polling) o código OTP mais recente no e-mail. O e-mail chega alguns
  * segundos após o site pedir o código, por isso o polling.
@@ -77,18 +94,25 @@ async function fetchOtpCode({ sinceMs, timeoutMs = 120000, intervalMs = 6000 } =
         return null;
     }
     if (!c.host || !c.user || !c.password) {
-        console.warn('[otp] IMAP não configurado (EMAIL_IMAP_HOST/USER/PASSWORD).');
+        console.warn('[otp] IMAP não configurado (EMAIL_IMAP_HOST/USER/PASSWORD) — pulando leitura de OTP.');
         return null;
     }
+
     const end = Date.now() + timeoutMs;
     while (Date.now() < end) {
-        const code = await tryFetchOnce(c, sinceMs).catch((e) => {
-            console.warn('[otp] erro IMAP:', e.message);
-            return null;
-        });
-        if (code) {
-            console.log('[otp] código encontrado no e-mail.');
-            return code;
+        try {
+            const code = await tryFetchOnce(c, sinceMs);
+            if (code) {
+                console.log('[otp] código encontrado no e-mail.');
+                return code;
+            }
+        } catch (e) {
+            // Erro de autenticação não se resolve tentando de novo — para já com dica clara.
+            if (isAuthError(e)) {
+                logAuthHelp(e);
+                return null;
+            }
+            console.warn('[otp] erro IMAP (vou tentar de novo):', e.message);
         }
         await sleep(intervalMs);
     }

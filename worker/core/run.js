@@ -151,15 +151,18 @@ async function runCycle(browser) {
                 const autoLogin = !!(config && config.disney && config.disney.username && config.disney.password);
                 console.error(`[run] 401 da Disney (via=${via}, bearer=${browser.bearer ? bearerAgeMin + 'min' : 'ausente'}). Recuperação automática falhou.`);
                 const otpBlocked = !!browser.loginBlockedByOtp;
+                const imapCfg = !!(config.otpMail && config.otpMail.host && config.otpMail.user && config.otpMail.password);
                 await notifyOps(
                     'session_down',
-                    otpBlocked ? 'Sessão MyDisney caiu — Disney pediu código (OTP)' : 'Sessão MyDisney caiu (401)',
+                    otpBlocked ? 'Sessão MyDisney caiu — código (OTP) não resolvido' : 'Sessão MyDisney caiu (401)',
                     (otpBlocked
-                        ? 'O auto-login chegou até a senha, mas a Disney pediu um CÓDIGO DE VERIFICAÇÃO enviado por e-mail (OTP). ' +
-                          'O worker não consegue ler esse código sozinho (a menos que integremos leitura do e-mail).\n\n'
+                        ? 'O auto-login chegou até a senha, a Disney pediu o CÓDIGO por e-mail (OTP), mas o worker não conseguiu concluir.\n' +
+                          (imapCfg
+                              ? '→ O leitor de e-mail (IMAP) está configurado, mas falhou. Provável causa: senha inválida (no Gmail pessoal use uma APP PASSWORD, não a senha normal) ou o código não chegou a tempo. Veja os logs do worker (linhas [otp]).\n\n'
+                              : '→ O leitor de e-mail (IMAP) NÃO está configurado. Preencha EMAIL_IMAP_HOST/USER/PASSWORD (Gmail: App Password) para o worker ler o código sozinho.\n\n')
                         : 'O worker tentou renovar o token e restaurar a sessão, mas não conseguiu — a sessão MyDisney provavelmente expirou de verdade.\n\n') +
-                        `Diagnóstico: via=${via}; token=${browser.bearer ? 'presente (' + bearerAgeMin + ' min)' : 'ausente'}; auto-login=${autoLogin ? 'configurado' : 'NÃO configurado'}; otp=${otpBlocked ? 'SIM' : 'não'}.\n\n` +
-                        'Rode `npm run worker:login` (headful) e faça login (marque "lembrar dispositivo" se aparecer, para durar mais).'
+                        `Diagnóstico: via=${via}; token=${browser.bearer ? 'presente (' + bearerAgeMin + ' min)' : 'ausente'}; auto-login=${autoLogin ? 'configurado' : 'NÃO configurado'}; otp=${otpBlocked ? 'SIM' : 'não'}; imap=${imapCfg ? 'configurado' : 'não'}.\n\n` +
+                        'Enquanto isso: rode `npm run worker:login` (headful) e faça login (marque "lembrar dispositivo" se aparecer).'
                 );
                 await backoffGroup(group.alerts, 'sessão MyDisney expirada (401)');
                 break; // sem login, nenhuma busca vai funcionar
