@@ -6328,11 +6328,18 @@ a.comparacao-card:hover {
         font-size: 0.95rem !important;
         padding: 1rem 1.25rem !important;
     }
-    
+
+    /* Fechada: sem padding-bottom, senão a 1ª linha da resposta vaza
+       (overflow:hidden recorta no padding-box, não no content-box). */
     .faq-answer {
         font-size: 0.875rem !important;
         line-height: 1.7 !important;
-        padding: 0 1.25rem 1rem 1.25rem !important;
+        padding: 0 1.25rem !important;
+    }
+
+    /* O respiro inferior só quando aberta. */
+    .faq-item.active .faq-answer {
+        padding-bottom: 1rem !important;
     }
     
     /* Help/Contact section */
