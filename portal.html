@@ -1227,51 +1227,12 @@
         
         // Simulação de dados do usuário (em produção, viria de uma API)
         function getUserData() {
-            // Verificar se existe dados salvos no localStorage
+            // Só dados reais do localStorage. Sem sessão -> null (não mostra dados falsos).
             const savedData = localStorage.getItem('dineMouse_userData');
             if (savedData) {
-                return JSON.parse(savedData);
+                try { return JSON.parse(savedData); } catch { return null; }
             }
-            
-            // Dados padrão para demonstração
-            // Em produção, isso viria do backend após login
-            return {
-                email: 'cliente@example.com',
-                plan: {
-                    type: 'alerts', // 'alerts' ou 'concierge'
-                    name: 'Plano Individual - 3 Alertas',
-                    price: 45.00,
-                    alerts: 3,
-                    conciergeName: null, // Preenchido se for concierge
-                    conciergeRestaurants: [] // Preenchido se for concierge
-                },
-                activationDate: null, // Será preenchido quando ativar
-                alerts: [
-                    {
-                        id: 1,
-                        restaurant: "Chef Mickey's",
-                        park: "Walt Disney World",
-                        date: "2024-03-15",
-                        meal: "Jantar",
-                        partySize: 4,
-                        status: 'active', // 'active', 'paused', 'cancelled'
-                        activeDays: 12,
-                        createdAt: '2024-03-01'
-                    },
-                    {
-                        id: 2,
-                        restaurant: "Be Our Guest Restaurant",
-                        park: "Walt Disney World",
-                        date: "2024-03-20",
-                        meal: "Almoço",
-                        partySize: 2,
-                        status: 'active',
-                        activeDays: 8,
-                        createdAt: '2024-03-05'
-                    }
-                ],
-                isFirstAccess: true // Será false após ativação
-            };
+            return null;
         }
         
         function saveUserData(data) {
@@ -1336,14 +1297,18 @@
         document.addEventListener('DOMContentLoaded', async () => {
             // Sempre buscar dados frescos do servidor (evita cache desatualizado).
             const refreshed = await refreshUserDataFromServer();
-
-            // Voltou do checkout mas sem sessão ativa (cliente novo): orienta login.
             const params = new URLSearchParams(window.location.search);
-            if (params.get('checkout') === 'success' && !refreshed) {
-                await customAlert(
-                    'Pagamento confirmado! 🎉 Enviamos seu acesso por e-mail. Faça login para ver seus alertas.',
-                    'Compra confirmada'
-                );
+
+            // Sem sessão válida: NÃO mostra dados falsos — manda pro login.
+            if (!refreshed && !userData) {
+                if (params.get('checkout') === 'success') {
+                    await customAlert(
+                        'Pagamento confirmado! 🎉 Enviamos seu acesso por e-mail. Faça login para ver seus alertas.',
+                        'Compra confirmada'
+                    );
+                }
+                window.location.href = '/index.html';
+                return;
             }
 
             // Sem passo de ativação: a compra via Stripe já ativa o serviço.
@@ -1671,30 +1636,24 @@
                 `;
             }
             
-            // Estado da senha (mostrar/ocultar)
-            let passwordHTML = '';
-            if (password) {
-                passwordHTML = `
-                    <div class="profile-info-item">
-                        <div class="profile-info-label">Senha</div>
-                        <div class="profile-info-value password-container">
-                            <span class="password-display" id="passwordDisplay">••••••••••••</span>
-                            <button class="btn-show-password" id="showPasswordBtn" onclick="togglePasswordVisibility()">
-                                👁️ Mostrar
-                            </button>
-                        </div>
+            // Segurança: NUNCA exibimos a senha. Oferecemos troca de senha.
+            const passwordHTML = `
+                <div class="profile-info-item">
+                    <div class="profile-info-label">Senha</div>
+                    <div class="profile-info-value password-container">
+                        <span>••••••••</span>
+                        <button class="btn-show-password" onclick="toggleChangePassword()">Trocar senha</button>
                     </div>
-                `;
-                // Armazenar senha para exibição
-                window.userPassword = password;
-            } else {
-                passwordHTML = `
-                    <div class="profile-info-item">
-                        <div class="profile-info-label">Senha</div>
-                        <div class="profile-info-value" style="color: #999;">Não disponível</div>
+                </div>
+                <div id="changePasswordForm" style="display:none; margin-top:0.75rem;">
+                    <div style="display:grid; gap:0.5rem; max-width:360px;">
+                        <input type="password" id="cpCurrent" placeholder="Senha atual" class="payment-input">
+                        <input type="password" id="cpNew" placeholder="Nova senha (mín. 8 caracteres)" class="payment-input">
+                        <input type="password" id="cpConfirm" placeholder="Confirmar nova senha" class="payment-input">
+                        <button class="btn-alert btn-alert-primary" onclick="submitChangePassword()">Salvar nova senha</button>
                     </div>
-                `;
-            }
+                </div>
+            `;
             
             profileDiv.innerHTML = `
                 <div class="profile-card">
@@ -1717,20 +1676,38 @@
             `;
         }
         
-        function togglePasswordVisibility() {
-            const passwordDisplay = document.getElementById('passwordDisplay');
-            const showPasswordBtn = document.getElementById('showPasswordBtn');
-            
-            if (!passwordDisplay || !showPasswordBtn) return;
-            
-            if (passwordDisplay.textContent === '••••••••••••') {
-                // Mostrar senha
-                passwordDisplay.textContent = window.userPassword || 'Não disponível';
-                showPasswordBtn.textContent = '🙈 Ocultar';
-            } else {
-                // Ocultar senha
-                passwordDisplay.textContent = '••••••••••••';
-                showPasswordBtn.textContent = '👁️ Mostrar';
+        function toggleChangePassword() {
+            const form = document.getElementById('changePasswordForm');
+            if (form) form.style.display = form.style.display === 'none' ? 'block' : 'none';
+        }
+
+        async function submitChangePassword() {
+            const cur = (document.getElementById('cpCurrent') || {}).value || '';
+            const nw = (document.getElementById('cpNew') || {}).value || '';
+            const conf = (document.getElementById('cpConfirm') || {}).value || '';
+            if (!cur || !nw) { await customAlert('Preencha a senha atual e a nova.', 'Atenção'); return; }
+            if (nw.length < 8) { await customAlert('A nova senha deve ter ao menos 8 caracteres.', 'Atenção'); return; }
+            if (nw !== conf) { await customAlert('A confirmação não confere com a nova senha.', 'Atenção'); return; }
+
+            try {
+                const r = await fetch('/api/auth/change-password', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: userData.email, currentPassword: cur, newPassword: nw }),
+                });
+                const data = await r.json().catch(() => ({}));
+                if (!r.ok || !data.ok) {
+                    await customAlert(data.error === 'invalid_credentials' ? 'Senha atual incorreta.' : 'Não foi possível trocar a senha.', 'Erro');
+                    return;
+                }
+                // Atualiza a senha guardada (usada para revalidar a sessão).
+                userData.password = nw;
+                saveUserData(userData);
+                await customAlert('Senha alterada com sucesso!', 'Sucesso');
+                loadProfile();
+            } catch (e) {
+                console.error('submitChangePassword:', e);
+                await customAlert('Erro de conexão. Tente novamente.', 'Erro');
             }
         }
         
@@ -1809,43 +1786,50 @@
         // ALERT ACTIONS
         // ============================================
         
-        async function pauseAlert(alertId) {
-            const confirmed = await customConfirm('Tem certeza que deseja pausar este alerta?', 'Pausar Alerta');
-            if (!confirmed) return;
-            
-            const alert = userData.alerts.find(a => a.id === alertId);
-            if (alert) {
-                alert.status = 'paused';
+        /** Atualiza o status do alerta NO SERVIDOR (portalPayload + coleção Alert). */
+        async function setAlertStatus(alertId, status, opts) {
+            opts = opts || {};
+            if (opts.confirm) {
+                const ok = await customConfirm(opts.confirm, opts.title || 'Confirmar');
+                if (!ok) return;
+            }
+            let creds = null;
+            try { creds = JSON.parse(localStorage.getItem('dineMouse_userData') || 'null'); } catch { creds = null; }
+            if (!creds || !creds.email || !creds.password) {
+                await customAlert('Sua sessão expirou. Faça login novamente.', 'Atenção');
+                return;
+            }
+            try {
+                const r = await fetch('/api/portal/alert-status', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: creds.email, password: creds.password, alertId, status }),
+                });
+                const data = await r.json().catch(() => ({}));
+                if (!r.ok || !data.ok) {
+                    await customAlert('Não foi possível atualizar o alerta. Tente novamente.', 'Erro');
+                    return;
+                }
+                const alert = userData.alerts.find(a => a.id === alertId);
+                if (alert) alert.status = status;
                 saveUserData(userData);
                 loadAlerts();
                 loadPlanSpecificContent();
-                customAlert('Alerta pausado com sucesso!', 'Sucesso');
+                if (opts.success) await customAlert(opts.success, 'Sucesso');
+            } catch (e) {
+                console.error('setAlertStatus:', e);
+                await customAlert('Erro de conexão. Tente novamente.', 'Erro');
             }
         }
-        
-        async function resumeAlert(alertId) {
-            const alert = userData.alerts.find(a => a.id === alertId);
-            if (alert) {
-                alert.status = 'active';
-                saveUserData(userData);
-                loadAlerts();
-                loadPlanSpecificContent();
-                customAlert('Alerta retomado com sucesso!', 'Sucesso');
-            }
+
+        function pauseAlert(alertId) {
+            return setAlertStatus(alertId, 'paused', { confirm: 'Tem certeza que deseja pausar este alerta?', title: 'Pausar Alerta', success: 'Alerta pausado com sucesso!' });
         }
-        
-        async function cancelAlert(alertId) {
-            const confirmed = await customConfirm('Tem certeza que deseja cancelar este alerta? Esta ação não pode ser desfeita.', 'Cancelar Alerta');
-            if (!confirmed) return;
-            
-            const alert = userData.alerts.find(a => a.id === alertId);
-            if (alert) {
-                alert.status = 'cancelled';
-                saveUserData(userData);
-                loadAlerts();
-                loadPlanSpecificContent();
-                customAlert('Alerta cancelado com sucesso!', 'Sucesso');
-            }
+        function resumeAlert(alertId) {
+            return setAlertStatus(alertId, 'active', { success: 'Alerta retomado com sucesso!' });
+        }
+        function cancelAlert(alertId) {
+            return setAlertStatus(alertId, 'cancelled', { confirm: 'Tem certeza que deseja cancelar este alerta? Esta ação não pode ser desfeita.', title: 'Cancelar Alerta', success: 'Alerta cancelado com sucesso!' });
         }
         
         // ============================================

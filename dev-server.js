@@ -14,6 +14,8 @@ const { authPortalRegister } = require('./lib/authPortalRegister');
 const { authLogin } = require('./lib/authLogin');
 const { authForgotPassword } = require('./lib/authForgotPassword');
 const { authResetPassword } = require('./lib/authResetPassword');
+const { changePassword } = require('./lib/authChangePassword');
+const { updateAlertStatus } = require('./lib/portalAlertStatus');
 const { createCheckout } = require('./lib/stripeCheckout');
 const { stripeWebhook } = require('./lib/stripeWebhook');
 const { createPortalSession } = require('./lib/stripePortal');
@@ -96,6 +98,8 @@ app.post('/api/stripe/receipts', listReceipts);
 app.post('/api/auth/login', authLogin);
 app.post('/api/auth/forgot-password', authForgotPassword);
 app.post('/api/auth/reset-password', authResetPassword);
+app.post('/api/auth/change-password', changePassword);
+app.post('/api/portal/alert-status', updateAlertStatus);
 
 const testePagePath = path.join(__dirname, 'teste.html');
 const sendTestePage = (req, res) => {
