@@ -72,6 +72,7 @@ class DisneyBrowser {
                 '--no-sandbox',
                 '--disable-http2',
                 '--disable-dev-shm-usage', // evita crash de /dev/shm pequeno em containers
+                '--disable-gpu', // headless não usa GPU; economiza memória no servidor
             ],
             ignoreDefaultArgs: ['--enable-automation'],
             extraHTTPHeaders: {

@@ -12,7 +12,7 @@ services:
     name: dinemouse-worker
     runtime: docker
     dockerfilePath: ./Dockerfile
-    plan: starter # ~512MB-1GB; Chrome precisa de memória
+    plan: standard # 2GB RAM — o Chrome estoura os 512MB do Starter (OOM/SIGKILL)
     autoDeploy: true
     disk:
       name: worker-data
