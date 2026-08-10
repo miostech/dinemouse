@@ -1468,7 +1468,17 @@
             }
             
             planInfoHTML += `</div>`;
-            
+
+            // Indicador de assinatura mensal (campo dedicado), independente dos avulsos.
+            const subOverview = (userData.subscription && userData.subscription.active !== false) ? userData.subscription : null;
+            if (subOverview) {
+                planInfoHTML += `
+                    <div style="margin-top:1rem;padding:0.75rem 1rem;background:rgba(255,255,255,0.15);border-radius:8px;">
+                        ✓ Assinatura mensal ativa: <strong>${subOverview.name || 'Plano Mensal'}</strong> — R$ ${(Number(subOverview.price) || 0).toFixed(2)}/mês
+                    </div>
+                `;
+            }
+
             // Adicionar informações do concierge se aplicável
             if (userData.plan.type === 'concierge' && userData.plan.conciergeName) {
                 // Formatar datas da viagem
@@ -1724,89 +1734,47 @@
             }
         }
         
+        /** Retorna a assinatura ativa (campo dedicado) ou null. */
+        function getSubscription() {
+            const s = userData.subscription;
+            return s && s.active !== false ? s : null;
+        }
+
         function loadSubscriptionDetails() {
             const subscriptionDiv = document.getElementById('subscriptionDetails');
             if (!subscriptionDiv) return;
 
-            const isSubscription = isMonthlyPlan();
+            const sub = getSubscription();
 
-            // Pagamento único (alertas avulsos ou concierge) NÃO é assinatura.
-            if (!isSubscription) {
-                const tipo = userData.plan && userData.plan.type === 'concierge' ? 'Concierge' : 'alertas avulsos';
+            // Sem assinatura recorrente (só alertas avulsos / concierge).
+            if (!sub) {
                 subscriptionDiv.innerHTML = `
                     <div style="background:#f8f9fa;padding:2rem;border-radius:12px;">
                         <div class="empty-state">
                             <div class="empty-state-icon">💳</div>
                             <p>Você não tem uma assinatura recorrente.</p>
-                            <p style="color:#666;">Seu plano <strong>${userData.plan.name}</strong> é de <strong>pagamento único</strong> (${tipo}) — sem cobrança mensal.</p>
-                            <p style="margin-top:1rem;"><a href="#" onclick="showSection('alerts'); return false;">Ver meus alertas</a> · <a href="#" onclick="showSection('receipts'); return false;">Ver recibos</a></p>
+                            <p style="color:#666;">Assine o <strong>plano mensal</strong> para monitorar vários restaurantes com cobrança mensal — ou compre <strong>alertas avulsos</strong> quando precisar.</p>
+                            <p style="margin-top:1rem;"><a href="/index.html#planos">Ver planos</a> · <a href="#" onclick="showSection('alerts'); return false;">Meus alertas</a></p>
                         </div>
                     </div>
                 `;
                 return;
             }
 
-            const activationDate = userData.activationDate
-                ? new Date(userData.activationDate).toLocaleDateString('pt-BR', {
-                    day: '2-digit',
-                    month: 'long',
-                    year: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit'
-                })
-                : 'Ativo';
+            const since = sub.since
+                ? new Date(sub.since).toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' })
+                : '—';
+            const price = 'R$ ' + (Number(sub.price) || 0).toFixed(2) + '/mês';
 
-            // Formatar datas da viagem se for Concierge
-            let tripDatesHTML = '';
-            if (userData.plan.type === 'concierge' && userData.conciergeInfo) {
-                const tripStart = new Date(userData.conciergeInfo.tripDateStart);
-                const tripEnd = new Date(userData.conciergeInfo.tripDateEnd);
-                const formattedStart = tripStart.toLocaleDateString('pt-BR', {
-                    day: '2-digit',
-                    month: 'long',
-                    year: 'numeric'
-                });
-                const formattedEnd = tripEnd.toLocaleDateString('pt-BR', {
-                    day: '2-digit',
-                    month: 'long',
-                    year: 'numeric'
-                });
-                tripDatesHTML = `
-                    <div style="background: rgba(75, 63, 114, 0.1); padding: 1rem; border-radius: 8px; margin-top: 1rem; border-left: 4px solid var(--roxo-magico);">
-                        <strong style="color: var(--azul-profundo); display: block; margin-bottom: 0.5rem;">📅 Datas da Viagem:</strong>
-                        <div style="color: #555;">
-                            ${formattedStart} até ${formattedEnd}
-                        </div>
-                        <div style="color: #666; font-size: 0.9rem; margin-top: 0.5rem;">
-                            Esta assinatura é referente a esta viagem específica.
-                        </div>
-                    </div>
-                `;
-            }
-            
             subscriptionDiv.innerHTML = `
                 <div style="background: #f8f9fa; padding: 2rem; border-radius: 12px;">
                     <h3 style="margin-bottom: 1.5rem; color: var(--azul-profundo);">Detalhes da Assinatura</h3>
                     <div style="display: grid; gap: 1rem;">
-                        <div>
-                            <strong>Plano:</strong> ${userData.plan.name}
-                        </div>
-                        <div>
-                            <strong>Valor:</strong> ${planPriceLabel()}
-                        </div>
-                        <div>
-                            <strong>Data de Ativação:</strong> ${activationDate}
-                        </div>
-                        <div>
-                            <strong>Status:</strong> <span style="color: #059669; font-weight: 600;">Ativo</span>
-                        </div>
-                        ${userData.plan.type === 'alerts' ? `
-                            <div>
-                                <strong>Alertas Disponíveis:</strong> ${planAlertCount()}
-                            </div>
-                        ` : ''}
+                        <div><strong>Plano:</strong> ${sub.name || 'Assinatura Mensal'}</div>
+                        <div><strong>Valor:</strong> ${price}</div>
+                        <div><strong>Assinante desde:</strong> ${since}</div>
+                        <div><strong>Status:</strong> <span style="color: #059669; font-weight: 600;">Ativa</span></div>
                     </div>
-                    ${tripDatesHTML}
                     <div style="margin-top:1.5rem;">
                         <button class="btn-alert btn-alert-primary" onclick="openBillingPortal()">Gerenciar / Cancelar assinatura</button>
                     </div>
