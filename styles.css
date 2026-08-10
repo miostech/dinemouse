@@ -111,6 +111,11 @@ body {
     align-items: center;
 }
 
+/* "Portal do cliente" no menu: só no mobile (no desktop existe o botão .cta-nav) */
+.nav-portal-mobile {
+    display: none;
+}
+
 .nav-menu a {
     color: var(--branco);
     text-decoration: none;
@@ -5861,7 +5866,20 @@ a.comparacao-card:hover {
     .cta-nav {
         display: none;
     }
-    
+
+    /* No mobile o botão some; mostramos o Portal como item do menu hambúrguer */
+    .nav-portal-mobile {
+        display: block;
+        margin-top: var(--spacing-sm);
+        padding-top: var(--spacing-sm);
+        border-top: 1px solid rgba(255, 255, 255, 0.15);
+    }
+
+    .nav-portal-mobile a {
+        font-weight: 700;
+        color: var(--dourado, #e6c77a);
+    }
+
     .menu-toggle {
         display: flex;
     }
