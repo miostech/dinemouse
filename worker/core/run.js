@@ -147,15 +147,18 @@ async function runCycle(browser) {
             }
 
             if (status === 401 || via === 'needs-login' || via === 'no-bearer') {
-                console.error(
-                    '[run] 401 da Disney: sessão MyDisney ausente/expirada. ' +
-                        'Prime o login (headful) — veja worker/README.md. Abortando ciclo.'
-                );
+                const bearerAgeMin = browser.bearerAt ? Math.round((Date.now() - browser.bearerAt) / 60000) : null;
+                const autoLogin = !!(config && config.disney && config.disney.username && config.disney.password);
+                console.error(`[run] 401 da Disney (via=${via}, bearer=${browser.bearer ? bearerAgeMin + 'min' : 'ausente'}). Recuperação automática falhou.`);
                 await notifyOps(
                     'session_down',
                     'Sessão MyDisney caiu (401)',
-                    'O worker não consegue mais consultar disponibilidade: a sessão MyDisney expirou. ' +
-                        'Rode `npm run worker:login` (headful) e faça login de novo. Nenhum alerta é enviado até lá.'
+                    'O worker tentou renovar o token e restaurar a sessão, mas não conseguiu — a sessão MyDisney provavelmente expirou de verdade.\n\n' +
+                        `Diagnóstico: via=${via}; token=${browser.bearer ? 'presente (' + bearerAgeMin + ' min)' : 'ausente'}; auto-login=${autoLogin ? 'configurado' : 'NÃO configurado'}.\n\n` +
+                        (autoLogin
+                            ? 'O auto-login (DISNEY_USERNAME/PASSWORD) também não resolveu — pode exigir verificação manual.'
+                            : 'Dica: configure DISNEY_USERNAME/PASSWORD para o worker tentar relogar sozinho.') +
+                        '\n\nEnquanto isso: rode `npm run worker:login` (headful) e faça login de novo.'
                 );
                 await backoffGroup(group.alerts, 'sessão MyDisney expirada (401)');
                 break; // sem login, nenhuma busca vai funcionar
