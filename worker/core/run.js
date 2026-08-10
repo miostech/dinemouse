@@ -121,6 +121,11 @@ async function runCycle(browser) {
     const groups = groupBySearch(resolvable).slice(0, config.schedule.maxGroupsPerCycle);
     console.log(`[run] ${resolvable.length} alerta(s) em ${groups.length} busca(s).`);
 
+    // Renova o token proativamente se estiver velho (evita 401 no meio do ciclo).
+    if (typeof browser.ensureFreshBearer === 'function') {
+        await browser.ensureFreshBearer();
+    }
+
     let checked = 0;
     let notified = 0;
 

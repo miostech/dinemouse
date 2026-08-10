@@ -28,6 +28,7 @@ class DisneyBrowser {
         this.resolvedOrigin = null;
         // Token BEARER OneID capturado das requisições do próprio site (rotaciona).
         this.bearer = null;
+        this.bearerAt = 0; // quando o bearer atual foi capturado (ms)
         // Controle de ritmo + disjuntor contra bloqueio Akamai.
         this.throttle = new Throttle();
     }
@@ -94,10 +95,13 @@ class DisneyBrowser {
         this.page = this.context.pages()[0] || (await this.context.newPage());
 
         // Captura o BEARER que o próprio site anexa (auth OneID). Rotaciona, então
-        // guardamos sempre o mais recente.
+        // guardamos sempre o mais recente + quando foi capturado.
         this.context.on('request', (req) => {
             const auth = req.headers()['authorization'];
-            if (auth && /^bearer /i.test(auth)) this.bearer = auth;
+            if (auth && /^bearer /i.test(auth)) {
+                this.bearer = auth;
+                this.bearerAt = Date.now();
+            }
         });
 
         return this;
@@ -409,16 +413,53 @@ class DisneyBrowser {
         return { status: res.status || 0, json: res.json, via: 'failed' };
     }
 
-    /** Reaquece a sessão: recarrega o formulário para renovar cookies + bearer. */
+    /**
+     * Reaquece a sessão: LIMPA o token e recarrega o formulário para o site
+     * emitir um BEARER NOVO (via refresh token OneID) + renova cookies Akamai.
+     * Sem limpar o token, o rewarm mantinha o token velho e o 401 persistia.
+     */
     async _rewarm() {
         try {
+            this.bearer = null; // força capturar um token NOVO
             await this._goto(config.wdw.availabilityFormUrl);
-            for (let i = 0; i < 8 && !this.bearer; i++) {
-                await this.page.waitForTimeout(1000);
+            await this._waitBearer();
+
+            // Se não veio token (sessão pode ter expirado), tenta restaurar do
+            // banco e, se houver credenciais, relogar automaticamente.
+            if (!this.bearer) {
+                const restored = await this.restoreSession().catch(() => false);
+                if (restored) {
+                    await this._goto(config.wdw.availabilityFormUrl);
+                    await this._waitBearer();
+                }
+                if (!this.bearer && config.disney.username && config.disney.password) {
+                    await this._login().catch(() => {});
+                    await this._goto(config.wdw.availabilityFormUrl);
+                    await this._waitBearer();
+                }
+            }
+
+            // Mantém a sessão do banco QUENTE (cookies recentes) p/ restart rápido.
+            if (this.bearer) {
+                await this.saveSession().catch(() => {});
             }
         } catch (e) {
             console.warn('[browser] rewarm falhou:', e.message);
         }
+    }
+
+    /**
+     * Renova o token PROATIVAMENTE se ele estiver velho (antes de expirar/falhar).
+     * Chamado no início de cada ciclo — evita a maioria dos 401 "toda hora".
+     */
+    async ensureFreshBearer() {
+        const maxAge = config.browser.bearerMaxAgeMs;
+        const stale = !this.bearer || !this.bearerAt || Date.now() - this.bearerAt > maxAge;
+        if (stale) {
+            console.log('[browser] renovando token (proativo)...');
+            await this._rewarm();
+        }
+        return !!this.bearer;
     }
 
     /**

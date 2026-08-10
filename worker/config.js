@@ -53,6 +53,9 @@ const config = {
         navTimeoutMs: Number(process.env.WORKER_NAV_TIMEOUT_MS || 45000),
         // Máx. de tentativas ao receber 428 (proteção Akamai) antes de desistir do ciclo.
         max428Retries: Number(process.env.WORKER_MAX_428_RETRIES || 3),
+        // Idade máx. do token BEARER antes de renovar proativamente (ms). Default 20min.
+        // O token OneID dura ~24h, mas renovar cedo evita 401 no meio do ciclo.
+        bearerMaxAgeMs: Number(process.env.WORKER_BEARER_MAX_AGE_MS || 20 * 60 * 1000),
     },
 
     // ---- Agendamento ----
