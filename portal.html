@@ -1278,6 +1278,22 @@
             localStorage.setItem('dineMouse_userData', JSON.stringify(data));
         }
 
+        /** Nº de alertas do plano, com fallback para a contagem real de alertas. */
+        function planAlertCount() {
+            const p = userData.plan || {};
+            if (p.alerts != null) return p.alerts;
+            return Array.isArray(userData.alerts) ? userData.alerts.length : 0;
+        }
+
+        /** Rótulo de preço correto por tipo de cobrança (único / mensal / por viagem). */
+        function planPriceLabel() {
+            const p = userData.plan || {};
+            const price = 'R$ ' + (Number(p.price) || 0).toFixed(2);
+            if (p.type === 'concierge') return price + ' por viagem';
+            if (p.billing === 'monthly') return price + '/mês';
+            return price + ' (pagamento único)';
+        }
+
         /**
          * Busca os dados MAIS RECENTES do servidor (usando as credenciais salvas)
          * e atualiza userData + localStorage. Sem isso, o portal mostra o cache
@@ -1357,8 +1373,8 @@
                 planDetails = `
                     <div class="activation-plan-name">${planName}</div>
                     <div class="activation-plan-details">
-                        Valor: R$ ${userData.plan.price.toFixed(2)}/mês<br>
-                        ${userData.plan.alerts} alertas disponíveis
+                        Valor: ${planPriceLabel()}<br>
+                        ${planAlertCount()} alerta(s)
                     </div>
                 `;
             }
@@ -1439,7 +1455,7 @@
                 planInfoHTML += `
                     <div class="plan-detail-item">
                         <div class="plan-detail-label">Alertas Disponíveis</div>
-                        <div class="plan-detail-value">${userData.plan.alerts}</div>
+                        <div class="plan-detail-value">${planAlertCount()}</div>
                     </div>
                     <div class="plan-detail-item">
                         <div class="plan-detail-label">Alertas Ativos</div>
@@ -1755,7 +1771,7 @@
                             <strong>Plano:</strong> ${userData.plan.name}
                         </div>
                         <div>
-                            <strong>Valor:</strong> R$ ${userData.plan.price.toFixed(2)}${userData.plan.type === 'concierge' ? ' por viagem' : '/mês'}
+                            <strong>Valor:</strong> ${planPriceLabel()}
                         </div>
                         <div>
                             <strong>Data de Ativação:</strong> ${activationDate}
@@ -1765,7 +1781,7 @@
                         </div>
                         ${userData.plan.type === 'alerts' ? `
                             <div>
-                                <strong>Alertas Disponíveis:</strong> ${userData.plan.alerts}
+                                <strong>Alertas Disponíveis:</strong> ${planAlertCount()}
                             </div>
                         ` : ''}
                     </div>
