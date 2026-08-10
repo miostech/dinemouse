@@ -561,6 +561,13 @@ section {
     overflow: hidden;
 }
 
+/* No mobile o padding lateral grande espremia o nome (quebrava em 2 linhas). */
+@media (max-width: 768px) {
+    .parque-item-lista {
+        padding: 1.25rem 1.5rem;
+    }
+}
+
 .parque-item-lista::after {
     content: '';
     position: absolute;
