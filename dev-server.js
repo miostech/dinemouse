@@ -17,6 +17,7 @@ const { authResetPassword } = require('./lib/authResetPassword');
 const { createCheckout } = require('./lib/stripeCheckout');
 const { stripeWebhook } = require('./lib/stripeWebhook');
 const { createPortalSession } = require('./lib/stripePortal');
+const { listReceipts } = require('./lib/stripeReceipts');
 
 const PORT = process.env.PORT || 3000;
 const MONGODB_URI = process.env.MONGODB_URI;
@@ -91,6 +92,7 @@ app.post('/api/b2b-leads', async (req, res) => {
 app.post('/api/portal/register', authPortalRegister);
 app.post('/api/stripe/create-checkout', createCheckout);
 app.post('/api/stripe/portal', createPortalSession);
+app.post('/api/stripe/receipts', listReceipts);
 app.post('/api/auth/login', authLogin);
 app.post('/api/auth/forgot-password', authForgotPassword);
 app.post('/api/auth/reset-password', authResetPassword);

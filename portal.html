@@ -1834,6 +1834,59 @@
         // NAVIGATION
         // ============================================
         
+        /** Carrega os recibos/faturas reais do Stripe na seção "Meus Recibos". */
+        async function loadReceipts() {
+            const section = document.getElementById('section-receipts');
+            if (!section) return;
+            section.innerHTML = '<h2>Meus Recibos</h2><div class="empty-state"><p>Carregando recibos...</p></div>';
+
+            let creds = null;
+            try { creds = JSON.parse(localStorage.getItem('dineMouse_userData') || 'null'); } catch { creds = null; }
+            if (!creds || !creds.email || !creds.password) {
+                section.innerHTML = '<h2>Meus Recibos</h2><div class="empty-state"><div class="empty-state-icon">🧾</div><p>Faça login para ver seus recibos.</p></div>';
+                return;
+            }
+
+            try {
+                const r = await fetch('/api/stripe/receipts', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: creds.email, password: creds.password }),
+                });
+                const data = await r.json().catch(() => ({}));
+                const receipts = (data && data.receipts) || [];
+
+                if (!r.ok || !data.ok || receipts.length === 0) {
+                    section.innerHTML = '<h2>Meus Recibos</h2><div class="empty-state"><div class="empty-state-icon">🧾</div><p>Nenhum recibo encontrado.</p></div>';
+                    return;
+                }
+
+                const cards = receipts.map(rec => {
+                    const date = new Date((rec.date || 0) * 1000).toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' });
+                    const amount = 'R$ ' + ((rec.amount || 0) / 100).toFixed(2).replace('.', ',');
+                    const link = rec.url
+                        ? `<a href="${rec.url}" target="_blank" rel="noopener" class="btn-alert btn-alert-primary">Ver recibo</a>`
+                        : '<span style="color:#999;">Recibo indisponível</span>';
+                    return `
+                        <div class="alert-card">
+                            <div class="alert-card-header">
+                                <div class="alert-card-title">${rec.description || 'Pagamento'}</div>
+                                <span class="alert-status active">${amount}</span>
+                            </div>
+                            <div class="alert-info">
+                                <div class="alert-info-item"><strong>Data:</strong> ${date}</div>
+                            </div>
+                            <div style="margin-top:12px;">${link}</div>
+                        </div>`;
+                }).join('');
+
+                section.innerHTML = '<h2>Meus Recibos</h2><div class="alerts-list">' + cards + '</div>';
+            } catch (e) {
+                console.error('loadReceipts:', e);
+                section.innerHTML = '<h2>Meus Recibos</h2><div class="empty-state"><p>Erro ao carregar recibos. Tente novamente.</p></div>';
+            }
+        }
+
         function showSection(sectionId) {
             // Esconder todas as seções
             document.querySelectorAll('.portal-section').forEach(section => {
@@ -1854,6 +1907,9 @@
             // Carregar conteúdo específico da seção se necessário
             if (sectionId === 'profile') {
                 loadProfile();
+            }
+            if (sectionId === 'receipts') {
+                loadReceipts();
             }
             
             // Adicionar active ao link clicado
