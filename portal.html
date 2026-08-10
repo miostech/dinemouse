@@ -1721,8 +1721,26 @@
         function loadSubscriptionDetails() {
             const subscriptionDiv = document.getElementById('subscriptionDetails');
             if (!subscriptionDiv) return;
-            
-            const activationDate = userData.activationDate 
+
+            const isSubscription = userData.plan && userData.plan.billing === 'monthly';
+
+            // Pagamento único (alertas avulsos ou concierge) NÃO é assinatura.
+            if (!isSubscription) {
+                const tipo = userData.plan && userData.plan.type === 'concierge' ? 'Concierge' : 'alertas avulsos';
+                subscriptionDiv.innerHTML = `
+                    <div style="background:#f8f9fa;padding:2rem;border-radius:12px;">
+                        <div class="empty-state">
+                            <div class="empty-state-icon">💳</div>
+                            <p>Você não tem uma assinatura recorrente.</p>
+                            <p style="color:#666;">Seu plano <strong>${userData.plan.name}</strong> é de <strong>pagamento único</strong> (${tipo}) — sem cobrança mensal.</p>
+                            <p style="margin-top:1rem;"><a href="#" onclick="showSection('alerts'); return false;">Ver meus alertas</a> · <a href="#" onclick="showSection('receipts'); return false;">Ver recibos</a></p>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            const activationDate = userData.activationDate
                 ? new Date(userData.activationDate).toLocaleDateString('pt-BR', {
                     day: '2-digit',
                     month: 'long',
@@ -1731,7 +1749,7 @@
                     minute: '2-digit'
                 })
                 : 'Ativo';
-            
+
             // Formatar datas da viagem se for Concierge
             let tripDatesHTML = '';
             if (userData.plan.type === 'concierge' && userData.conciergeInfo) {
@@ -1783,8 +1801,34 @@
                         ` : ''}
                     </div>
                     ${tripDatesHTML}
+                    <div style="margin-top:1.5rem;">
+                        <button class="btn-alert btn-alert-primary" onclick="openBillingPortal()">Gerenciar / Cancelar assinatura</button>
+                    </div>
                 </div>
             `;
+        }
+
+        /** Abre o Billing Portal do Stripe (gerenciar/cancelar assinatura). */
+        async function openBillingPortal() {
+            let creds = null;
+            try { creds = JSON.parse(localStorage.getItem('dineMouse_userData') || 'null'); } catch { creds = null; }
+            if (!creds || !creds.email) return;
+            try {
+                const r = await fetch('/api/stripe/portal', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: creds.email }),
+                });
+                const data = await r.json().catch(() => ({}));
+                if (r.ok && data.ok && data.url) {
+                    window.location.href = data.url;
+                    return;
+                }
+                await customAlert('Não foi possível abrir o gerenciamento de assinatura agora. Tente novamente em instantes.', 'Aviso');
+            } catch (e) {
+                console.error('openBillingPortal:', e);
+                await customAlert('Erro ao abrir o gerenciamento de assinatura.', 'Erro');
+            }
         }
         
         // ============================================
