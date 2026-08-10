@@ -455,6 +455,16 @@ window.DINEMOUSE_EN = {
     'Esqueceu sua senha?': 'Forgot your password?',
     'Recuperar senha': 'Reset password',
 
+    // ---- Moeda: símbolo e números soltos dos cards (o resto o conversor trata) ----
+    'R$': '$',
+    '15,00': '15.00',
+    '49,90': '49.90',
+    '119,90': '119.90',
+    '197,90': '197.90',
+    '249,90': '249.90',
+    '359,90': '359.90',
+    '1.499': '1,499',
+
     // ---- Placeholders ----
     'Digite seu nome': 'Enter your first name',
     'Digite seu sobrenome': 'Enter your last name',

@@ -22,6 +22,26 @@
         try { localStorage.setItem(KEY, l === 'en' ? 'en' : 'pt'); } catch { /* ignore */ }
     }
 
+    function usThousands(s) {
+        return s.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    }
+    // Em EN, "R$ X" vira "$X" (mesmo número). Cobre formato BR (49,90 / 1.499)
+    // e o formato do JS via toFixed (38.00 / 1079.10).
+    function convertCurrency(text) {
+        if (text.indexOf('R$') === -1) return text;
+        return text
+            // BR com centavos: R$ 1.234,56 / R$ 49,90
+            .replace(/R\$\s*(\d{1,3}(?:\.\d{3})+|\d+),(\d{2})/g, (m, i, d) => '$' + usThousands(i.replace(/\./g, '')) + '.' + d)
+            // decimal do JS (toFixed): R$ 1079.10 / R$ 38.00
+            .replace(/R\$\s*(\d+)\.(\d{2})(?!\d)/g, (m, i, d) => '$' + usThousands(i) + '.' + d)
+            // BR inteiro com milhar: R$ 1.499
+            .replace(/R\$\s*(\d{1,3}(?:\.\d{3})+)(?!\d)/g, (m, i) => '$' + usThousands(i.replace(/\./g, '')))
+            // inteiro simples: R$ 599
+            .replace(/R\$\s*(\d+)(?!\d)/g, (m, i) => '$' + usThousands(i))
+            // símbolo solto: R$
+            .replace(/R\$/g, '$');
+    }
+
     function translateTextNodes(root, lang) {
         if (!root) return;
         const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
@@ -38,10 +58,17 @@
             const raw = originals.get(n);
             // Chave normalizada: sem espaços nas pontas e runs internos viram 1 espaço.
             const coreNorm = raw.trim().replace(/\s+/g, ' ');
-            if (lang === 'en' && DICT[coreNorm]) {
-                const lead = raw.match(/^\s*/)[0];
-                const trail = raw.match(/\s*$/)[0];
-                n.nodeValue = lead + DICT[coreNorm] + trail;
+            if (lang === 'en') {
+                let out;
+                if (DICT[coreNorm]) {
+                    const lead = raw.match(/^\s*/)[0];
+                    const trail = raw.match(/\s*$/)[0];
+                    out = lead + DICT[coreNorm] + trail;
+                } else {
+                    out = raw;
+                }
+                // Converte moeda mesmo em nós sem tradução (preços soltos e dinâmicos).
+                n.nodeValue = convertCurrency(out);
             } else {
                 n.nodeValue = raw;
             }
