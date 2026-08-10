@@ -1340,11 +1340,8 @@
                 );
             }
 
-            if (userData.isFirstAccess && !userData.activationDate) {
-                showActivationModal();
-            } else {
-                loadPortalContent();
-            }
+            // Sem passo de ativação: a compra via Stripe já ativa o serviço.
+            loadPortalContent();
         });
         
         // ============================================
@@ -1431,7 +1428,7 @@
                     month: 'long',
                     year: 'numeric'
                 })
-                : 'Não ativado';
+                : 'Ativo';
             
             let planInfoHTML = `
                 <div class="plan-info-header">
@@ -1733,7 +1730,7 @@
                     hour: '2-digit',
                     minute: '2-digit'
                 })
-                : 'Não ativado';
+                : 'Ativo';
             
             // Formatar datas da viagem se for Concierge
             let tripDatesHTML = '';
