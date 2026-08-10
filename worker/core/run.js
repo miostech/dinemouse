@@ -150,15 +150,16 @@ async function runCycle(browser) {
                 const bearerAgeMin = browser.bearerAt ? Math.round((Date.now() - browser.bearerAt) / 60000) : null;
                 const autoLogin = !!(config && config.disney && config.disney.username && config.disney.password);
                 console.error(`[run] 401 da Disney (via=${via}, bearer=${browser.bearer ? bearerAgeMin + 'min' : 'ausente'}). Recuperação automática falhou.`);
+                const otpBlocked = !!browser.loginBlockedByOtp;
                 await notifyOps(
                     'session_down',
-                    'Sessão MyDisney caiu (401)',
-                    'O worker tentou renovar o token e restaurar a sessão, mas não conseguiu — a sessão MyDisney provavelmente expirou de verdade.\n\n' +
-                        `Diagnóstico: via=${via}; token=${browser.bearer ? 'presente (' + bearerAgeMin + ' min)' : 'ausente'}; auto-login=${autoLogin ? 'configurado' : 'NÃO configurado'}.\n\n` +
-                        (autoLogin
-                            ? 'O auto-login (DISNEY_USERNAME/PASSWORD) também não resolveu — pode exigir verificação manual.'
-                            : 'Dica: configure DISNEY_USERNAME/PASSWORD para o worker tentar relogar sozinho.') +
-                        '\n\nEnquanto isso: rode `npm run worker:login` (headful) e faça login de novo.'
+                    otpBlocked ? 'Sessão MyDisney caiu — Disney pediu código (OTP)' : 'Sessão MyDisney caiu (401)',
+                    (otpBlocked
+                        ? 'O auto-login chegou até a senha, mas a Disney pediu um CÓDIGO DE VERIFICAÇÃO enviado por e-mail (OTP). ' +
+                          'O worker não consegue ler esse código sozinho (a menos que integremos leitura do e-mail).\n\n'
+                        : 'O worker tentou renovar o token e restaurar a sessão, mas não conseguiu — a sessão MyDisney provavelmente expirou de verdade.\n\n') +
+                        `Diagnóstico: via=${via}; token=${browser.bearer ? 'presente (' + bearerAgeMin + ' min)' : 'ausente'}; auto-login=${autoLogin ? 'configurado' : 'NÃO configurado'}; otp=${otpBlocked ? 'SIM' : 'não'}.\n\n` +
+                        'Rode `npm run worker:login` (headful) e faça login (marque "lembrar dispositivo" se aparecer, para durar mais).'
                 );
                 await backoffGroup(group.alerts, 'sessão MyDisney expirada (401)');
                 break; // sem login, nenhuma busca vai funcionar

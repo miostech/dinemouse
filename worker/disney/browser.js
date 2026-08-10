@@ -29,6 +29,7 @@ class DisneyBrowser {
         // Token BEARER OneID capturado das requisições do próprio site (rotaciona).
         this.bearer = null;
         this.bearerAt = 0; // quando o bearer atual foi capturado (ms)
+        this.loginBlockedByOtp = false; // Disney pediu código de verificação por e-mail
         // Controle de ritmo + disjuntor contra bloqueio Akamai.
         this.throttle = new Throttle();
     }
@@ -309,6 +310,7 @@ class DisneyBrowser {
      */
     async _login() {
         const page = this.page;
+        this.loginBlockedByOtp = false;
         console.log('[browser] tentando login MyDisney (auto)...');
 
         await this._clickSignIn();
@@ -346,10 +348,20 @@ class DisneyBrowser {
             return false;
         }
 
-        // Espera concluir: o iframe some e/ou a sessão fica logada.
+        // Espera concluir: o iframe some (sucesso) ou aparece o pedido de OTP.
         for (let i = 0; i < 25; i++) {
             await page.waitForTimeout(1000);
-            if (!this._findOneIdFrame()) break;
+            const f = this._findOneIdFrame();
+            if (!f) break;
+            // Disney pediu CÓDIGO DE VERIFICAÇÃO (OTP por e-mail)?
+            const otp = f
+                .locator('input[autocomplete="one-time-code"], input[name*="code" i], input[id*="otp" i], input[name*="passcode" i], input[name*="oneTime" i], input[name*="securityCode" i]')
+                .first();
+            if (await otp.isVisible().catch(() => false)) {
+                this.loginBlockedByOtp = true;
+                console.warn('[browser] OneID pediu CÓDIGO DE VERIFICAÇÃO (OTP por e-mail) — auto-login não passa sem ler o e-mail.');
+                return false;
+            }
         }
 
         // Recarrega o formulário para pegar o novo bearer da sessão logada.
