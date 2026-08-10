@@ -249,39 +249,115 @@ class DisneyBrowser {
         }
     }
 
+    /** Frame do OneID (login) atualmente presente, ou null. */
+    _findOneIdFrame() {
+        return (
+            this.page.frames().find((f) => /registerdisney|oneid|login\.go\.com|cma\./i.test(f.url() || '')) || null
+        );
+    }
+
+    /** Espera o iframe do OneID aparecer (até ~timeout ms). */
+    async _waitOneIdFrame(timeoutMs = 15000) {
+        const end = Date.now() + timeoutMs;
+        while (Date.now() < end) {
+            const f = this._findOneIdFrame();
+            if (f) return f;
+            await this.page.waitForTimeout(500);
+        }
+        return null;
+    }
+
+    /** Aciona o "Sign In" (link/botão/ícone de conta) — tenta vários seletores. */
+    async _clickSignIn() {
+        const page = this.page;
+        const candidates = [
+            () => page.getByRole('link', { name: /sign in|log in|entrar/i }).first(),
+            () => page.getByRole('button', { name: /sign in|log in|entrar/i }).first(),
+            () => page.locator('[href*="signin" i], [href*="login" i]').first(),
+            () => page.locator('[aria-label*="sign in" i], [aria-label*="account" i], [aria-label*="conta" i]').first(),
+            () => page.locator('button:has-text("Sign In"), a:has-text("Sign In")').first(),
+        ];
+        for (const get of candidates) {
+            const el = get();
+            if (await el.isVisible().catch(() => false)) {
+                await el.click().catch(() => {});
+                await page.waitForTimeout(2000);
+                if (this._findOneIdFrame()) return true;
+            }
+        }
+        return !!this._findOneIdFrame();
+    }
+
+    /** Clica o botão de submit dentro do frame do OneID, ou aperta Enter. */
+    async _oneIdSubmit(frame, nameRe) {
+        const btn = frame
+            .locator('button[type="submit"], button, [role="button"]')
+            .filter({ hasText: nameRe })
+            .first();
+        if (await btn.isVisible().catch(() => false)) {
+            await btn.click().catch(() => {});
+            return;
+        }
+        // Fallback: Enter no campo focado.
+        await frame.locator('input:focus').press('Enter').catch(() => {});
+    }
+
     /**
-     * Login MyDisney (best-effort). O fluxo OneID pode mudar/usar iframe;
-     * por isso o caminho confiável é primar a sessão manualmente uma vez.
+     * Login MyDisney (auto) — robusto ao fluxo OneID: aciona sign-in, espera o
+     * iframe, trata etapa de e-mail e a de senha (multi-step), e aguarda o redirect.
+     * Best-effort: se houver CAPTCHA/verificação, falha e cai no aviso ao operador.
      */
     async _login() {
         const page = this.page;
-        // Abre o modal/página de login.
-        const signIn = page.getByRole('link', { name: /sign in|log in|entrar/i }).first();
-        if (await signIn.isVisible().catch(() => false)) {
-            await signIn.click().catch(() => {});
-            await page.waitForTimeout(2000);
+        console.log('[browser] tentando login MyDisney (auto)...');
+
+        await this._clickSignIn();
+        const frame = await this._waitOneIdFrame();
+        if (!frame) {
+            console.warn('[browser] iframe do OneID não apareceu — não foi possível logar.');
+            return false;
         }
 
-        // O OneID normalmente vive num iframe.
-        const frames = page.frames();
-        const target =
-            frames.find((f) => /oneid|registerdisney|login/i.test(f.url())) || page.mainFrame();
+        // Etapa do e-mail.
+        const emailField = frame
+            .locator('input[type="email"], input[name*="loginValue" i], input[name*="username" i], input[id*="email" i]')
+            .first();
+        try {
+            await emailField.waitFor({ state: 'visible', timeout: 12000 });
+        } catch {
+            console.warn('[browser] campo de e-mail do OneID não apareceu.');
+            return false;
+        }
+        await emailField.fill(config.disney.username).catch(() => {});
 
-        const userField = target.locator(
-            'input[type="email"], input[name*="loginValue" i], input[name*="username" i]'
-        );
-        const passField = target.locator('input[type="password"]');
+        // Muitos fluxos têm uma etapa "Continue" antes de revelar a senha.
+        let passField = frame.locator('input[type="password"]').first();
+        if (!(await passField.isVisible().catch(() => false))) {
+            await this._oneIdSubmit(frame, /continue|next|continuar|próximo|log ?in|sign ?in|entrar/i);
+            await passField.waitFor({ state: 'visible', timeout: 12000 }).catch(() => {});
+        }
 
-        await userField.first().fill(config.disney.username, { timeout: 8000 });
-        await passField.first().fill(config.disney.password, { timeout: 8000 });
-        await target
-            .locator('button[type="submit"], button:has-text("Log In"), button:has-text("Sign In")')
-            .first()
-            .click({ timeout: 8000 })
-            .catch(() => {});
+        // Etapa da senha.
+        if (await passField.isVisible().catch(() => false)) {
+            await passField.fill(config.disney.password).catch(() => {});
+            await this._oneIdSubmit(frame, /log ?in|sign ?in|entrar|continue|continuar/i);
+        } else {
+            console.warn('[browser] campo de senha do OneID não apareceu (CAPTCHA/verificação?).');
+            return false;
+        }
 
-        await page.waitForTimeout(5000);
-        return this._isLoggedIn();
+        // Espera concluir: o iframe some e/ou a sessão fica logada.
+        for (let i = 0; i < 25; i++) {
+            await page.waitForTimeout(1000);
+            if (!this._findOneIdFrame()) break;
+        }
+
+        // Recarrega o formulário para pegar o novo bearer da sessão logada.
+        await this._goto(config.wdw.availabilityFormUrl);
+        await this._waitBearer();
+        const ok = await this._isLoggedIn().catch(() => false);
+        console.log('[browser] login MyDisney:', ok ? 'OK ✅' : 'não confirmado');
+        return ok;
     }
 
     /**
