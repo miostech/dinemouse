@@ -2868,16 +2868,22 @@ document.addEventListener('DOMContentLoaded', () => {
 // LOGIN MODAL
 // ============================================
 function openLoginModal() {
-    // Verificar se o usuário já está logado (tem dados salvos)
+    // Verificar se o usuário já está logado (tem sessão salva).
+    // Basta o dineMouse_userData com e-mail — o dineMouse_email é só o
+    // "lembrar-me" (preenche o campo), não é o que define a sessão.
     const userData = localStorage.getItem('dineMouse_userData');
-    const savedEmail = localStorage.getItem('dineMouse_email');
-    
-    // Se já tem dados do usuário e email salvo, redirecionar direto para o portal
-    if (userData && savedEmail) {
-        window.location.href = '/portal';
-        return;
+    if (userData) {
+        try {
+            const u = JSON.parse(userData);
+            if (u && u.email) {
+                window.location.href = '/portal';
+                return;
+            }
+        } catch {
+            /* dado corrompido: cai no modal de login */
+        }
     }
-    
+
     // Caso contrário, abrir modal de login
     const modal = document.getElementById('loginModal');
     if (modal) {
