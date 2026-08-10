@@ -124,8 +124,9 @@ const config = {
             // Template pré-aprovado no Meta Business (obrigatório p/ msg proativa).
             templateName: process.env.WHATSAPP_TEMPLATE_NAME || '',
             templateLang: process.env.WHATSAPP_TEMPLATE_LANG || 'pt_BR',
-            // Template EN (opcional): criar/aprovar no Meta para clientes em inglês.
-            templateNameEn: process.env.WHATSAPP_TEMPLATE_NAME_EN || '',
+            // Template EN para clientes em inglês (mesma estrutura de 4 variáveis,
+            // aprovado no Meta Business). Override via env se o nome mudar.
+            templateNameEn: process.env.WHATSAPP_TEMPLATE_NAME_EN || 'vaga_disponivel_en',
             templateLangEn: process.env.WHATSAPP_TEMPLATE_LANG_EN || 'en_US',
         },
         // DRY_RUN: não envia nada, só loga (para testar o ciclo sem notificar clientes).

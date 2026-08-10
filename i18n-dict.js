@@ -525,6 +525,21 @@ window.DINEMOUSE_EN = {
     'Copiar': 'Copy',
     'Copiado ✓': 'Copied ✓',
 
+    // ---- Recuperar senha ----
+    'Nova senha': 'New password',
+    'Defina uma nova senha para a sua conta Dine Mouse. O link do e-mail expira em 1 hora.': 'Set a new password for your Dine Mouse account. The email link expires in 1 hour.',
+    'Confirmar senha': 'Confirm password',
+    'Guardar nova senha': 'Save new password',
+    '← Voltar ao site': '← Back to site',
+    'Link inválido ou incompleto. Peça um novo e-mail em «Recuperar senha» no login.': 'Invalid or incomplete link. Request a new email via "Reset password" on the login screen.',
+    'A senha deve ter pelo menos 8 caracteres.': 'The password must be at least 8 characters.',
+    'As senhas não coincidem.': 'The passwords don\'t match.',
+    'A guardar…': 'Saving…',
+    'Senha atualizada. Já pode entrar no Portal com a nova senha.': 'Password updated. You can now sign in to the Portal with your new password.',
+    'Este link expirou ou já foi usado. Solicite um novo e-mail em «Recuperar senha».': 'This link has expired or was already used. Request a new email via "Reset password".',
+    'Não foi possível alterar a senha. Tente novamente ou contacte o suporte.': 'We couldn\'t change the password. Please try again or contact support.',
+    'Erro de rede. Verifique a ligação e tente de novo.': 'Network error. Check your connection and try again.',
+
     // ---- Placeholders ----
     'Digite seu nome': 'Enter your first name',
     'Digite seu sobrenome': 'Enter your last name',
