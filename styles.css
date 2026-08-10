@@ -3413,6 +3413,27 @@ a.comparacao-card:hover {
     font-weight: 400;
 }
 
+/* Explicação da faixa de preço (por que R$ 15 / 20 / 30) */
+.date-price-note {
+    display: block;
+    color: #555;
+    font-size: 0.82rem;
+    line-height: 1.4;
+    margin-top: 0.5rem;
+    padding: 0.5rem 0.65rem;
+    background: rgba(75, 63, 114, 0.06);
+    border-radius: 8px;
+    font-weight: 400;
+}
+
+/* Destaque quando o alerta saiu da faixa de R$ 15 (antecedência > 30 dias) */
+.date-price-note.price-note-alert {
+    color: #8a5a00;
+    background: rgba(255, 179, 0, 0.12);
+    border: 1px solid rgba(255, 179, 0, 0.35);
+    font-weight: 500;
+}
+
 .btn-remove-date {
     background: linear-gradient(135deg, rgba(231, 76, 60, 0.1) 0%, rgba(231, 76, 60, 0.05) 100%);
     color: #E74C3C;

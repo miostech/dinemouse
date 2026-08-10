@@ -1257,6 +1257,20 @@ function calculatePriceByDaysAhead(daysAhead) {
     }
 }
 
+/**
+ * Explica por que aquele alerta custou o que custou (a faixa depende da
+ * antecedência da data, pois monitoramos até o dia da reserva).
+ */
+function priceTierExplanation(daysAhead) {
+    if (daysAhead <= 30) {
+        return `Faltam ${daysAhead} dias para a data → faixa até 30 dias (R$ 15, a menor).`;
+    } else if (daysAhead <= 45) {
+        return `Faltam ${daysAhead} dias para a data → como passou de 30 dias, sobe para a faixa de 31 a 45 dias (R$ 20). Monitoramos por mais tempo, até o dia da reserva.`;
+    } else {
+        return `Faltam ${daysAhead} dias para a data → como passou de 45 dias, entra na faixa de 46+ dias (R$ 30). É o período mais longo de monitoramento, até o dia da reserva.`;
+    }
+}
+
 function openPaymentModal() {
     const modal = document.getElementById('paymentModal');
     if (modal) {
@@ -1804,7 +1818,8 @@ function updateDatesList() {
     }
     
     datesList.innerHTML = paymentModalData.dates.map((dateItem, index) => {
-        const expirationFormatted = dateItem.expirationDate ? formatDate(dateItem.expirationDate) : '';
+        const explanation = priceTierExplanation(dateItem.daysAhead || 0);
+        const higherTier = (dateItem.daysAhead || 0) > 30; // destaca quando saiu dos R$ 15
         return `
         <div class="date-item">
             <div class="date-item-content">
@@ -1815,7 +1830,8 @@ function updateDatesList() {
                     <span class="party-size">${dateItem.partySize} pessoas</span>
                     <span class="date-price">R$ ${dateItem.price.toFixed(2)}</span>
                 </div>
-                <div class="date-duration">⏰ Alerta ativo por ${dateItem.activeDays || 0} dias • Ativo até ${expirationFormatted}</div>
+                <div class="date-duration">⏰ Monitoramos até o dia da reserva (${dateItem.date})</div>
+                <div class="date-price-note${higherTier ? ' price-note-alert' : ''}">${higherTier ? '⚠️ ' : 'ℹ️ '}${explanation}</div>
             </div>
             <button type="button" class="btn-remove-date" onclick="removeDate(${index})">Remover</button>
         </div>
