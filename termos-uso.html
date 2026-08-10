@@ -216,6 +216,7 @@
                 <li><a href="index.html#contato">Contato</a></li>
             </ul>
             <button class="cta-nav" onclick="window.location.href='index.html'; setTimeout(() => { if(typeof openLoginModal === 'function') openLoginModal(); }, 100);">Portal do cliente</button>
+            <button class="lang-toggle" type="button" onclick="i18nToggle()" aria-label="Switch to English">EN</button>
             <button class="menu-toggle" aria-label="Menu">
                 <span></span>
                 <span></span>
@@ -480,5 +481,8 @@
     </footer>
 
     <script src="script.js"></script>
+    <script src="/i18n-dict.js"></script>
+    <script src="/i18n-dict-legal.js"></script>
+    <script src="/i18n.js"></script>
 </body>
 </html>
