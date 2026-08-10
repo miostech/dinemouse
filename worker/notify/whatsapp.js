@@ -31,6 +31,12 @@ function joinTimes(slots, max = 12) {
     return times.slice(0, max).join(', ') + ` e mais ${times.length - max}`;
 }
 
+/** 'YYYY-MM-DD' -> 'DD/MM/YYYY' (para exibição). Deixa passar outros formatos. */
+function formatDatePt(date) {
+    const m = String(date || '').match(/^(\d{4})-(\d{2})-(\d{2})$/);
+    return m ? `${m[3]}/${m[2]}/${m[1]}` : String(date || '');
+}
+
 async function postMessage(body) {
     const { apiVersion, phoneNumberId, accessToken } = config.notify.whatsapp;
     const url = `https://graph.facebook.com/${apiVersion}/${phoneNumberId}/messages`;
@@ -63,10 +69,12 @@ async function sendAvailabilityWhatsApp({ to, restaurantName, date, meal, partyS
         return { sent: false, reason: 'not_configured' };
     }
 
-    const dateInfo = `${date}${meal ? ` · ${meal}` : ''} · ${partySize} pessoa(s)`;
+    const dateText = formatDatePt(date);
     const timesText = joinTimes(slots);
 
     // Envio via TEMPLATE (obrigatório p/ proativo).
+    // Template `vaga_disponivel` (4 variáveis, nesta ordem):
+    //   {{1}} restaurante · {{2}} data · {{3}} horário(s) · {{4}} nº de pessoas
     if (wa.templateName) {
         return postMessage({
             messaging_product: 'whatsapp',
@@ -80,8 +88,9 @@ async function sendAvailabilityWhatsApp({ to, restaurantName, date, meal, partyS
                         type: 'body',
                         parameters: [
                             { type: 'text', text: restaurantName },
-                            { type: 'text', text: dateInfo },
+                            { type: 'text', text: dateText },
                             { type: 'text', text: timesText },
+                            { type: 'text', text: String(partySize) },
                         ],
                     },
                 ],
@@ -96,7 +105,7 @@ async function sendAvailabilityWhatsApp({ to, restaurantName, date, meal, partyS
         to: phone,
         type: 'text',
         text: {
-            body: `🎉 Vaga na Disney! ${restaurantName} — ${dateInfo}.\nHorários: ${timesText}\nReserve rápido no site oficial.`,
+            body: `🎉 Vaga na Disney! ${restaurantName} — ${dateText}${meal ? ` · ${meal}` : ''} · ${partySize} pessoa(s).\nHorários: ${timesText}\nReserve rápido no site oficial.`,
         },
     });
 }
