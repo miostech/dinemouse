@@ -816,10 +816,13 @@ function handleSubscriptionUserData() {
     };
 
     // Iniciar assinatura (Stripe Billing). Redireciona no sucesso.
+    // O tier é o nº de alertas do plano escolhido; o preço final é definido
+    // pelo servidor (SUBSCRIPTION_TIERS), nunca pelo valor do cliente.
+    const tier = String((subscriptionData.plan && subscriptionData.plan.alerts) || 'mensal');
     startStripeCheckout({
         planType: 'subscription',
         customer: { email, name, phones },
-        subscription: { tier: 'mensal' },
+        subscription: { tier },
     });
 }
 
