@@ -854,25 +854,6 @@
 </head>
 <body>
     <canvas id="portal-particles-canvas"></canvas>
-    <!-- Activation Modal -->
-    <div id="activationModal" class="activation-modal">
-        <canvas class="modal-particles-canvas" id="activationModalParticles"></canvas>
-        <div class="activation-modal-content">
-            <div class="activation-modal-header">
-                <div class="activation-modal-icon">🎉</div>
-                <h2 class="activation-modal-title">Bem-vindo ao Dine Mouse!</h2>
-                <p class="activation-modal-subtitle">Confirme seu plano contratado para ativar o serviço</p>
-            </div>
-            
-            <div class="activation-plan-info" id="activationPlanInfo">
-                <!-- Será preenchido dinamicamente -->
-            </div>
-            
-            <div class="activation-modal-actions">
-                <button class="btn-activate" onclick="activateService()">Ativar Serviço</button>
-            </div>
-        </div>
-    </div>
 
     <div class="portal-container">
         <div class="portal-header">
@@ -1316,68 +1297,6 @@
         });
         
         // ============================================
-        // ACTIVATION MODAL
-        // ============================================
-        
-        function showActivationModal() {
-            const modal = document.getElementById('activationModal');
-            const planInfo = document.getElementById('activationPlanInfo');
-            
-            if (!modal || !planInfo) return;
-            
-            // Preencher informações do plano
-            const planName = userData.plan.name;
-            let planDetails = '';
-            
-            if (userData.plan.type === 'concierge') {
-                planDetails = `
-                    <div class="activation-plan-name">${planName}</div>
-                    <div class="activation-plan-details">
-                        Valor: R$ ${userData.plan.price.toFixed(2)} por viagem<br>
-                        Seu concierge dedicado entrará em contato em breve.
-                    </div>
-                `;
-            } else {
-                planDetails = `
-                    <div class="activation-plan-name">${planName}</div>
-                    <div class="activation-plan-details">
-                        Valor: ${planPriceLabel()}<br>
-                        ${planAlertCount()} alerta(s)
-                    </div>
-                `;
-            }
-            
-            planInfo.innerHTML = planDetails;
-            modal.classList.add('active');
-            document.body.style.overflow = 'hidden';
-            
-            // Inicializar partículas no modal de ativação
-            initModalParticles('activationModalParticles');
-        }
-        
-        function activateService() {
-            // Registrar data de ativação
-            userData.activationDate = new Date().toISOString();
-            userData.isFirstAccess = false;
-            saveUserData(userData);
-            
-            // Fechar modal
-            const modal = document.getElementById('activationModal');
-            if (modal) {
-                modal.classList.remove('active');
-                document.body.style.overflow = '';
-                // Destruir partículas
-                destroyModalParticles('activationModalParticles');
-            }
-            
-            // Carregar conteúdo do portal
-            loadPortalContent();
-            
-            // Mostrar mensagem de sucesso
-            customAlert('Serviço ativado com sucesso! 🎉\n\nA data de ativação foi registrada.', 'Sucesso');
-        }
-        
-        // ============================================
         // PORTAL CONTENT LOADING
         // ============================================
         
@@ -1523,22 +1442,115 @@
             }
         }
         
+        // Restaurantes do Walt Disney World (mesma lista curada do site).
+        const WDW_RESTAURANTS = [
+            "Chef Mickey's", "Be Our Guest Restaurant", "Cinderella's Royal Table", "Le Cellier Steakhouse",
+            "Space 220 Restaurant", "The Crystal Palace", "Liberty Tree Tavern", "Jungle Navigation Co. Skipper Canteen",
+            "Tony's Town Square Restaurant", "Akershus Royal Banquet Hall", "Coral Reef Restaurant", "Chefs de France",
+            "Monsieur Paul", "Rose & Crown Dining Room", "Garden Grill Restaurant", "Biergarten Restaurant",
+            "San Angel Inn Restaurante", "Teppan Edo", "Tokyo Dining", "Sci-Fi Dine-In Theater Restaurant",
+            "Hollywood & Vine", "Mama Melrose's Ristorante Italiano", "The Hollywood Brown Derby", "Tiffins Restaurant",
+            "Yak & Yeti™ Restaurant", "Tusker House Restaurant", "Rainforest Cafe (AK entrance)", "'Ohana",
+            "California Grill", "Topolino's Terrace", "Boma – Flavors of Africa", "Sanaa", "Whispering Canyon Café",
+            "Sebastian's Bistro", "Ale & Compass Restaurant", "Narcoossee's", "Victoria & Albert's",
+            "Jaleo by José Andrés", "Morimoto Asia", "The BOATHOUSE", "Wine Bar George", "STK Steakhouse",
+            "Paddlefish", "Planet Hollywood"
+        ];
+
+        /** UI de "novo alerta" — só para assinantes. */
+        function renderNewAlertUI() {
+            if (!getSubscription()) return '';
+            const options = WDW_RESTAURANTS.map(r => `<option value="${r}">${r}</option>`).join('');
+            const today = new Date().toISOString().slice(0, 10);
+            const max = new Date(Date.now() + 60 * 86400000).toISOString().slice(0, 10);
+            return `
+                <div style="margin-bottom:1.5rem;">
+                    <button class="btn-alert btn-alert-primary" onclick="toggleNewAlertForm()">＋ Novo alerta</button>
+                    <div id="newAlertForm" style="display:none; margin-top:1rem; background:#f8f9fa; padding:1.5rem; border-radius:12px;">
+                        <div style="display:grid; gap:0.75rem; max-width:440px;">
+                            <label>Restaurante (Walt Disney World)
+                                <select id="naRestaurant" class="payment-input">${options}</select>
+                            </label>
+                            <label>Data
+                                <input type="date" id="naDate" class="payment-input" min="${today}" max="${max}">
+                            </label>
+                            <label>Refeição
+                                <select id="naMeal" class="payment-input">
+                                    <option>Café da Manhã</option><option>Almoço</option><option selected>Jantar</option>
+                                </select>
+                            </label>
+                            <label>Nº de pessoas
+                                <input type="number" id="naParty" class="payment-input" min="1" max="20" value="2">
+                            </label>
+                            <button class="btn-alert btn-alert-primary" onclick="submitNewAlert()">Criar alerta</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function toggleNewAlertForm() {
+            const f = document.getElementById('newAlertForm');
+            if (f) f.style.display = f.style.display === 'none' ? 'block' : 'none';
+        }
+
+        async function submitNewAlert() {
+            const restaurant = (document.getElementById('naRestaurant') || {}).value || '';
+            const date = (document.getElementById('naDate') || {}).value || '';
+            const meal = (document.getElementById('naMeal') || {}).value || 'Jantar';
+            const partySize = Number((document.getElementById('naParty') || {}).value) || 2;
+            if (!restaurant || !date) { await customAlert('Escolha o restaurante e a data.', 'Atenção'); return; }
+            let creds = null;
+            try { creds = JSON.parse(localStorage.getItem('dineMouse_userData') || 'null'); } catch { creds = null; }
+            if (!creds || !creds.email || !creds.password) { await customAlert('Sua sessão expirou. Faça login novamente.', 'Atenção'); return; }
+            try {
+                const r = await fetch('/api/portal/add-alert', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: creds.email, password: creds.password, restaurant, date, meal, partySize }),
+                });
+                const data = await r.json().catch(() => ({}));
+                if (!r.ok || !data.ok) {
+                    const msg = {
+                        no_subscription: 'Criar alertas pelo portal é exclusivo para assinantes.',
+                        limit_reached: 'Você atingiu o limite de alertas ativos do seu plano.',
+                        duplicate: 'Você já tem um alerta igual (mesmo restaurante, data e grupo).',
+                        date_out_of_range: 'A data deve estar entre hoje e 60 dias à frente.',
+                    }[data.error] || 'Não foi possível criar o alerta. Tente novamente.';
+                    await customAlert(msg, 'Erro');
+                    return;
+                }
+                userData.alerts = userData.alerts || [];
+                userData.alerts.push(data.alert);
+                saveUserData(userData);
+                loadAlerts();
+                loadPlanSpecificContent();
+                await customAlert('Alerta criado! Já estamos monitorando. 🎯', 'Sucesso');
+            } catch (e) {
+                console.error('submitNewAlert:', e);
+                await customAlert('Erro de conexão. Tente novamente.', 'Erro');
+            }
+        }
+
         function loadAlerts() {
             const alertsList = document.getElementById('alertsList');
             if (!alertsList) return;
-            
-            if (userData.plan.type !== 'alerts' || userData.alerts.length === 0) {
-                alertsList.innerHTML = `
+
+            const header = renderNewAlertUI();
+            const alerts = Array.isArray(userData.alerts) ? userData.alerts : [];
+
+            if (alerts.length === 0) {
+                alertsList.innerHTML = header + `
                     <div class="empty-state">
                         <div class="empty-state-icon">📋</div>
-                        <p>Você ainda não possui alertas ${userData.plan.type !== 'alerts' ? '(disponível apenas para planos de alertas)' : 'ativos'}.</p>
-                        ${userData.plan.type === 'alerts' ? '<p><a href="/index.html#planos">Criar primeiro alerta</a></p>' : ''}
+                        <p>Você ainda não possui alertas.</p>
+                        ${getSubscription() ? '<p>Use o botão “Novo alerta” acima para criar.</p>' : '<p><a href="/index.html#planos">Criar primeiro alerta</a></p>'}
                     </div>
                 `;
                 return;
             }
-            
-            alertsList.innerHTML = userData.alerts.map(alert => {
+
+            alertsList.innerHTML = header + alerts.map(alert => {
                 const statusClass = alert.status;
                 const statusText = {
                     'active': 'Ativo',
@@ -1926,18 +1938,6 @@
             }
         }
         
-        // Fechar modal de ativação ao clicar fora
-        document.addEventListener('DOMContentLoaded', () => {
-            const activationModal = document.getElementById('activationModal');
-            if (activationModal) {
-                activationModal.addEventListener('click', (e) => {
-                    if (e.target === activationModal) {
-                        // Não permitir fechar clicando fora - deve ativar o serviço
-                        return;
-                    }
-                });
-            }
-        });
     </script>
 </body>
 </html>
