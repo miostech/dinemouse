@@ -15,12 +15,13 @@ const STRIPE_CHECKOUT_API = '/api/stripe/create-checkout';
  */
 async function startStripeCheckout(cart) {
     try {
-        // Moeda pelo idioma do site: EN cobra em USD (mesmo número), PT em BRL.
-        const currency = (typeof window.i18nLang === 'function' && window.i18nLang() === 'en') ? 'usd' : 'brl';
+        // Idioma/moeda pelo idioma do site: EN cobra em USD e manda e-mails em EN.
+        const lang = (typeof window.i18nLang === 'function' && window.i18nLang() === 'en') ? 'en' : 'pt';
+        const currency = lang === 'en' ? 'usd' : 'brl';
         const r = await fetch(STRIPE_CHECKOUT_API, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ ...cart, currency }),
+            body: JSON.stringify({ ...cart, currency, lang }),
         });
         const data = await r.json().catch(() => ({}));
         if (r.ok && data.ok && data.url) {

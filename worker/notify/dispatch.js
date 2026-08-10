@@ -22,6 +22,7 @@ async function dispatchAvailability(alert, restaurantName, slots, restaurantUrl)
         partySize: alert.partySize,
         slots,
         restaurantUrl: restaurantUrl || null,
+        lang: alert.lang === 'en' ? 'en' : 'pt',
     };
     const result = {};
 

@@ -58,7 +58,7 @@ async function postMessage(body) {
     return { sent: true, id };
 }
 
-async function sendAvailabilityWhatsApp({ to, restaurantName, date, meal, partySize, slots }) {
+async function sendAvailabilityWhatsApp({ to, restaurantName, date, meal, partySize, slots, lang }) {
     const wa = config.notify.whatsapp;
     const phone = normalizePhone(to);
 
@@ -72,17 +72,23 @@ async function sendAvailabilityWhatsApp({ to, restaurantName, date, meal, partyS
     const dateText = formatDatePt(date);
     const timesText = joinTimes(slots);
 
+    // Template por idioma. Em EN, usa o template/idioma EN se configurado
+    // (precisa ser criado e APROVADO no Meta Business); senão cai no padrão.
+    const isEn = lang === 'en';
+    const templateName = (isEn && wa.templateNameEn) || wa.templateName;
+    const templateLang = (isEn && wa.templateNameEn && wa.templateLangEn) || wa.templateLang;
+
     // Envio via TEMPLATE (obrigatório p/ proativo).
     // Template `vaga_disponivel` (4 variáveis, nesta ordem):
     //   {{1}} restaurante · {{2}} data · {{3}} horário(s) · {{4}} nº de pessoas
-    if (wa.templateName) {
+    if (templateName) {
         return postMessage({
             messaging_product: 'whatsapp',
             to: phone,
             type: 'template',
             template: {
-                name: wa.templateName,
-                language: { code: wa.templateLang },
+                name: templateName,
+                language: { code: templateLang },
                 components: [
                     {
                         type: 'body',
