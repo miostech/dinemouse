@@ -617,6 +617,9 @@ function handleSubscriptionCheckout() {
             document.getElementById('subscriptionCTA3').style.display = 'flex';
             document.getElementById('subscriptionSecurityNote').style.display = 'none';
             document.getElementById('subscriptionTermsBlock').style.display = 'none';
+
+            // Pré-preenche se o cliente já estiver logado ("Confirme seus dados").
+            prefillStep3('subscription');
         }
     })();
 }
@@ -1907,8 +1910,55 @@ function handleCheckout() {
             document.getElementById('paymentCTA3').style.display = 'flex';
             document.getElementById('paymentTermsBlock').style.display = 'none';
             document.getElementById('paymentSecurityNote').style.display = 'none';
+
+            // Pré-preenche se o cliente já estiver logado ("Confirme seus dados").
+            prefillStep3('payment');
         }
     })();
+}
+
+/** Retorna o usuário logado (do localStorage) ou null. */
+function getLoggedInUser() {
+    try {
+        const u = JSON.parse(localStorage.getItem('dineMouse_userData') || 'null');
+        if (u && u.email) return u;
+    } catch (e) {
+        /* ignore */
+    }
+    return null;
+}
+
+/**
+ * Se o cliente já está logado, pré-preenche o passo "seus dados" e troca o
+ * título para "Confirme seus dados". kind: 'payment' | 'subscription'.
+ * Chame DEPOIS de montar os campos de telefone (setup...Phones).
+ */
+function prefillStep3(kind) {
+    const prefix = kind === 'subscription' ? 'subscription' : 'payment';
+    const step3 = document.getElementById(prefix + 'Step3');
+    const heading = step3 ? step3.querySelector('h3') : null;
+    const user = getLoggedInUser();
+
+    if (!user) {
+        if (heading) heading.textContent = 'Preencha seus dados';
+        return;
+    }
+    if (heading) heading.textContent = 'Confirme seus dados';
+
+    const nameEl = document.getElementById(prefix + 'UserName');
+    const emailEl = document.getElementById(prefix + 'UserEmail');
+    if (nameEl && !nameEl.value) nameEl.value = user.name || '';
+    if (emailEl && !emailEl.value) emailEl.value = user.email || '';
+
+    const phones = Array.isArray(user.phones) ? user.phones : [];
+    phones.forEach((p, i) => {
+        const country = p && typeof p === 'object' ? p.country || '' : '';
+        const number = p && typeof p === 'object' ? p.number || '' : typeof p === 'string' ? p : '';
+        const c = document.getElementById(`${prefix}Country${i}`);
+        const n = document.getElementById(`${prefix}Phone${i}`);
+        if (c && country) c.value = country;
+        if (n && number && !n.value) n.value = number;
+    });
 }
 
 function setupPaymentPhones() {
