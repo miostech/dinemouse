@@ -2739,6 +2739,7 @@ a.comparacao-card:hover {
     flex-direction: column;
     gap: 2rem;
     overflow-y: auto;
+    overscroll-behavior: contain;
     scrollbar-width: thin;
     scrollbar-color: rgba(75, 63, 114, 0.3) transparent;
 }
@@ -3459,15 +3460,20 @@ a.comparacao-card:hover {
     .payment-modal {
         padding: 0;
         align-items: flex-start;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior: contain; /* não deixa o scroll "vazar" pro fundo */
     }
-    
+
     .payment-modal-content {
         max-width: 100%;
         width: 100%;
         margin: 0;
         border-radius: 0;
-        max-height: 100vh;
-        height: 100vh;
+        /* Rola o modal inteiro como uma coluna só (em vez de espremer o meio) */
+        max-height: none;
+        min-height: 100dvh;
+        height: auto;
         display: flex;
         flex-direction: column;
     }
@@ -3500,10 +3506,9 @@ a.comparacao-card:hover {
     .payment-modal-body {
         padding: 1.25rem 1rem;
         gap: 1.25rem;
-        flex: 1;
-        overflow-y: auto;
-        -webkit-overflow-scrolling: touch;
-        min-height: 0;
+        /* Sem scroll interno no mobile: quem rola é o modal inteiro */
+        flex: 0 0 auto;
+        overflow: visible;
     }
     
     .payment-block {
@@ -3525,7 +3530,9 @@ a.comparacao-card:hover {
     .payment-modal-footer {
         padding: 1.25rem 1rem;
         flex-shrink: 0;
+        margin-top: auto; /* cola no fim quando o conteúdo é curto */
         border-top: 2px solid rgba(75, 63, 114, 0.1);
+        background: #fff;
     }
     
     .payment-terms-block {
