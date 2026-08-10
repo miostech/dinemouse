@@ -803,11 +803,7 @@ function handleSubscriptionUserData() {
                 customAlert(`Por favor, informe o telefone ${i === 0 ? 'principal' : `adicional ${i}`}.`, 'Atenção');
                 return;
             }
-            phones.push({
-                country: countrySelect.value,
-                number: phone,
-                full: `${countrySelect.value} ${phone}`
-            });
+            phones.push(buildPhone(countrySelect.value, phone));
         }
     }
     
@@ -1917,6 +1913,39 @@ function handleCheckout() {
     })();
 }
 
+/** Remove o código do país repetido no início do número (evita "+55 +55 ..."). */
+function stripLeadingCountry(num, country) {
+    let n = String(num || '').trim();
+    if (country) {
+        const cc = country.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        n = n.replace(new RegExp('^(?:\\s*' + cc + '\\s*)+'), '').trim();
+    }
+    return n;
+}
+
+/** Monta o objeto de telefone sem duplicar o código do país. */
+function buildPhone(country, typed) {
+    const number = stripLeadingCountry(typed, country);
+    return { country, number, full: `${country} ${number}`.trim() };
+}
+
+/** Separa um telefone (string ou objeto) em { country, local } para exibir. */
+function splitPhone(p) {
+    let country = '';
+    let num = '';
+    if (p && typeof p === 'object') {
+        country = p.country || '';
+        num = p.number || p.full || '';
+    } else {
+        num = String(p || '');
+    }
+    if (!country) {
+        const m = num.match(/^\s*(\+\d{1,3})\b/);
+        if (m) country = m[1];
+    }
+    return { country, local: stripLeadingCountry(num, country) };
+}
+
 /** Retorna o usuário logado (do localStorage) ou null. */
 function getLoggedInUser() {
     try {
@@ -1952,12 +1981,11 @@ function prefillStep3(kind) {
 
     const phones = Array.isArray(user.phones) ? user.phones : [];
     phones.forEach((p, i) => {
-        const country = p && typeof p === 'object' ? p.country || '' : '';
-        const number = p && typeof p === 'object' ? p.number || '' : typeof p === 'string' ? p : '';
+        const { country, local } = splitPhone(p);
         const c = document.getElementById(`${prefix}Country${i}`);
         const n = document.getElementById(`${prefix}Phone${i}`);
         if (c && country) c.value = country;
-        if (n && number && !n.value) n.value = number;
+        if (n && local && !n.value) n.value = local;
     });
 }
 
@@ -2120,11 +2148,7 @@ function handlePaymentUserData() {
                 customAlert(`Por favor, informe o telefone ${i === 0 ? 'principal' : `adicional ${i}`}.`, 'Atenção');
                 return;
             }
-            phones.push({
-                country: countrySelect.value,
-                number: phone,
-                full: `${countrySelect.value} ${phone}`
-            });
+            phones.push(buildPhone(countrySelect.value, phone));
         }
     }
     
