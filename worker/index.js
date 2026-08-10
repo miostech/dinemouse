@@ -7,6 +7,7 @@
  *   once             -> executa um único ciclo e sai
  *   login            -> abre o Chrome visível p/ login MyDisney; espera ENTER e salva a sessão (local + Mongo)
  *   save-session     -> salva no Mongo a sessão já logada localmente (sem re-login)
+ *   test-login       -> valida auto-login (usuário/senha) + leitura de OTP por e-mail, sob demanda
  *   probe DATE PARTY -> uma busca crua p/ calibrar parser/seletores (não toca no DB)
  *                       ex.: node worker/index.js probe 2026-10-10 4
  *   catalog          -> sincroniza o catálogo do WDW e sai
@@ -156,6 +157,66 @@ async function syncCatalog() {
     });
 }
 
+/**
+ * Valida o auto-login (usuário/senha) + leitura de OTP por e-mail, sob demanda.
+ * Usa uma sessão EFÊMERA para forçar estado deslogado (exercita o login de
+ * verdade). Se tudo der certo, salva a sessão no banco (também re-prima a prod).
+ */
+async function testLogin() {
+    const os = require('os');
+    const path = require('path');
+    const channel = config.browser.channel || 'chrome';
+    const imapCfg = !!(config.otpMail.host && config.otpMail.user && config.otpMail.password);
+
+    console.log('=== test-login: validando auto-login + OTP ===');
+    console.log('DISNEY_USERNAME/PASSWORD:', config.disney.username && config.disney.password ? 'configurado ✅' : '❌ FALTA');
+    console.log('IMAP (leitura de OTP):', imapCfg ? 'configurado ✅' : '⚠️ não configurado (OTP por e-mail não será lido)');
+    if (!config.disney.username || !config.disney.password) {
+        console.error('Sem DISNEY_USERNAME/PASSWORD não há o que testar. Abortando.');
+        return;
+    }
+
+    const tmpDir = path.join(os.tmpdir(), 'dm-test-login-' + process.pid);
+    browser = await new DisneyBrowser().start({ sessionDir: tmpDir, headless: config.browser.headless, channel });
+    try {
+        await browser._goto(config.wdw.origin + '/');
+        await browser.page.waitForTimeout(1500);
+        await browser._goto(config.wdw.availabilityFormUrl);
+        await browser.page.waitForTimeout(2500);
+        try {
+            browser.resolvedOrigin = new URL(browser.page.url()).origin;
+        } catch {
+            /* noop */
+        }
+        await browser._waitBearer();
+        console.log('estado inicial:', (await browser._isLoggedIn().catch(() => false)) ? 'já logado' : 'deslogado (bom p/ testar)');
+
+        const ok = await browser._login().catch((e) => {
+            console.error('login erro:', e.message);
+            return false;
+        });
+
+        console.log('\n--- RESULTADO ---');
+        console.log('login:', ok ? '✅ OK' : '❌ falhou');
+        console.log('OTP pedido:', browser.loginBlockedByOtp ? '⚠️ SIM e não resolvido (veja linhas [otp] acima)' : 'não / resolvido');
+        console.log('token BEARER:', browser.bearer ? '✅ capturado' : '❌ ausente');
+
+        if (browser.bearer) {
+            const date = new Date(Date.now() + 50 * 86400000).toISOString().slice(0, 10);
+            const { status, via } = await browser.queryAvailability(date, 2);
+            console.log(`consulta de disponibilidade (${date}, 2 pessoas): status=${status} via=${via}`);
+            if (status === 200) {
+                console.log('\n🎉 TUDO FUNCIONANDO — salvando a sessão no banco (também re-prima a produção).');
+                await browser.saveSession().catch((e) => console.warn('saveSession:', e.message));
+            } else {
+                console.warn('\n⚠️ Login OK mas a consulta não retornou 200 — verifique os logs acima.');
+            }
+        }
+    } finally {
+        await browser.close();
+    }
+}
+
 function handleSignals() {
     const shutdown = async (sig) => {
         console.log(`\n[worker] ${sig} recebido, encerrando...`);
@@ -177,6 +238,7 @@ function handleSignals() {
         if (mode === 'once') await once();
         else if (mode === 'login' || mode === 'prime') await login();
         else if (mode === 'save-session') await saveSession();
+        else if (mode === 'test-login') await testLogin();
         else if (mode === 'probe') await probe();
         else if (mode === 'catalog') await syncCatalog();
         else await loop();

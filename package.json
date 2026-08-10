@@ -11,6 +11,7 @@
     "worker": "node worker/index.js",
     "worker:login": "node worker/index.js login",
     "worker:save-session": "node worker/index.js save-session",
+    "worker:test-login": "node worker/index.js test-login",
     "worker:once": "node worker/index.js once",
     "worker:probe": "node worker/index.js probe",
     "worker:catalog": "node worker/index.js catalog",

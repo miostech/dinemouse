@@ -43,14 +43,18 @@ class DisneyBrowser {
                 "playwright não instalado. Rode: npm i playwright && npx playwright install chromium"
             );
         }
-        fs.mkdirSync(config.browser.sessionDir, { recursive: true });
+        // Pasta do perfil: overrides.sessionDir permite uma sessão efêmera (ex.:
+        // test-login força estado deslogado sem tocar na sessão real).
+        const sessionDir = overrides.sessionDir || config.browser.sessionDir;
+        this.sessionDir = sessionDir;
+        fs.mkdirSync(sessionDir, { recursive: true });
 
         // Remove travas obsoletas do perfil. Sem isso, após um restart (deploy/crash)
         // o Chrome vê o SingletonLock antigo e recusa abrir ("profile appears to be
         // in use"), causando loop de reinício no servidor.
         for (const lock of ['SingletonLock', 'SingletonCookie', 'SingletonSocket']) {
             try {
-                fs.rmSync(`${config.browser.sessionDir}/${lock}`, { force: true });
+                fs.rmSync(`${sessionDir}/${lock}`, { force: true });
             } catch {
                 /* noop */
             }
@@ -85,7 +89,7 @@ class DisneyBrowser {
             launchOpts.channel = channel; // ex.: 'chrome'
         }
 
-        this.context = await chromium.launchPersistentContext(config.browser.sessionDir, launchOpts);
+        this.context = await chromium.launchPersistentContext(sessionDir, launchOpts);
         this.context.setDefaultTimeout(config.browser.navTimeoutMs);
 
         // Esconde navigator.webdriver antes de qualquer script da página.
