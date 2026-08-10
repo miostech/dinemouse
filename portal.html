@@ -1285,12 +1285,18 @@
             return Array.isArray(userData.alerts) ? userData.alerts.length : 0;
         }
 
+        /** É um plano de assinatura mensal? (robusto: billing OU nome do plano). */
+        function isMonthlyPlan() {
+            const p = userData.plan || {};
+            return p.billing === 'monthly' || /assinatura|mensal/i.test(p.name || '');
+        }
+
         /** Rótulo de preço correto por tipo de cobrança (único / mensal / por viagem). */
         function planPriceLabel() {
             const p = userData.plan || {};
             const price = 'R$ ' + (Number(p.price) || 0).toFixed(2);
             if (p.type === 'concierge') return price + ' por viagem';
-            if (p.billing === 'monthly') return price + '/mês';
+            if (isMonthlyPlan()) return price + '/mês';
             return price + ' (pagamento único)';
         }
 
@@ -1722,7 +1728,7 @@
             const subscriptionDiv = document.getElementById('subscriptionDetails');
             if (!subscriptionDiv) return;
 
-            const isSubscription = userData.plan && userData.plan.billing === 'monthly';
+            const isSubscription = isMonthlyPlan();
 
             // Pagamento único (alertas avulsos ou concierge) NÃO é assinatura.
             if (!isSubscription) {
