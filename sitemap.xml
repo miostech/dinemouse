@@ -11,6 +11,31 @@
         <priority>0.9</priority>
     </url>
     <url>
+        <loc>https://www.dinemouse.com/blog/melhores-restaurantes-hollywood-studios/</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://www.dinemouse.com/blog/melhores-restaurantes-animal-kingdom/</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://www.dinemouse.com/blog/restaurantes-disney-restricao-alimentar/</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://www.dinemouse.com/blog/reserva-restaurante-disney-solo/</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://www.dinemouse.com/blog/perdi-reserva-disney-no-show/</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
         <loc>https://www.dinemouse.com/blog/walk-up-list-disney/</loc>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
