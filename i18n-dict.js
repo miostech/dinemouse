@@ -95,7 +95,7 @@ window.DINEMOUSE_EN = {
     'Pagamento único, por data. O valor depende da antecedência*': 'One-time payment, per date. The price depends on how far ahead the date is*',
     '* O valor para até 30 dias de antecedência R$ 15, de 31 a 45 dias de antecedência R$ 20 e acima de 46 dias de antecedência R$ 30.': '* Up to 30 days ahead R$ 15, 31 to 45 days ahead R$ 20, and 46+ days ahead R$ 30.',
     // Card "Mesmo Dia" (urgente)
-    '⚡ Urgente': '⚡ Urgent',
+    'Urgente': 'Urgent',
     'Mesmo Dia': 'Same Day',
     'Precisa de mesa para hoje? Alerta de última hora.': 'Need a table today? Last-minute alert.',
     'valor único': 'one-time price',
@@ -352,7 +352,7 @@ window.DINEMOUSE_EN = {
     '← Voltar': '← Back',
     'Li e concordo com os': 'I have read and agree to the',
     'Termos de Uso': 'Terms of Use',
-    'e estou ciente de que os serviços não são reembolsáveis após a compra.*': 'and understand that the services are non-refundable after purchase.*',
+    'e estou ciente de que os serviços não são reembolsáveis após a compra e de que não garantimos a reserva.*': 'and understand that the services are non-refundable after purchase and that we do not guarantee the reservation.*',
     'Confirmar e pagar': 'Confirm and pay',
     'Finalizar cadastro': 'Complete registration',
     'Pagamento seguro • Cancelamento a qualquer momento': 'Secure payment • Cancel anytime',

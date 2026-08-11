@@ -1870,7 +1870,7 @@ function updateDatesList() {
         const urgent = da <= 0; // mesmo dia = alerta urgente
         const higherTier = da > 30; // destaca quando saiu dos R$ 15
         const noteClass = urgent ? ' price-note-urgent' : (higherTier ? ' price-note-alert' : '');
-        const noteIcon = urgent ? '⚡ ' : (higherTier ? '⚠️ ' : 'ℹ️ ');
+        const noteIcon = urgent ? '' : (higherTier ? '⚠️ ' : 'ℹ️ ');
         return `
         <div class="date-item${urgent ? ' date-item-urgent' : ''}">
             <div class="date-item-content">
