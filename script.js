@@ -10,6 +10,28 @@ const AUTH_FORGOT_PASSWORD_API = '/api/auth/forgot-password';
 const STRIPE_CHECKOUT_API = '/api/stripe/create-checkout';
 
 /**
+ * URLs limpas (sem #) para links externos (ex.: bio do Instagram):
+ * /planos, /alertas, /concierge, etc. rolam até a seção correspondente.
+ */
+const CLEAN_PATH_TO_SECTION = {
+    '/como-funciona': 'problema',
+    '/planos': 'planos',
+    '/alertas': 'alertas',
+    '/concierge': 'concierge',
+    '/parques': 'parques',
+    '/faq': 'faq',
+    '/ajuda': 'ajuda',
+    '/contato': 'contato',
+};
+document.addEventListener('DOMContentLoaded', () => {
+    const path = location.pathname.replace(/\/+$/, '') || '/';
+    const id = CLEAN_PATH_TO_SECTION[path];
+    if (!id) return;
+    const el = document.getElementById(id);
+    if (el) setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'start' }), 250);
+});
+
+/**
  * Inicia o pagamento: envia o carrinho ao backend, que cria a sessão de Stripe
  * Checkout e devolve a URL. Redireciona o cliente para o pagamento seguro.
  */

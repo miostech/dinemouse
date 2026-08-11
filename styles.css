@@ -46,6 +46,10 @@
 
 html {
     scroll-behavior: smooth;
+    scroll-padding-top: 90px; /* compensa a navbar fixa ao rolar até âncoras */
+}
+body {
+    scroll-padding-top: 90px;
 }
 
 body {

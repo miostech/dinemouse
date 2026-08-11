@@ -135,6 +135,12 @@ const sendAdminPage = (req, res) => {
 app.get('/admin', sendAdminPage);
 app.get('/admin/', sendAdminPage);
 
+// URLs limpas (sem #) que abrem a landing e rolam até a seção (via script.js).
+const indexPagePath = path.join(__dirname, 'index.html');
+['/como-funciona', '/planos', '/alertas', '/concierge', '/parques', '/faq', '/ajuda', '/contato'].forEach((p) => {
+    app.get(p, (req, res) => res.sendFile(indexPagePath));
+});
+
 app.use(express.static(path.join(__dirname)));
 
 connectMongo()

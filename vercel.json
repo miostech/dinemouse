@@ -10,6 +10,14 @@
     { "source": "/recuperar-senha", "destination": "/recuperar-senha.html" },
     { "source": "/recuperar-senha/", "destination": "/recuperar-senha.html" },
     { "source": "/admin", "destination": "/admin.html" },
-    { "source": "/admin/", "destination": "/admin.html" }
+    { "source": "/admin/", "destination": "/admin.html" },
+    { "source": "/como-funciona", "destination": "/index.html" },
+    { "source": "/planos", "destination": "/index.html" },
+    { "source": "/alertas", "destination": "/index.html" },
+    { "source": "/concierge", "destination": "/index.html" },
+    { "source": "/parques", "destination": "/index.html" },
+    { "source": "/faq", "destination": "/index.html" },
+    { "source": "/ajuda", "destination": "/index.html" },
+    { "source": "/contato", "destination": "/index.html" }
   ]
 }
