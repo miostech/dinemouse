@@ -8,6 +8,8 @@
     { "source": "/portal", "destination": "/portal.html" },
     { "source": "/portal/", "destination": "/portal.html" },
     { "source": "/recuperar-senha", "destination": "/recuperar-senha.html" },
-    { "source": "/recuperar-senha/", "destination": "/recuperar-senha.html" }
+    { "source": "/recuperar-senha/", "destination": "/recuperar-senha.html" },
+    { "source": "/admin", "destination": "/admin.html" },
+    { "source": "/admin/", "destination": "/admin.html" }
   ]
 }

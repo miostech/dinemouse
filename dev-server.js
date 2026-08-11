@@ -128,6 +128,13 @@ const sendRecuperarPage = (req, res) => {
 app.get('/recuperar-senha', sendRecuperarPage);
 app.get('/recuperar-senha/', sendRecuperarPage);
 
+const adminPagePath = path.join(__dirname, 'admin.html');
+const sendAdminPage = (req, res) => {
+    res.sendFile(adminPagePath);
+};
+app.get('/admin', sendAdminPage);
+app.get('/admin/', sendAdminPage);
+
 app.use(express.static(path.join(__dirname)));
 
 connectMongo()
