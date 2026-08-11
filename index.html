@@ -1294,12 +1294,12 @@
                         <div class="date-form-row">
                             <div class="date-form-field">
                                 <label class="date-form-label">Data</label>
-                                <input type="date" id="paymentDateInput" class="payment-input" min="" max="" onchange="validateDate()">
+                                <input type="date" id="paymentDateInput" class="payment-input" min="" max="" onchange="validateDate(); updateMealOptions()">
                             </div>
                             <div class="date-form-field">
                                 <label class="date-form-label">Tipo de Refeição</label>
                                 <select id="paymentMealType" class="payment-select-small">
-                                    <option value="Qualquer refeição">Qualquer refeição</option>
+                                    <option id="mealOptAnytime" value="Qualquer horário" hidden>Qualquer horário</option>
                                     <option value="Café da Manhã">Café da Manhã</option>
                                     <option value="Almoço">Almoço</option>
                                     <option value="Jantar" selected>Jantar</option>

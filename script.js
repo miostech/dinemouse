@@ -1356,6 +1356,28 @@ function openPaymentModal() {
     }
 }
 
+/** A data selecionada é HOJE? (mesmo cálculo UTC do servidor) */
+function isTodaySelected() {
+    const el = document.getElementById('paymentDateInput');
+    if (!el || !el.value) return false;
+    const targetUTC = new Date(el.value + 'T00:00:00Z');
+    const now = new Date();
+    const todayUTC = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
+    return Math.max(0, Math.ceil((targetUTC - todayUTC) / (1000 * 60 * 60 * 24))) === 0;
+}
+
+/** "Qualquer horário" só existe no alerta urgente (data = hoje). */
+function updateMealOptions() {
+    const opt = document.getElementById('mealOptAnytime');
+    const sel = document.getElementById('paymentMealType');
+    if (!opt || !sel) return;
+    const urgent = isTodaySelected();
+    opt.hidden = !urgent;
+    opt.disabled = !urgent;
+    // Se a opção some enquanto estava escolhida, volta para Jantar.
+    if (!urgent && sel.value === 'Qualquer horário') sel.value = 'Jantar';
+}
+
 /** Abre o modal de alerta já com a data de HOJE (fluxo do alerta urgente). */
 function openUrgentAlertModal() {
     openPaymentModal();
@@ -1363,6 +1385,7 @@ function openUrgentAlertModal() {
     setTimeout(() => {
         const d = document.getElementById('paymentDateInput');
         if (d) d.value = new Date().toISOString().slice(0, 10);
+        updateMealOptions(); // libera "Qualquer horário" (é urgente)
     }, 150);
 }
 
@@ -1391,6 +1414,7 @@ function resetPaymentForm() {
     if (dateInput) dateInput.value = '';
     if (mealSelect) mealSelect.value = 'Jantar';
     if (partySizeInput) partySizeInput.value = '2';
+    if (typeof updateMealOptions === 'function') updateMealOptions(); // esconde "Qualquer horário" (data vazia)
     
     // Limpar listas
     const selectedRestaurantsList = document.getElementById('selectedRestaurantsList');

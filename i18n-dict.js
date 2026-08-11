@@ -325,7 +325,7 @@ window.DINEMOUSE_EN = {
     'Adicionar Data do Alerta': 'Add Alert Date',
     'Data': 'Date',
     'Tipo de Refeição': 'Meal Type',
-    'Qualquer refeição': 'Any meal',
+    'Qualquer horário': 'Any time',
     'Café da Manhã': 'Breakfast',
     'Almoço': 'Lunch',
     'Jantar': 'Dinner',
