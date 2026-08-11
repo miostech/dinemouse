@@ -1356,6 +1356,16 @@ function openPaymentModal() {
     }
 }
 
+/** Abre o modal de alerta já com a data de HOJE (fluxo do alerta urgente). */
+function openUrgentAlertModal() {
+    openPaymentModal();
+    // openPaymentModal reseta o formulário; setamos a data de hoje logo depois.
+    setTimeout(() => {
+        const d = document.getElementById('paymentDateInput');
+        if (d) d.value = new Date().toISOString().slice(0, 10);
+    }, 150);
+}
+
 function setupDatePicker() {
     const dateInput = document.getElementById('paymentDateInput');
     if (dateInput) {

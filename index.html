@@ -365,7 +365,6 @@
                                 </div>
                                 <p class="preco-unidade-luxo">por alerta</p>
                                 <p class="preco-nota-luxo">Pagamento único, por data. O valor depende da antecedência*</p>
-                                <p class="preco-urgente-luxo">⚡ Precisa para hoje? Alerta urgente (mesmo dia) por R$&nbsp;50, com monitoramento acelerado. É só escolher a data de hoje.</p>
 
                                 <!-- Botão que abre o modal de pagamento -->
                                 <br><button class="btn-plano-luxo btn-individual-luxo" onclick="openPaymentModal()">
@@ -398,7 +397,7 @@
                                     <span>Notificação via WhatsApp contratada separadamente</span>
                                 </div>
                             </div>
-                            <p class="preco-legenda-luxo">* Mesmo dia (alerta urgente): R$&nbsp;50. Até 30 dias de antecedência: R$&nbsp;15; de 31 a 45 dias: R$&nbsp;20; acima de 46 dias: R$&nbsp;30.</p>
+                            <p class="preco-legenda-luxo">* O valor para até 30 dias de antecedência R$&nbsp;15, de 31 a 45 dias de antecedência R$&nbsp;20 e acima de 46 dias de antecedência R$&nbsp;30.</p>
                         </div>
                     </div>
 
@@ -461,6 +460,56 @@
                                 <div class="feature-item-luxo disabled">
                                     <div class="feature-icon-x">✗</div>
                                     <span>Notificação via WhatsApp contratada separadamente</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Plano Mesmo Dia (Urgente) -->
+                    <div class="plano-card-luxo urgente" data-aos="fade-up" data-delay="200">
+                        <div class="plano-glow urgente-glow"></div>
+                        <div class="plano-badge-luxo badge-urgente">
+                            <span>⚡ Urgente</span>
+                        </div>
+                        <div class="plano-content">
+                            <div class="plano-header-luxo">
+                                <h3 class="plano-titulo-luxo">Mesmo Dia</h3>
+                                <p class="plano-subtitle-luxo">Precisa de mesa para hoje? Alerta de última hora.</p>
+                            </div>
+
+                            <div class="plano-preco-luxo">
+                                <p class="preco-nota-luxo">valor único</p>
+                                <div class="preco-wrapper">
+                                    <span class="preco-simbolo">R$</span>
+                                    <span class="preco-valor-luxo">50,00</span>
+                                </div>
+                                <p class="preco-unidade-luxo">por alerta (hoje)</p>
+                                <p class="preco-nota-luxo">Monitoramento acelerado para pegar cancelamentos de última hora do dia.</p>
+
+                                <br><button class="btn-plano-luxo btn-urgente-luxo" onclick="openUrgentAlertModal()">
+                                    <span>Criar Alerta Urgente</span>
+                                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                        <path d="M7.5 15L12.5 10L7.5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                </button>
+                            </div>
+
+                            <div class="plano-features-luxo">
+                                <div class="feature-item-luxo">
+                                    <div class="feature-icon">⚡</div>
+                                    <span>Monitoramento em frequência muito maior</span>
+                                </div>
+                                <div class="feature-item-luxo">
+                                    <div class="feature-icon">✓</div>
+                                    <span>Reserva confirmada, não é fila (walk-up)</span>
+                                </div>
+                                <div class="feature-item-luxo">
+                                    <div class="feature-icon">✓</div>
+                                    <span>Ideal para decisões de última hora</span>
+                                </div>
+                                <div class="feature-item-luxo">
+                                    <div class="feature-icon">✓</div>
+                                    <span>Notificação via e-mail</span>
                                 </div>
                             </div>
                         </div>

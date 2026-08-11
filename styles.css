@@ -1299,6 +1299,28 @@ section {
     box-shadow: 0 8px 32px rgba(78, 205, 196, 0.4);
 }
 
+.btn-urgente-luxo {
+    background: linear-gradient(135deg, #ff5a5a, #d61f1f);
+    color: var(--branco);
+    box-shadow: 0 6px 24px rgba(214, 31, 31, 0.3);
+}
+.btn-urgente-luxo:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(214, 31, 31, 0.42);
+}
+
+/* Card "Mesmo Dia" (urgente) */
+.plano-card-luxo.urgente {
+    border-color: rgba(214, 31, 31, 0.35);
+}
+.plano-badge-luxo.badge-urgente {
+    background: linear-gradient(135deg, #ff5a5a, #d61f1f);
+    color: var(--branco);
+}
+.urgente-glow {
+    background: radial-gradient(circle, rgba(214, 31, 31, 0.18) 0%, transparent 70%);
+}
+
 .btn-subscription-luxo {
     background: linear-gradient(135deg, var(--dourado-suave), var(--dourado-escuro));
     color: var(--azul-profundo);
