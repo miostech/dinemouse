@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Admin - Dine Mouse</title>
+    <link rel="icon" type="image/png" href="/favicon.png" sizes="512x512">
+    <style>
+        :root { --roxo:#4B3F72; --azul:#0B1C2D; --borda:#e6e6ef; }
+        * { box-sizing: border-box; }
+        body { margin:0; font-family: system-ui, -apple-system, sans-serif; color:#0B1C2D; background:#f4f5f9; }
+        .wrap { max-width: 1200px; margin: 0 auto; padding: 1.5rem 1rem 4rem; }
+        h1 { font-size: 1.5rem; margin: 0.5rem 0 0.25rem; }
+        .muted { color:#777; }
+        /* Login */
+        .login { max-width: 380px; margin: 12vh auto; background:#fff; border:1px solid var(--borda); border-radius:14px; padding:2rem; box-shadow:0 8px 32px rgba(75,63,114,.1); }
+        .login h1 { margin-top:0; }
+        input, select { width:100%; padding:.7rem .8rem; border:1px solid var(--borda); border-radius:8px; font-size:1rem; }
+        button { cursor:pointer; border:none; background:var(--roxo); color:#fff; padding:.7rem 1.1rem; border-radius:8px; font-weight:600; font-size:.95rem; }
+        button.ghost { background:transparent; color:var(--roxo); border:1px solid var(--roxo); }
+        .err { color:#b00020; font-size:.9rem; margin-top:.5rem; min-height:1.1rem; }
+        /* Layout autenticado */
+        .topbar { display:flex; align-items:center; justify-content:space-between; gap:1rem; flex-wrap:wrap; margin-bottom:1rem; }
+        .stats { display:flex; gap:.75rem; flex-wrap:wrap; margin:1rem 0 1.5rem; }
+        .stat { background:#fff; border:1px solid var(--borda); border-radius:12px; padding:.9rem 1.1rem; min-width:120px; }
+        .stat b { display:block; font-size:1.5rem; }
+        .stat span { color:#777; font-size:.85rem; }
+        .tabs { display:flex; gap:.5rem; margin-bottom:1rem; flex-wrap:wrap; }
+        .tab { background:#fff; border:1px solid var(--borda); color:#444; }
+        .tab.active { background:var(--roxo); color:#fff; }
+        .panel { display:none; }
+        .panel.active { display:block; }
+        .filter { margin-bottom:.75rem; max-width:340px; }
+        .card { background:#fff; border:1px solid var(--borda); border-radius:12px; overflow:hidden; }
+        .tablewrap { overflow-x:auto; }
+        table { width:100%; border-collapse:collapse; font-size:.9rem; }
+        th, td { text-align:left; padding:.65rem .8rem; border-bottom:1px solid #f0f0f5; white-space:nowrap; }
+        th { background:#faf9fc; color:#555; font-weight:600; position:sticky; top:0; }
+        tr:hover td { background:#fafafe; }
+        .pill { display:inline-block; padding:.15rem .55rem; border-radius:999px; font-size:.78rem; font-weight:600; }
+        .pill.sent { background:#e7f6ec; color:#1b7a3d; }
+        .pill.failed { background:#fdecec; color:#b00020; }
+        .pill.email { background:#eef0fb; color:#4B3F72; }
+        .pill.whatsapp { background:#e6f6ec; color:#128c4b; }
+        .pill.on { background:#e7f6ec; color:#1b7a3d; }
+        .pill.off { background:#f0f0f3; color:#777; }
+        .empty { padding:1.5rem; color:#888; text-align:center; }
+        code.small { font-size:.82rem; color:#555; }
+    </style>
+</head>
+<body>
+    <!-- Login -->
+    <div id="loginView" class="login">
+        <h1>Admin Dine Mouse</h1>
+        <p class="muted">Acesso restrito. Informe a senha de administrador.</p>
+        <form id="loginForm">
+            <input type="password" id="pw" placeholder="Senha de admin" autocomplete="current-password" required>
+            <div class="err" id="loginErr"></div>
+            <button type="submit" style="width:100%; margin-top:.5rem;">Entrar</button>
+        </form>
+    </div>
+
+    <!-- Painel -->
+    <div id="adminView" class="wrap" style="display:none;">
+        <div class="topbar">
+            <div>
+                <h1>Painel Administrativo</h1>
+                <p class="muted" id="lastUpdate" style="margin:.2rem 0 0;"></p>
+            </div>
+            <div style="display:flex; gap:.5rem;">
+                <button class="ghost" id="refreshBtn">Atualizar</button>
+                <button class="ghost" id="logoutBtn">Sair</button>
+            </div>
+        </div>
+
+        <div class="stats" id="stats"></div>
+
+        <div class="tabs">
+            <button class="tab active" data-panel="customers">Clientes</button>
+            <button class="tab" data-panel="purchases">Contratos</button>
+            <button class="tab" data-panel="deliveries">Envios de alerta</button>
+        </div>
+
+        <!-- Clientes -->
+        <div class="panel active" id="panel-customers">
+            <input class="filter" id="filter-customers" placeholder="Filtrar por e-mail, nome ou plano…">
+            <div class="card"><div class="tablewrap"><table id="tbl-customers">
+                <thead><tr>
+                    <th>E-mail</th><th>Nome</th><th>Plano</th><th>Assinatura</th>
+                    <th>Alertas</th><th>Idioma</th><th>Criado em</th>
+                </tr></thead><tbody></tbody>
+            </table></div><div class="empty" id="empty-customers" style="display:none;">Nenhum cliente.</div></div>
+        </div>
+
+        <!-- Contratos -->
+        <div class="panel" id="panel-purchases">
+            <input class="filter" id="filter-purchases" placeholder="Filtrar por e-mail ou plano…">
+            <div class="card"><div class="tablewrap"><table id="tbl-purchases">
+                <thead><tr>
+                    <th>Data</th><th>E-mail</th><th>Tipo</th><th>Plano</th><th>Valor</th><th>Idioma</th>
+                </tr></thead><tbody></tbody>
+            </table></div><div class="empty" id="empty-purchases" style="display:none;">Nenhum contrato.</div></div>
+        </div>
+
+        <!-- Envios -->
+        <div class="panel" id="panel-deliveries">
+            <input class="filter" id="filter-deliveries" placeholder="Filtrar por e-mail, restaurante ou canal…">
+            <div class="card"><div class="tablewrap"><table id="tbl-deliveries">
+                <thead><tr>
+                    <th>Data / Hora</th><th>Cliente</th><th>Restaurante</th><th>Data reserva</th>
+                    <th>Horários</th><th>Canal</th><th>Destino</th><th>Status</th>
+                </tr></thead><tbody></tbody>
+            </table></div><div class="empty" id="empty-deliveries" style="display:none;">Nenhum envio registrado.</div></div>
+        </div>
+    </div>
+
+    <script>
+    (function () {
+        const $ = (s) => document.querySelector(s);
+        const KEY = 'dineMouse_adminPw';
+        let data = null;
+
+        function fmtDateTime(iso) {
+            if (!iso) return '—';
+            try { return new Date(iso).toLocaleString('pt-BR', { day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit' }); }
+            catch { return iso; }
+        }
+        function money(v, cur) { if (v == null) return '—'; return (cur === 'USD' ? 'US$ ' : 'R$ ') + Number(v).toFixed(2); }
+        function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+
+        async function fetchData(password) {
+            const r = await fetch('/api/admin/data', {
+                method: 'POST', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ password }),
+            });
+            if (r.status === 401) throw new Error('senha incorreta');
+            if (r.status === 500) { const j = await r.json().catch(() => ({})); throw new Error(j.error === 'admin_not_configured' ? 'ADMIN_PASSWORD não configurada no servidor' : 'erro no servidor'); }
+            if (!r.ok) throw new Error('erro (' + r.status + ')');
+            return r.json();
+        }
+
+        function renderStats(s) {
+            $('#stats').innerHTML = [
+                ['Clientes', s.customers], ['Contratos', s.purchases],
+                ['Envios', s.deliveries], ['Enviados', s.deliveriesSent], ['Falhas', s.deliveriesFailed],
+            ].map(([l, v]) => `<div class="stat"><b>${v}</b><span>${l}</span></div>`).join('');
+        }
+
+        function renderCustomers(rows) {
+            const tb = $('#tbl-customers tbody');
+            tb.innerHTML = rows.map(c => `<tr>
+                <td>${esc(c.email)}</td>
+                <td>${esc(c.name) || '—'}</td>
+                <td>${esc(c.planName) || '—'}${c.planPrice != null ? ' <code class="small">(' + (c.billing === 'monthly' ? 'mensal' : c.billing === 'once' ? 'único' : c.planType) + ')</code>' : ''}</td>
+                <td>${c.subscriptionActive ? '<span class="pill on">ativa</span>' : '<span class="pill off">—</span>'} ${esc(c.subscriptionName)}</td>
+                <td>${c.alertsActive}/${c.alertsTotal}</td>
+                <td>${(c.lang || 'pt').toUpperCase()}</td>
+                <td>${fmtDateTime(c.createdAt)}</td>
+            </tr>`).join('');
+            $('#empty-customers').style.display = rows.length ? 'none' : 'block';
+        }
+        function renderPurchases(rows) {
+            $('#tbl-purchases tbody').innerHTML = rows.map(p => `<tr>
+                <td>${fmtDateTime(p.at)}</td>
+                <td>${esc(p.email) || '—'}</td>
+                <td>${esc(p.planType)}</td>
+                <td>${esc(p.planName) || '—'}</td>
+                <td>${money(p.amount, p.currency)}</td>
+                <td>${(p.lang || 'pt').toUpperCase()}</td>
+            </tr>`).join('');
+            $('#empty-purchases').style.display = rows.length ? 'none' : 'block';
+        }
+        function renderDeliveries(rows) {
+            $('#tbl-deliveries tbody').innerHTML = rows.map(d => `<tr>
+                <td>${fmtDateTime(d.at)}</td>
+                <td>${esc(d.email) || '—'}</td>
+                <td>${esc(d.restaurant) || '—'}</td>
+                <td>${esc(d.date)}${d.meal ? ' · ' + esc(d.meal) : ''}</td>
+                <td>${(d.slots || []).join(', ')}</td>
+                <td><span class="pill ${d.channel}">${d.channel === 'whatsapp' ? 'WhatsApp' : 'E-mail'}</span></td>
+                <td>${esc(d.to)}</td>
+                <td><span class="pill ${d.status}">${d.status === 'sent' ? 'enviado' : 'falha'}</span>${d.reason ? ' <code class="small">' + esc(d.reason) + '</code>' : ''}</td>
+            </tr>`).join('');
+            $('#empty-deliveries').style.display = rows.length ? 'none' : 'block';
+        }
+
+        function applyFilter(kind) {
+            const q = $('#filter-' + kind).value.toLowerCase().trim();
+            let rows = data[kind] || [];
+            if (q) {
+                rows = rows.filter(r => JSON.stringify(r).toLowerCase().includes(q));
+            }
+            if (kind === 'customers') renderCustomers(rows);
+            else if (kind === 'purchases') renderPurchases(rows);
+            else renderDeliveries(rows);
+        }
+
+        function renderAll() {
+            renderStats(data.stats);
+            applyFilter('customers'); applyFilter('purchases'); applyFilter('deliveries');
+            $('#lastUpdate').textContent = 'Atualizado às ' + new Date().toLocaleTimeString('pt-BR');
+        }
+
+        async function load(password) {
+            const res = await fetchData(password);
+            data = res;
+            $('#loginView').style.display = 'none';
+            $('#adminView').style.display = 'block';
+            renderAll();
+        }
+
+        // Tabs
+        document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => {
+            document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+            document.querySelectorAll('.panel').forEach(x => x.classList.remove('active'));
+            t.classList.add('active');
+            $('#panel-' + t.dataset.panel).classList.add('active');
+        }));
+        // Filtros
+        ['customers', 'purchases', 'deliveries'].forEach(k =>
+            $('#filter-' + k).addEventListener('input', () => applyFilter(k)));
+
+        $('#loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            $('#loginErr').textContent = '';
+            const pw = $('#pw').value;
+            try {
+                await load(pw);
+                try { sessionStorage.setItem(KEY, pw); } catch {}
+            } catch (err) {
+                $('#loginErr').textContent = err.message;
+            }
+        });
+        $('#refreshBtn').addEventListener('click', async () => {
+            const pw = sessionStorage.getItem(KEY);
+            if (pw) { try { await load(pw); } catch (e) { alert(e.message); } }
+        });
+        $('#logoutBtn').addEventListener('click', () => {
+            try { sessionStorage.removeItem(KEY); } catch {}
+            location.reload();
+        });
+
+        // Auto-login se a senha ainda estiver na sessão
+        const saved = (() => { try { return sessionStorage.getItem(KEY); } catch { return null; } })();
+        if (saved) { load(saved).catch(() => { try { sessionStorage.removeItem(KEY); } catch {} }); }
+    })();
+    </script>
+</body>
+</html>
