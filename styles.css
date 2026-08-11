@@ -1107,6 +1107,19 @@ section {
     border-top: 1px solid rgba(0, 0, 0, 0.06);
 }
 
+/* Destaque do alerta urgente (mesmo dia) no card de preço */
+.preco-urgente-luxo {
+    font-size: 0.82rem;
+    line-height: 1.5;
+    color: #a11a1a;
+    background: rgba(224, 40, 40, 0.08);
+    border: 1px solid rgba(224, 40, 40, 0.25);
+    border-radius: 10px;
+    padding: 0.6rem 0.8rem;
+    margin-top: var(--spacing-sm);
+}
+.preco-urgente-luxo strong { color: #a11a1a; }
+
 /* Dropdown Premium */
 .dropdown-wrapper-luxo {
     margin: var(--spacing-md) 0;
