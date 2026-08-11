@@ -74,6 +74,11 @@ const config = {
         loopIntervalMs: Number(process.env.WORKER_INTERVAL_MS || 60_000),
         // Gap mínimo antes de re-checar o MESMO alerta (ms).
         recheckMs: Number(process.env.ALERT_RECHECK_MS || 90_000),
+        // Alerta URGENTE (mesmo dia): re-checa muito mais rápido para pegar
+        // cancelamentos de última hora.
+        urgentRecheckMs: Number(process.env.ALERT_URGENT_RECHECK_MS || 20_000),
+        // Intervalo do loop quando há alerta urgente ativo (dorme menos).
+        urgentLoopMs: Number(process.env.WORKER_URGENT_INTERVAL_MS || 20_000),
         // Backoff quando um alerta dá erro (ms).
         errorBackoffMs: Number(process.env.ALERT_ERROR_BACKOFF_MS || 300_000),
         // Máx. de grupos (data,partySize) processados por ciclo (proteção de rate limit).

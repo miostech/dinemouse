@@ -3476,6 +3476,30 @@ a.comparacao-card:hover {
     font-weight: 500;
 }
 
+/* Alerta URGENTE (mesmo dia) */
+.date-price-note.price-note-urgent {
+    color: #a11a1a;
+    background: rgba(224, 40, 40, 0.10);
+    border: 1px solid rgba(224, 40, 40, 0.35);
+    font-weight: 600;
+}
+.date-item-urgent {
+    border-color: rgba(224, 40, 40, 0.4) !important;
+    box-shadow: 0 0 0 1px rgba(224, 40, 40, 0.25) inset;
+}
+.urgent-badge {
+    display: inline-block;
+    margin-left: 0.5rem;
+    padding: 0.1rem 0.5rem;
+    border-radius: 999px;
+    background: #e02828;
+    color: #fff;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    vertical-align: middle;
+}
+
 .btn-remove-date {
     background: linear-gradient(135deg, rgba(231, 76, 60, 0.1) 0%, rgba(231, 76, 60, 0.05) 100%);
     color: #E74C3C;

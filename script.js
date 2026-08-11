@@ -1255,7 +1255,9 @@ const EXTRAS_PRICES = {
 
 // Função para calcular o preço baseado nos dias à frente
 function calculatePriceByDaysAhead(daysAhead) {
-    if (daysAhead <= 30) {
+    if (daysAhead <= 0) {
+        return 50; // Alerta URGENTE (mesmo dia)
+    } else if (daysAhead <= 30) {
         return 15; // R$ 15 por alerta até 30 dias
     } else if (daysAhead <= 45) {
         return 20; // R$ 20 por alerta de 31-45 dias
@@ -1269,7 +1271,9 @@ function calculatePriceByDaysAhead(daysAhead) {
  * antecedência da data, pois monitoramos até o dia da reserva).
  */
 function priceTierExplanation(daysAhead) {
-    if (daysAhead <= 30) {
+    if (daysAhead <= 0) {
+        return `Alerta URGENTE (mesmo dia) — R$ 50. Monitoramos com frequência muito maior para pegar cancelamentos de última hora hoje.`;
+    } else if (daysAhead <= 30) {
         return `Faltam ${daysAhead} dias para a data → faixa até 30 dias (R$ 15, a menor).`;
     } else if (daysAhead <= 45) {
         return `Faltam ${daysAhead} dias para a data → como passou de 30 dias, sobe para a faixa de 31 a 45 dias (R$ 20). Monitoramos por mais tempo, até o dia da reserva.`;
@@ -1743,14 +1747,17 @@ function addDate() {
         return;
     }
     
-    const selectedDate = new Date(dateInput.value);
-    const todayDate = new Date();
-    todayDate.setHours(0, 0, 0, 0);
-    
-    // Calcular dias à frente
-    const diffTime = selectedDate - todayDate;
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    
+    // Data local (para exibir o dia certo, sem deslocamento de fuso).
+    const [yy, mm, dd] = dateInput.value.split('-').map(Number);
+    const selectedDate = new Date(yy, mm - 1, dd);
+
+    // Dias à frente em UTC — MESMO cálculo do servidor (evita divergência de
+    // preço: hoje = 0 = alerta urgente R$ 50).
+    const targetUTC = new Date(dateInput.value + 'T00:00:00Z');
+    const nowUTC = new Date();
+    const todayUTC = new Date(Date.UTC(nowUTC.getUTCFullYear(), nowUTC.getUTCMonth(), nowUTC.getUTCDate()));
+    const diffDays = Math.max(0, Math.ceil((targetUTC - todayUTC) / (1000 * 60 * 60 * 24)));
+
     // Calcular preço baseado nos dias à frente
     const price = calculatePriceByDaysAhead(diffDays);
     
@@ -1773,11 +1780,10 @@ function addDate() {
         return;
     }
     
-    // Calcular quantos dias o alerta ficará ativo (data selecionada + 12 dias de monitoramento)
+    // Data de expiração (informativa): o monitoramento vai até o dia da reserva.
     const expirationDate = new Date(selectedDate);
-    expirationDate.setDate(expirationDate.getDate() + 12);
-    const activeDays = Math.ceil((expirationDate - todayDate) / (1000 * 60 * 60 * 24));
-    
+    const activeDays = diffDays;
+
     // Adicionar data com preço calculado
     paymentModalData.dates.push({
         dateString: dateString,
@@ -1825,20 +1831,24 @@ function updateDatesList() {
     }
     
     datesList.innerHTML = paymentModalData.dates.map((dateItem, index) => {
-        const explanation = priceTierExplanation(dateItem.daysAhead || 0);
-        const higherTier = (dateItem.daysAhead || 0) > 30; // destaca quando saiu dos R$ 15
+        const da = dateItem.daysAhead || 0;
+        const explanation = priceTierExplanation(da);
+        const urgent = da <= 0; // mesmo dia = alerta urgente
+        const higherTier = da > 30; // destaca quando saiu dos R$ 15
+        const noteClass = urgent ? ' price-note-urgent' : (higherTier ? ' price-note-alert' : '');
+        const noteIcon = urgent ? '⚡ ' : (higherTier ? '⚠️ ' : 'ℹ️ ');
         return `
-        <div class="date-item">
+        <div class="date-item${urgent ? ' date-item-urgent' : ''}">
             <div class="date-item-content">
-                <span class="date-text">${dateItem.date}</span>
+                <span class="date-text">${dateItem.date}${urgent ? ' <span class="urgent-badge">URGENTE · mesmo dia</span>' : ''}</span>
                 <div class="date-restaurant">🍽️ ${dateItem.restaurant || 'Restaurante não definido'}</div>
                 <div class="date-details">
                     <span class="meal-type">☑ ${dateItem.meal}</span>
                     <span class="party-size">${dateItem.partySize} pessoas</span>
                     <span class="date-price">R$ ${dateItem.price.toFixed(2)}</span>
                 </div>
-                <div class="date-duration">⏰ Monitoramos até o dia da reserva (${dateItem.date})</div>
-                <div class="date-price-note${higherTier ? ' price-note-alert' : ''}">${higherTier ? '⚠️ ' : 'ℹ️ '}${explanation}</div>
+                <div class="date-duration">⏰ ${urgent ? 'Monitoramento acelerado até o fim do dia de hoje' : `Monitoramos até o dia da reserva (${dateItem.date})`}</div>
+                <div class="date-price-note${noteClass}">${noteIcon}${explanation}</div>
             </div>
             <button type="button" class="btn-remove-date" onclick="removeDate(${index})">Remover</button>
         </div>

@@ -96,6 +96,9 @@ async function runCycle(browser) {
     await expirePastAlerts();
 
     const now = new Date();
+    // Há alerta urgente (mesmo dia) ativo? Define o ritmo do loop (rápido).
+    const hasUrgent = (await Alert.countDocuments({ status: 'active', resort: 'wdw', urgent: true })) > 0;
+
     const dueAlerts = await Alert.find({
         status: 'active',
         resort: 'wdw',
@@ -106,7 +109,7 @@ async function runCycle(browser) {
 
     if (dueAlerts.length === 0) {
         console.log('[run] Nenhum alerta na fila.');
-        return { checked: 0, notified: 0 };
+        return { checked: 0, notified: 0, hasUrgent };
     }
 
     const { cat, index } = await ensureCatalog(browser);
@@ -202,9 +205,11 @@ async function runCycle(browser) {
                     }
                 }
 
+                // Alerta urgente (mesmo dia): re-checa muito mais rápido.
+                const recheck = alert.urgent ? config.schedule.urgentRecheckMs : config.schedule.recheckMs;
                 const update = {
                     lastCheckedAt: new Date(),
-                    nextCheckAt: new Date(Date.now() + config.schedule.recheckMs),
+                    nextCheckAt: new Date(Date.now() + recheck),
                     lastError: '',
                     $inc: { checkCount: 1 },
                 };
@@ -231,7 +236,7 @@ async function runCycle(browser) {
     }
 
     console.log(`[run] Ciclo concluído: ${checked} checado(s), ${notified} notificado(s).`);
-    return { checked, notified };
+    return { checked, notified, hasUrgent };
 }
 
 async function backoffGroup(alerts, reason) {

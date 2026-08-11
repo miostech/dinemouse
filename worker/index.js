@@ -40,13 +40,18 @@ async function loop() {
     console.log(`[worker] loop iniciado (intervalo ${config.schedule.loopIntervalMs}ms).`);
 
     while (!stopping) {
+        let result;
         try {
-            await runCycle(browser);
+            result = await runCycle(browser);
         } catch (err) {
             console.error('[worker] erro no ciclo:', err);
         }
         if (stopping) break;
-        await new Promise((r) => setTimeout(r, config.schedule.loopIntervalMs));
+        // Com alerta urgente (mesmo dia) ativo, dorme bem menos entre ciclos.
+        const sleepMs = result && result.hasUrgent
+            ? config.schedule.urgentLoopMs
+            : config.schedule.loopIntervalMs;
+        await new Promise((r) => setTimeout(r, sleepMs));
     }
     await browser.close();
 }
