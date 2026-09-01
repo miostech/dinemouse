@@ -79,7 +79,11 @@
         <div class="tabs">
             <button class="tab active" data-panel="customers">Clientes</button>
             <button class="tab" data-panel="purchases">Contratos</button>
+            <button class="tab" data-panel="concierge">Concierge</button>
+            <button class="tab" data-panel="subscriptions">Assinaturas</button>
             <button class="tab" data-panel="deliveries">Envios de alerta</button>
+            <button class="tab" data-panel="leads">Leads</button>
+            <button class="tab" data-panel="revenue">Receita</button>
         </div>
 
         <!-- Clientes -->
@@ -103,6 +107,26 @@
             </table></div><div class="empty" id="empty-purchases" style="display:none;">Nenhum contrato.</div></div>
         </div>
 
+        <!-- Concierge -->
+        <div class="panel" id="panel-concierge">
+            <input class="filter" id="filter-concierge" placeholder="Filtrar por e-mail, plano ou contato…">
+            <div class="card"><div class="tablewrap"><table id="tbl-concierge">
+                <thead><tr>
+                    <th>Data</th><th>E-mail</th><th>Plano</th><th>Valor</th><th>Viagem</th><th>Pessoas</th><th>Contato</th><th>Telefone</th>
+                </tr></thead><tbody></tbody>
+            </table></div><div class="empty" id="empty-concierge" style="display:none;">Nenhum concierge contratado.</div></div>
+        </div>
+
+        <!-- Assinaturas -->
+        <div class="panel" id="panel-subscriptions">
+            <input class="filter" id="filter-subscriptions" placeholder="Filtrar por e-mail, nome ou plano…">
+            <div class="card"><div class="tablewrap"><table id="tbl-subscriptions">
+                <thead><tr>
+                    <th>E-mail</th><th>Nome</th><th>Plano</th><th>Status</th><th>Cota de alertas</th><th>Valor</th><th>Desde</th><th>Último pagamento</th>
+                </tr></thead><tbody></tbody>
+            </table></div><div class="empty" id="empty-subscriptions" style="display:none;">Nenhuma assinatura.</div></div>
+        </div>
+
         <!-- Envios -->
         <div class="panel" id="panel-deliveries">
             <input class="filter" id="filter-deliveries" placeholder="Filtrar por e-mail, restaurante ou canal…">
@@ -112,6 +136,34 @@
                     <th>Horários</th><th>Canal</th><th>Destino</th><th>Status</th>
                 </tr></thead><tbody></tbody>
             </table></div><div class="empty" id="empty-deliveries" style="display:none;">Nenhum envio registrado.</div></div>
+        </div>
+
+        <!-- Leads -->
+        <div class="panel" id="panel-leads">
+            <input class="filter" id="filter-leads" placeholder="Filtrar leads por e-mail, nome, empresa…">
+            <h3 style="margin:.5rem 0;">Contato (site)</h3>
+            <div class="card"><div class="tablewrap"><table id="tbl-contactLeads">
+                <thead><tr>
+                    <th>Data</th><th>Origem</th><th>Nome</th><th>E-mail</th><th>Telefone</th><th>Datas</th><th>Parques</th><th>Restaurantes</th><th>Mensagem</th>
+                </tr></thead><tbody></tbody>
+            </table></div><div class="empty" id="empty-contactLeads" style="display:none;">Nenhum lead de contato.</div></div>
+            <h3 style="margin:1.25rem 0 .5rem;">Parcerias B2B</h3>
+            <div class="card"><div class="tablewrap"><table id="tbl-b2bLeads">
+                <thead><tr>
+                    <th>Data</th><th>Empresa</th><th>Contato</th><th>E-mail</th><th>Telefone</th><th>País</th><th>Site</th><th>Volume/mês</th><th>Mensagem</th>
+                </tr></thead><tbody></tbody>
+            </table></div><div class="empty" id="empty-b2bLeads" style="display:none;">Nenhum lead B2B.</div></div>
+        </div>
+
+        <!-- Receita -->
+        <div class="panel" id="panel-revenue">
+            <div class="stats" id="revenue-totals" style="margin-top:0;"></div>
+            <div class="card" style="margin-top:1rem;"><div class="tablewrap"><table id="tbl-revenue">
+                <thead><tr>
+                    <th>Tipo de plano</th><th>Contratos</th><th>Total (R$)</th><th>Total (US$)</th>
+                </tr></thead><tbody></tbody>
+            </table></div></div>
+            <p class="muted" style="margin-top:.75rem; font-size:.85rem;">* Soma dos contratos (compras) registrados. Não inclui renovações automáticas de assinatura.</p>
         </div>
     </div>
 
@@ -142,8 +194,8 @@
 
         function renderStats(s) {
             $('#stats').innerHTML = [
-                ['Clientes', s.customers], ['Contratos', s.purchases],
-                ['Envios', s.deliveries], ['Enviados', s.deliveriesSent], ['Falhas', s.deliveriesFailed],
+                ['Clientes', s.customers], ['Contratos', s.purchases], ['Assinaturas', s.subscriptions ?? 0],
+                ['Leads', s.leads ?? 0], ['Envios', s.deliveries], ['Enviados', s.deliveriesSent], ['Falhas', s.deliveriesFailed],
             ].map(([l, v]) => `<div class="stat"><b>${v}</b><span>${l}</span></div>`).join('');
         }
 
@@ -198,20 +250,113 @@
             $('#empty-deliveries').style.display = rows.length ? 'none' : 'block';
         }
 
+        function renderConcierge(rows) {
+            $('#tbl-concierge tbody').innerHTML = rows.map(p => {
+                const c = p.concierge || {};
+                return `<tr>
+                    <td>${fmtDateTime(p.at)}</td>
+                    <td>${esc(p.email) || '—'}</td>
+                    <td>${esc(p.planName) || '—'}</td>
+                    <td>${money(p.amount, p.currency)}</td>
+                    <td>${fmtDateOnly(c.tripDateStart)} – ${fmtDateOnly(c.tripDateEnd)}</td>
+                    <td>${c.partySize || '—'}</td>
+                    <td>${esc(c.contactName) || '—'}</td>
+                    <td>${esc(c.phone) || '—'}</td>
+                </tr>`;
+            }).join('');
+            $('#empty-concierge').style.display = rows.length ? 'none' : 'block';
+        }
+
+        function renderSubscriptions(rows) {
+            $('#tbl-subscriptions tbody').innerHTML = rows.map(s => `<tr>
+                <td>${esc(s.email)}</td>
+                <td>${esc(s.name) || '—'}</td>
+                <td>${esc(s.planName) || '—'}</td>
+                <td>${s.active ? '<span class="pill on">ativa</span>' : '<span class="pill off">cancelada</span>'}</td>
+                <td>${s.alerts != null ? s.alerts : '—'}</td>
+                <td>${s.price != null ? money(s.price, 'BRL') : '—'}</td>
+                <td>${fmtDateTime(s.since)}</td>
+                <td>${fmtDateTime(s.lastPaymentAt)}</td>
+            </tr>`).join('');
+            $('#empty-subscriptions').style.display = rows.length ? 'none' : 'block';
+        }
+
+        function renderContactLeads(rows) {
+            $('#tbl-contactLeads tbody').innerHTML = rows.map(l => `<tr>
+                <td>${fmtDateTime(l.at)}</td>
+                <td>${l.source === 'help' ? 'Ajuda' : 'Modal'}</td>
+                <td>${esc(l.name) || '—'}</td>
+                <td>${esc(l.email) || '—'}</td>
+                <td>${esc(l.phone) || '—'}</td>
+                <td>${esc(l.dates) || '—'}</td>
+                <td>${esc(l.parks) || '—'}</td>
+                <td>${esc(l.restaurants) || '—'}</td>
+                <td>${esc(l.message) || '—'}</td>
+            </tr>`).join('');
+            $('#empty-contactLeads').style.display = rows.length ? 'none' : 'block';
+        }
+
+        function renderB2BLeads(rows) {
+            $('#tbl-b2bLeads tbody').innerHTML = rows.map(l => `<tr>
+                <td>${fmtDateTime(l.at)}</td>
+                <td>${esc(l.companyName) || '—'}</td>
+                <td>${esc(l.contactName) || '—'}</td>
+                <td>${esc(l.email) || '—'}</td>
+                <td>${esc(l.phone) || '—'}</td>
+                <td>${esc(l.country) || '—'}</td>
+                <td>${esc(l.website) || '—'}</td>
+                <td>${esc(l.monthlyVolume) || '—'}</td>
+                <td>${esc(l.message) || '—'}</td>
+            </tr>`).join('');
+            $('#empty-b2bLeads').style.display = rows.length ? 'none' : 'block';
+        }
+
+        function renderRevenue() {
+            const purchases = data.purchases || [];
+            const totals = { BRL: 0, USD: 0 };
+            const last30 = { BRL: 0, USD: 0 };
+            const byType = {};
+            const since30 = Date.now() - 30 * 864e5;
+            purchases.forEach(p => {
+                if (p.amount == null) return;
+                const cur = p.currency === 'USD' ? 'USD' : 'BRL';
+                totals[cur] += p.amount;
+                if (p.at && new Date(p.at).getTime() >= since30) last30[cur] += p.amount;
+                const t = p.planType || 'outro';
+                byType[t] = byType[t] || { BRL: 0, USD: 0, count: 0 };
+                byType[t][cur] += p.amount; byType[t].count += 1;
+            });
+            const label = { alerts: 'Alertas', subscription: 'Assinatura', concierge: 'Concierge', outro: 'Outro' };
+            $('#revenue-totals').innerHTML = [
+                ['Total R$', 'R$ ' + totals.BRL.toFixed(2)],
+                ['Total US$', 'US$ ' + totals.USD.toFixed(2)],
+                ['Últ. 30 dias R$', 'R$ ' + last30.BRL.toFixed(2)],
+                ['Últ. 30 dias US$', 'US$ ' + last30.USD.toFixed(2)],
+            ].map(([l, v]) => `<div class="stat"><b style="font-size:1.2rem;">${v}</b><span>${l}</span></div>`).join('');
+            $('#tbl-revenue tbody').innerHTML = Object.keys(byType).map(t => `<tr>
+                <td>${label[t] || t}</td>
+                <td>${byType[t].count}</td>
+                <td>R$ ${byType[t].BRL.toFixed(2)}</td>
+                <td>US$ ${byType[t].USD.toFixed(2)}</td>
+            </tr>`).join('') || '<tr><td colspan="4" class="empty">Sem contratos ainda.</td></tr>';
+        }
+
         function applyFilter(kind) {
-            const q = $('#filter-' + kind).value.toLowerCase().trim();
-            let rows = data[kind] || [];
-            if (q) {
-                rows = rows.filter(r => JSON.stringify(r).toLowerCase().includes(q));
-            }
-            if (kind === 'customers') renderCustomers(rows);
-            else if (kind === 'purchases') renderPurchases(rows);
-            else renderDeliveries(rows);
+            const input = $('#filter-' + kind);
+            const q = input ? input.value.toLowerCase().trim() : '';
+            const match = (arr) => q ? arr.filter(r => JSON.stringify(r).toLowerCase().includes(q)) : arr;
+            if (kind === 'customers') renderCustomers(match(data.customers || []));
+            else if (kind === 'purchases') renderPurchases(match(data.purchases || []));
+            else if (kind === 'deliveries') renderDeliveries(match(data.deliveries || []));
+            else if (kind === 'concierge') renderConcierge(match((data.purchases || []).filter(p => p.planType === 'concierge')));
+            else if (kind === 'subscriptions') renderSubscriptions(match(data.subscriptions || []));
+            else if (kind === 'leads') { renderContactLeads(match(data.contactLeads || [])); renderB2BLeads(match(data.b2bLeads || [])); }
         }
 
         function renderAll() {
             renderStats(data.stats);
-            applyFilter('customers'); applyFilter('purchases'); applyFilter('deliveries');
+            ['customers', 'purchases', 'concierge', 'subscriptions', 'deliveries', 'leads'].forEach(applyFilter);
+            renderRevenue();
             $('#lastUpdate').textContent = 'Atualizado às ' + new Date().toLocaleTimeString('pt-BR');
         }
 
@@ -231,8 +376,10 @@
             $('#panel-' + t.dataset.panel).classList.add('active');
         }));
         // Filtros
-        ['customers', 'purchases', 'deliveries'].forEach(k =>
-            $('#filter-' + k).addEventListener('input', () => applyFilter(k)));
+        ['customers', 'purchases', 'concierge', 'subscriptions', 'deliveries', 'leads'].forEach(k => {
+            const el = $('#filter-' + k);
+            if (el) el.addEventListener('input', () => applyFilter(k));
+        });
 
         $('#loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
