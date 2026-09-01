@@ -513,7 +513,91 @@
         .active-days-info strong {
             color: var(--azul-profundo);
         }
-        
+
+        /* Painel de estatísticas da Visão Geral */
+        .overview-subtitle {
+            display: block;
+            font-size: 1.1rem;
+            color: var(--azul-profundo);
+            font-weight: 700;
+            margin: 0.5rem 0 0;
+            max-width: none;
+            text-align: left;
+        }
+
+        .overview-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .stat-tile {
+            background: #ffffff;
+            border: 2px solid rgba(75, 63, 114, 0.1);
+            border-radius: 14px;
+            padding: 1.25rem 1.25rem;
+            box-shadow: 0 2px 12px rgba(11, 28, 45, 0.06);
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .stat-tile:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(11, 28, 45, 0.1);
+        }
+
+        .stat-tile .stat-num {
+            font-size: 1.9rem;
+            font-weight: 800;
+            color: var(--roxo-magico);
+            line-height: 1.1;
+        }
+
+        .stat-tile.accent .stat-num {
+            color: var(--dourado-suave);
+        }
+
+        .stat-tile .stat-num.stat-num-sm {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--azul-profundo);
+        }
+
+        .stat-tile .stat-label {
+            font-size: 0.85rem;
+            color: #6b7280;
+            font-weight: 600;
+        }
+
+        .overview-substats {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem 1.25rem;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            color: #6b7280;
+        }
+
+        .overview-substats .mini-stat strong {
+            color: var(--azul-profundo);
+        }
+
+        @media (max-width: 600px) {
+            .overview-stats {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.75rem;
+            }
+            .stat-tile {
+                padding: 1rem;
+            }
+            .stat-tile .stat-num {
+                font-size: 1.6rem;
+            }
+        }
+
         /* Profile Card */
         .profile-card {
             background: #ffffff;
@@ -1544,17 +1628,50 @@
             if (!contentDiv) return;
             
             if (userData.plan.type === 'alerts') {
-                // Mostrar informações sobre alertas ativos
-                const activeAlerts = userData.alerts.filter(a => a.status === 'active');
-                const pausedAlerts = userData.alerts.filter(a => a.status === 'paused');
-                
-                let html = '<div class="active-days-info">';
-                html += `<strong>Resumo dos Alertas</strong><br>`;
-                html += `Alertas ativos: ${activeAlerts.length} | `;
-                html += `Alertas pausados: ${pausedAlerts.length} | `;
-                html += `Total: ${userData.alerts.length}`;
+                const alerts = Array.isArray(userData.alerts) ? userData.alerts : [];
+                const activeAlerts = alerts.filter(a => a.status === 'active');
+                const pausedAlerts = alerts.filter(a => a.status === 'paused');
+                const expiredAlerts = alerts.filter(a => a.status === 'expired');
+                const cancelledAlerts = alerts.filter(a => a.status === 'cancelled');
+                const totalNotifs = alerts.reduce((s, a) => s + (Number(a.notificationsCount) || 0), 0);
+
+                // Próxima data monitorada: menor data futura entre os alertas ativos.
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                const upcoming = activeAlerts
+                    .map(a => a.date)
+                    .filter(d => /^\d{4}-\d{2}-\d{2}$/.test(d))
+                    .filter(d => new Date(d + 'T00:00:00') >= today)
+                    .sort();
+                const nextDate = upcoming.length
+                    ? new Date(upcoming[0] + 'T00:00:00').toLocaleDateString('pt-BR')
+                    : '—';
+
+                // Estatísticas secundárias: só mostra as categorias que existem.
+                const subParts = [];
+                if (pausedAlerts.length) subParts.push(`<span class="mini-stat"><strong>${pausedAlerts.length}</strong> <span>Pausados</span></span>`);
+                if (expiredAlerts.length) subParts.push(`<span class="mini-stat"><strong>${expiredAlerts.length}</strong> <span>Expirados</span></span>`);
+                if (cancelledAlerts.length) subParts.push(`<span class="mini-stat"><strong>${cancelledAlerts.length}</strong> <span>Cancelados</span></span>`);
+
+                let html = '<strong class="overview-subtitle">Resumo dos Alertas</strong>';
+                html += '<div class="overview-stats">';
+                html += `
+                    <div class="stat-tile">
+                        <span class="stat-num">${activeAlerts.length}</span>
+                        <span class="stat-label">Alertas ativos</span>
+                    </div>
+                    <div class="stat-tile accent">
+                        <span class="stat-num">${totalNotifs}</span>
+                        <span class="stat-label">Notificações recebidas</span>
+                    </div>
+                    <div class="stat-tile">
+                        <span class="stat-num stat-num-sm">${nextDate}</span>
+                        <span class="stat-label">Próxima data monitorada</span>
+                    </div>
+                `;
                 html += '</div>';
-                
+                if (subParts.length) html += `<div class="overview-substats">${subParts.join('')}</div>`;
+
                 contentDiv.innerHTML = html;
             } else {
                 // Mostrar informações do concierge
