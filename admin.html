@@ -98,7 +98,7 @@
             <input class="filter" id="filter-purchases" placeholder="Filtrar por e-mail ou plano…">
             <div class="card"><div class="tablewrap"><table id="tbl-purchases">
                 <thead><tr>
-                    <th>Data</th><th>E-mail</th><th>Tipo</th><th>Plano</th><th>Valor</th><th>Idioma</th>
+                    <th>Data</th><th>E-mail</th><th>Tipo</th><th>Plano</th><th>Valor</th><th>Idioma</th><th>Detalhes (Concierge)</th>
                 </tr></thead><tbody></tbody>
             </table></div><div class="empty" id="empty-purchases" style="display:none;">Nenhum contrato.</div></div>
         </div>
@@ -160,6 +160,18 @@
             </tr>`).join('');
             $('#empty-customers').style.display = rows.length ? 'none' : 'block';
         }
+        function fmtDateOnly(d) {
+            const m = String(d || '').match(/^(\d{4})-(\d{2})-(\d{2})$/);
+            return m ? `${m[3]}/${m[2]}/${m[1]}` : (d || '—');
+        }
+        function conciergeDetails(c) {
+            if (!c) return '—';
+            return `<div class="small">
+                📅 ${fmtDateOnly(c.tripDateStart)} – ${fmtDateOnly(c.tripDateEnd)}<br>
+                👥 ${c.partySize || '—'} · ${esc(c.contactName) || '—'}<br>
+                📞 ${esc(c.phone) || '—'}
+            </div>`;
+        }
         function renderPurchases(rows) {
             $('#tbl-purchases tbody').innerHTML = rows.map(p => `<tr>
                 <td>${fmtDateTime(p.at)}</td>
@@ -168,6 +180,7 @@
                 <td>${esc(p.planName) || '—'}</td>
                 <td>${money(p.amount, p.currency)}</td>
                 <td>${(p.lang || 'pt').toUpperCase()}</td>
+                <td>${conciergeDetails(p.concierge)}</td>
             </tr>`).join('');
             $('#empty-purchases').style.display = rows.length ? 'none' : 'block';
         }
