@@ -1633,7 +1633,9 @@
                 const pausedAlerts = alerts.filter(a => a.status === 'paused');
                 const expiredAlerts = alerts.filter(a => a.status === 'expired');
                 const cancelledAlerts = alerts.filter(a => a.status === 'cancelled');
-                const totalNotifs = alerts.reduce((s, a) => s + (Number(a.notificationsCount) || 0), 0);
+                // Só conta notificações dos alertas ATIVOS (as dos expirados/
+                // cancelados já aparecem no card de cada um em "Meus Alertas").
+                const totalNotifs = activeAlerts.reduce((s, a) => s + (Number(a.notificationsCount) || 0), 0);
 
                 // Próxima data monitorada: menor data futura entre os alertas ativos.
                 const today = new Date();
