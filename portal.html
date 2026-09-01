@@ -295,7 +295,17 @@
             background: rgba(107, 114, 128, 0.1);
             color: #6b7280;
         }
-        
+
+        .alert-status.expired {
+            background: rgba(107, 114, 128, 0.12);
+            color: #6b7280;
+        }
+
+        .alert-status.cancelled {
+            background: rgba(239, 68, 68, 0.1);
+            color: #dc2626;
+        }
+
         .alert-info {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -1671,9 +1681,11 @@
                 const statusText = {
                     'active': 'Ativo',
                     'paused': 'Pausado',
-                    'cancelled': 'Cancelado'
+                    'cancelled': 'Cancelado',
+                    'expired': 'Expirado'
                 }[alert.status] || 'Desconhecido';
-                
+                const notifCount = Number(alert.notificationsCount) || 0;
+
                 return `
                     <div class="alert-card">
                         <div class="alert-card-header">
@@ -1693,9 +1705,17 @@
                             <div class="alert-info-item">
                                 <strong>Pessoas:</strong> ${alert.partySize}
                             </div>
+                            <div class="alert-info-item">
+                                <strong>Notificações recebidas:</strong> ${notifCount}
+                            </div>
                             ${alert.status === 'active' ? `
                                 <div class="alert-info-item">
                                     <strong>Monitoramento:</strong> até o dia da reserva
+                                </div>
+                            ` : ''}
+                            ${alert.status === 'expired' ? `
+                                <div class="alert-info-item">
+                                    <strong>Monitoramento:</strong> encerrado (data passou)
                                 </div>
                             ` : ''}
                         </div>
