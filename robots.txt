@@ -1,4 +1,18 @@
 User-agent: *
 Allow: /
 
+# Crawlers da OpenAI — explicitamente permitidos.
+# Referência: https://platform.openai.com/docs/bots
+# OAI-SearchBot: surfaces o site na busca/respostas do ChatGPT (descoberta e anúncios).
+User-agent: OAI-SearchBot
+Allow: /
+
+# ChatGPT-User: buscas feitas quando um usuário pede ao ChatGPT para abrir um link.
+User-agent: ChatGPT-User
+Allow: /
+
+# GPTBot: rastreamento de conteúdo da OpenAI.
+User-agent: GPTBot
+Allow: /
+
 Sitemap: https://www.dinemouse.com/sitemap.xml
