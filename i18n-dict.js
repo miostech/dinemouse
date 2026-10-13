@@ -461,7 +461,7 @@ window.DINEMOUSE_EN = {
     'Monitoramento de reservas e concierge gastronômico Disney': 'Disney reservation monitoring and dining concierge',
     'Termos de Serviço': 'Terms of Service',
     'O Dine Mouse é um serviço independente de monitoramento e concierge gastronômico para restaurantes da Disney, criado para ajudar famílias e viajantes a encontrar reservas em parques temáticos. Não somos afiliados, patrocinados ou endossados pela Disney ou por qualquer parque temático.': 'Dine Mouse is an independent monitoring and dining concierge service for Disney restaurants, created to help families and travelers find reservations at theme parks. We are not affiliated with, sponsored by, or endorsed by Disney or any theme park.',
-    '© 2026 Dine Mouse · Mios Tech LDA · Todos os direitos reservados.': '© 2026 Dine Mouse · Mios Tech LDA · All rights reserved.',
+    '© 2026 Dine Mouse · Mios Tech Global Inc · Todos os direitos reservados.': '© 2026 Dine Mouse · Mios Tech Global Inc · All rights reserved.',
 
     // ---- Modal de login ----
     'Portal do Cliente': 'Client Portal',
